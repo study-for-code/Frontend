@@ -1,11 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 //styles
 import { Container } from "./styles/home/homeStyles";
 
 //img
 import GoormThinking from "@/assets/home/goormThinking.jpg";
-import Plus from "@/assets/home/plus.png";
 import LogOut from "@/assets/home/logout.png";
 import HamburgerBar from "@/assets/home/hamburgerBar.png";
 import Expansion from "@/assets/home/expansion.png";
@@ -13,11 +12,65 @@ import CategoryExpansion from "@/assets/home/category_expansion.png";
 import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 import { theme } from "./styles/common/ColorStyles";
 
+import StudyList from "./components/Study/StudyList";
+
+interface User {
+  id: number;
+  name: string;
+  studies: Study[];
+}
+
+interface Study {
+  studyName: string;
+  studyImage: File | null;
+}
+
 const App = () => {
+  const [user, setUser] = useState<User | null>(null);
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
   // 카테고리 컨트롤
   const [showCategory, setShowCategory] = useState(false);
+
+  // useEffect(() => {
+  //   const fetchUser = async () => {
+  //     // 여기서 실제 API 호출을 통해 사용자 정보를 가져옵니다.
+  //     const response = await fetch('/api/user');
+  //     const data: User = await response.json();
+  //     setUser(data);
+  //   };
+
+  //   fetchUser();
+  // }, []);
+
+  useEffect(() => {
+    // 임시 사용자 데이터를 설정하는 함수
+    const fetchUser = async () => {
+      // 여기서 실제 API 호출 대신 임시 데이터를 설정합니다.
+      const data: User = {
+        id: 1,
+        name: 'John Doe',
+        studies: [
+          { studyName: 'study 1', studyImage: null },
+          { studyName: 'study 2', studyImage: null },
+        ],
+      };
+      setUser(data);
+    };
+
+    fetchUser();
+  }, []);
+
+  const addStudy = (newStudy: Study) => {
+    if (user) {
+      setUser({
+        ...user,
+        studies: [...user.studies, newStudy],
+      });
+    }
+  };
+
+  console.log('스터디 목록 :', user?.studies);
 
   const handleHamburgerBar = () => setShowHamburgerBar(!showHamburgerBar);
   const handleCategory = () => setShowCategory(!showCategory);
@@ -27,14 +80,7 @@ const App = () => {
         <div className="header">구름적사고</div>
       </nav>
       <main>
-        <div className="drawer">
-          <img src={GoormThinking} className="element1" />
-          <img src={GoormThinking} className="element1" />
-          <img src={GoormThinking} className="element1" />
-          <div className="plusContainer">
-            <img src={Plus} />
-          </div>
-        </div>
+        <StudyList studies={user?.studies || []} addStudy={addStudy} />
         <div className="hamburgerBarContainer">
           <div className="drawerSection" onClick={handleHamburgerBar}>
             <div className="hamburgerbutton">
