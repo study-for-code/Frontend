@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 //styles
 import { Container } from "./styles/home/homeStyles";
@@ -11,7 +11,18 @@ import HamburgerBar from "@/assets/home/hamburgerBar.png";
 import Expansion from "@/assets/home/expansion.png";
 import CategoryExpansion from "@/assets/home/category_expansion.png";
 import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
+
+// theme
 import { theme } from "./styles/common/ColorStyles";
+
+// libraries
+import axios from "axios";
+import { useQuery } from "@tanstack/react-query";
+
+// components
+
+// types
+import { CategoryListData } from "./types/aboutHome";
 
 const App = () => {
   // 햄버거바 컨트롤
@@ -19,10 +30,74 @@ const App = () => {
   // 카테고리 컨트롤
   const [showCategory, setShowCategory] = useState(false);
 
+  // 카테고리 데이터
+  const [categoryList, setCategoryList] = useState([]);
+
+  // // 페이지 상태
+  // const [page, setPage] = useState("");
+
+  // 문제 리스트
+  const [problemList, setProblemList] = useState([]);
+  // 토글 상태 컨트롤
+  const [isToggleSelected, setIsToggleSelected] = useState<boolean[]>([]);
+
+  const getCategoryData = async () => {
+    try {
+      const response = await axios.get("/categoryList");
+      const data = response.data;
+
+      const findStandard = data.filter(
+        (element: CategoryListData, idx: number) => {
+          return (
+            data.findIndex((element1: CategoryListData) => {
+              return element1.listName === element.listName;
+            }) === idx
+          );
+        }
+      );
+      const listNames = findStandard.map(
+        (element: CategoryListData) => element.listName
+      );
+      setProblemList(listNames);
+
+      const result = data.reduce((acc, curr: CategoryListData) => {
+        if (!acc[curr.listName]) {
+          acc[curr.listName] = [];
+        }
+        acc[curr.listName].push(curr);
+        return acc;
+      }, {});
+
+      setCategoryList(result);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  const handleToggle = (idx: number) => {
+    if (isToggleSelected.length > 0) {
+      const newArr = [...isToggleSelected];
+      newArr[idx] = !newArr[idx];
+      setIsToggleSelected(newArr);
+    } else {
+      const newArr: boolean[] = Array(problemList.length).fill(false);
+      newArr[idx] = true;
+      setIsToggleSelected(newArr);
+    }
+  };
+
   const handleHamburgerBar = () => setShowHamburgerBar(!showHamburgerBar);
-  const handleCategory = () => setShowCategory(!showCategory);
+
+  useEffect(() => {
+    console.log("categoryList: ", categoryList);
+    console.log("isToggleSelected: ", isToggleSelected);
+  }, [isToggleSelected]);
+  useEffect(() => {
+    getCategoryData();
+  }, []);
+
   return (
-    <Container showHamburgerBar={showHamburgerBar}>
+    <Container showhamburgerBar={showHamburgerBar}>
       <nav>
         <div className="header">구름적사고</div>
       </nav>
@@ -61,7 +136,7 @@ const App = () => {
                 </div>
               )}
 
-              <img src={HamburgerBar} />
+              <img src={HamburgerBar} style={{ marginRight: "1rem" }} />
             </div>
             {showHamburgerBar && (
               <div className="StudyContent">
@@ -73,27 +148,41 @@ const App = () => {
           </div>
           <div className="drawerContent">
             <div className="categorySpace">
-              <div className="categoryRow">
-                <span>1주차 문제</span>
-                <span style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                  -------------
-                </span>
-                <img
-                  src={showCategory ? CategoryExpansion : CategoryExpansion2}
-                  onClick={handleCategory}
-                />
-              </div>
-              <div className="categoryRow">
-                <span>2주차 문제</span>
-                <span style={{ marginLeft: "0.5rem", marginRight: "0.5rem" }}>
-                  -------------
-                </span>
-                <img src={CategoryExpansion2} />
-              </div>
+              <div className="algorithmList">알고리즘 목록</div>
+              {Object.entries(categoryList).map(([key, value], idx: number) => (
+                <div className="categoryRow" key={key}>
+                  <div style={{ display: "flex", alignItems: "center" }}>
+                    <span style={{ marginRight: "0.5rem" }}>{key}</span>
+                    <span>-----------</span>
+                    <img
+                      style={{ marginLeft: "0.5rem" }}
+                      title="week1"
+                      src={
+                        isToggleSelected[idx]
+                          ? CategoryExpansion
+                          : CategoryExpansion2
+                      }
+                      onClick={() => handleToggle(idx)}
+                    />
+                  </div>
+
+                  {isToggleSelected[idx] &&
+                    value.map((item: CategoryListData, index: number) => (
+                      <div key={index} className="algorithmProblems">
+                        <li style={{ padding: "0.3rem" }}>
+                          {item.subjectNumber} {item.subjectName}
+                        </li>
+                      </div>
+                    ))}
+                </div>
+              ))}
             </div>
           </div>
           <div className="drawerButton">
-            <img src={LogOut} style={{ width: "20px", height: "20px" }} />
+            <img
+              src={LogOut}
+              style={{ width: "20px", height: "20px", marginBottom: "0.5rem" }}
+            />
           </div>
         </div>
         <div className="contentSection">

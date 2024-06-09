@@ -24,13 +24,13 @@ export const moveSideBar = keyframes`
     transform: translateX(0px);
   }
   100%{
-    transform: translateX(200px);
+    transform: translateX(100px);
   }
 `;
 
 export const backSideBar = keyframes`
   0% {
-    transform: translateX(200px);
+    transform: translateX(100px);
   }
   100%{
     transform: translateX(0px);
