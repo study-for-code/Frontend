@@ -14,12 +14,18 @@ import AceEditor from "react-ace";
 import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
+import * as ace from "ace-builds";
 
 interface CodeReviewType {
   pageData: CategoryListData;
 }
 
 const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
+  // 동적 로드를 가능하게 하기 위해 basePath 설정
+  ace.config.set(
+    "basePath",
+    "https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-noconflict/"
+  );
   return (
     <Container>
       {/* header 부분 */}
