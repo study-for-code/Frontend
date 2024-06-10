@@ -4,10 +4,7 @@ import { useEffect, useState } from "react";
 import { Container } from "@/styles/home/homeStyles";
 
 //img
-import GoormThinking from "@/assets/home/goormThinking.jpg";
-import Plus from "@/assets/home/plus.png";
 import LogOut from "@/assets/home/logout.png";
-import HamburgerBar from "@/assets/home/hamburgerBar.png";
 import Expansion from "@/assets/home/expansion.png";
 import CategoryExpansion from "@/assets/home/category_expansion.png";
 import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
@@ -20,18 +17,27 @@ import axios from "axios";
 
 // components
 import CodeReview from "@/components/CodeReview";
+import StudyList from "@/components/Study/StudyList";
 
 // types
 import { CategoryListData, ComponentMap, PageKey } from "@/types/aboutHome";
 import AlgorithmList from "@/components/AlgorithmList";
+import { User } from "@/types/User";
+import { Study } from "@/types/aboutStudy";
+import StudyInformation from "@/components/StudyInformation";
 
 interface CategoryListMap {
   [listName: string]: CategoryListData[];
 }
 
 const Home = () => {
+  const [user, setUser] = useState<User | null>(null);
+  const [studies, setStudies] = useState<Study[] | null>(null);
+
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
+
+  const [selectedStudy, setSelectedStudy] = useState<Study | null>(null);
 
   // 카테고리 데이터
   const [categoryList, setCategoryList] = useState<CategoryListMap>({});
@@ -63,6 +69,28 @@ const Home = () => {
     setPageData(data);
     setPage("codeReview");
   };
+
+  const getUserData = async () => {
+    try {
+      const response = await axios.get("/user");
+      const data = response.data;
+      console.log(data);
+      setUser(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const getStudyList = async () => {
+    try {
+      const response = await axios.get("/studyList");
+      const data = response.data;
+      console.log("study List : ", data);
+      setStudies(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
 
   const getCategoryData = async () => {
     try {
@@ -115,7 +143,24 @@ const Home = () => {
     }
   };
 
+  const addStudy = (newStudy: Study) => {
+    if (studies) {
+      setStudies([...studies, newStudy]);
+    } else {
+      setStudies([newStudy]);
+    }
+  
+    // 서버나 다른 데이터 저장소에 새 스터디를 저장하는 로직을 추가할 수 있습니다.
+    // 예를 들어:
+    // await axios.post('/studies', newStudy);
+  };
+
   const handleHamburgerBar = () => setShowHamburgerBar(!showHamburgerBar);
+
+  const handleStudySelect = (study: Study) => {
+    setSelectedStudy(study);
+    setShowHamburgerBar(true);
+  };
 
   const componentMap: ComponentMap = {
     codeReview: <CodeReview pageData={pageData} />,
@@ -131,6 +176,8 @@ const Home = () => {
 
   useEffect(() => {
     getCategoryData();
+    getUserData();
+    getStudyList();
   }, []);
 
   return (
@@ -139,50 +186,20 @@ const Home = () => {
         <div className="header">구름적사고</div>
       </nav>
       <main>
-        <div className="drawer">
-          <img src={GoormThinking} className="element1" />
-          <img src={GoormThinking} className="element1" />
-          <img src={GoormThinking} className="element1" />
-          <div className="plusContainer">
-            <img src={Plus} />
-          </div>
-        </div>
+      <StudyList 
+        studies={studies || []} 
+        addStudy={addStudy} 
+        user={user}
+        onStudySelect={handleStudySelect}
+      />
         <div className="hamburgerBarContainer">
-          <div className="drawerSection" onClick={handleHamburgerBar}>
-            <div className="hamburgerbutton">
-              {showHamburgerBar && (
-                <div className="studyName">
-                  <img
-                    src={GoormThinking}
-                    style={{
-                      width: "25px",
-                      height: "25px",
-                      borderRadius: "50%",
-                      marginRight: "0.5rem",
-                      marginLeft: "0.5rem",
-                    }}
-                  />
-                  <span
-                    style={{
-                      fontSize: "1.2rem",
-                      color: `${theme.fontWhiteColor}`,
-                    }}
-                  >
-                    알고리즘 스터디
-                  </span>
-                </div>
-              )}
-
-              <img src={HamburgerBar} style={{ marginRight: "1rem" }} />
-            </div>
-            {showHamburgerBar && (
-              <div className="StudyContent">
-                <div>개설 날짜: 2024.05.31</div>
-                <div>참여 인원: 6명</div>
-                <div>제출된 코드: 112개</div>
-              </div>
-            )}
-          </div>
+        <StudyInformation 
+          study={selectedStudy}
+          showHamburgerBar={showHamburgerBar}
+          handleHamburgerBar={handleHamburgerBar}
+          theme={theme}
+          user={user}
+        />
           <div className="drawerContent">
             <div className="categorySpace">
               <div className="algorithmList">알고리즘 목록</div>
