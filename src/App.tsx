@@ -14,6 +14,9 @@ import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 // theme
 import { theme } from "./styles/common/ColorStyles";
 
+// libraries
+import axios from "axios";
+
 // types
 import { CategoryListData, ComponentMap, PageKey } from "./types/aboutHome";
 import { User } from "./types/User";
