@@ -1,4 +1,5 @@
 export const theme = {
+  mainRed: "#733B3B",
   mainColor: "#2DA8A6",
   mainYellow: "#FEBE42",
   black: "#232323",
