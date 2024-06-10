@@ -16,7 +16,7 @@ export interface CategoryListData {
 export interface ComponentMap {
   codeReview: React.ReactElement;
   algorithmList: React.ReactElement;
-  defaultPage: React.ReactElement;
+  defaultPage: React.ReactElement | null;
 }
 
 export type PageKey = keyof ComponentMap;
