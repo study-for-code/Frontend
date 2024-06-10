@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 //styles
 import { Container } from "./styles/home/homeStyles";
@@ -13,6 +13,16 @@ import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 
 // theme
 import { theme } from "./styles/common/ColorStyles";
+
+// types
+import { CategoryListData, ComponentMap, PageKey } from "./types/aboutHome";
+import { User } from "./types/User";
+import { Study } from "./types/aboutStudy";
+
+// components
+import CodeReview from "./components/CodeReview";
+import AlgorithmList from "./components/AlgorithmList";
+import StudyList from "./components/Study/StudyList";
 
 const App = () => {
   const [user, setUser] = useState<User | null>(null);
