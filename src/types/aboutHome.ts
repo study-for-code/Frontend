@@ -9,5 +9,14 @@ export interface CategoryListData {
   person: number;
   answerRate: number;
   language: string;
+  solveTime: string;
   codes: string;
 }
+
+export interface ComponentMap {
+  codeReview: React.ReactElement;
+  algorithmList: React.ReactElement;
+  defaultPage: React.ReactElement;
+}
+
+export type PageKey = keyof ComponentMap;

@@ -29,8 +29,8 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     flex-direction: column;
     align-items: center;
     width: 100px;
-    /* height: 100%; */
     background-color: ${theme.lightBlack};
+    z-index: 0;
   }
 
   .element1 {
@@ -75,6 +75,7 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
   }
 
   .drawerSection {
+    z-index: 0;
     width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
     height: ${(props) => (props.showhamburgerBar ? "120px" : "40px")};
     display: flex;

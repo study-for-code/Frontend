@@ -17,12 +17,13 @@ import { theme } from "./styles/common/ColorStyles";
 
 // libraries
 import axios from "axios";
-import { useQuery } from "@tanstack/react-query";
 
 // components
+import CodeReview from "./components/CodeReview";
 
 // types
-import { CategoryListData } from "./types/aboutHome";
+import { CategoryListData, ComponentMap, PageKey } from "./types/aboutHome";
+import AlgorithmList from "./components/AlgorithmList";
 
 const App = () => {
   // 햄버거바 컨트롤
@@ -33,13 +34,33 @@ const App = () => {
   // 카테고리 데이터
   const [categoryList, setCategoryList] = useState([]);
 
-  // // 페이지 상태
-  // const [page, setPage] = useState("");
+  // 페이지 상태
+  const [page, setPage] = useState<PageKey>("defaultPage");
 
   // 문제 리스트
   const [problemList, setProblemList] = useState([]);
   // 토글 상태 컨트롤
   const [isToggleSelected, setIsToggleSelected] = useState<boolean[]>([]);
+  // 페이지
+  const [pageData, setPageData] = useState<CategoryListData>({
+    listName: "",
+    subjectName: "",
+    subjectNumber: 0,
+    timeLimit: 0,
+    memorySize: 0,
+    submit: 0,
+    answer: 0,
+    person: 0,
+    answerRate: 0,
+    language: "",
+    solveTime: "",
+    codes: "",
+  });
+
+  const handlePage = (data: CategoryListData) => {
+    setPageData(data);
+    setPage("codeReview");
+  };
 
   const getCategoryData = async () => {
     try {
@@ -88,10 +109,18 @@ const App = () => {
 
   const handleHamburgerBar = () => setShowHamburgerBar(!showHamburgerBar);
 
+  const componentMap: ComponentMap = {
+    codeReview: <CodeReview pageData={pageData} />,
+    algorithmList: <AlgorithmList />,
+    defaultPage: null,
+  };
+
+  const componentToShow = componentMap[page];
+
   useEffect(() => {
-    console.log("categoryList: ", categoryList);
-    console.log("isToggleSelected: ", isToggleSelected);
-  }, [isToggleSelected]);
+    console.log("pageData: ", pageData);
+  }, [pageData]);
+
   useEffect(() => {
     getCategoryData();
   }, []);
@@ -149,33 +178,38 @@ const App = () => {
           <div className="drawerContent">
             <div className="categorySpace">
               <div className="algorithmList">알고리즘 목록</div>
-              {Object.entries(categoryList).map(([key, value], idx: number) => (
-                <div className="categoryRow" key={key}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <span style={{ marginRight: "0.5rem" }}>{key}</span>
-                    <span>-----------</span>
-                    <img
-                      style={{ marginLeft: "0.5rem" }}
-                      title="week1"
-                      src={
-                        isToggleSelected[idx]
-                          ? CategoryExpansion
-                          : CategoryExpansion2
-                      }
-                      onClick={() => handleToggle(idx)}
-                    />
-                  </div>
+              {Object.entries(categoryList).map(([key, value], idx: number) => {
+                return (
+                  <div className="categoryRow" key={key}>
+                    <div style={{ display: "flex", alignItems: "center" }}>
+                      <span style={{ marginRight: "0.5rem" }}>{key}</span>
+                      <span>-----------</span>
+                      <img
+                        style={{ marginLeft: "0.5rem" }}
+                        title="week1"
+                        src={
+                          isToggleSelected[idx]
+                            ? CategoryExpansion
+                            : CategoryExpansion2
+                        }
+                        onClick={() => handleToggle(idx)}
+                      />
+                    </div>
 
-                  {isToggleSelected[idx] &&
-                    value.map((item: CategoryListData, index: number) => (
-                      <div key={index} className="algorithmProblems">
-                        <li style={{ padding: "0.3rem" }}>
-                          {item.subjectNumber} {item.subjectName}
-                        </li>
-                      </div>
-                    ))}
-                </div>
-              ))}
+                    {isToggleSelected[idx] &&
+                      value.map((item: CategoryListData, index: number) => (
+                        <div key={index} className="algorithmProblems">
+                          <li
+                            style={{ padding: "0.3rem" }}
+                            onClick={() => handlePage(item)}
+                          >
+                            {item.subjectNumber} {item.subjectName}
+                          </li>
+                        </div>
+                      ))}
+                  </div>
+                );
+              })}
             </div>
           </div>
           <div className="drawerButton">
@@ -185,11 +219,17 @@ const App = () => {
             />
           </div>
         </div>
-        <div className="contentSection">
-          <nav className="contentHeader">
-            <div className="problemTitle">15888 치킨 배달</div>
-          </nav>
-        </div>
+        {page !== "defaultPage" ? (
+          <div className="contentSection">
+            <nav className="contentHeader">
+              <div className="problemTitle">15888 치킨 배달</div>
+            </nav>
+            {componentToShow}
+          </div>
+        ) : (
+          <div className="contentSection"></div>
+        )}
+
         <div className="userSection">
           <img src={Expansion} className="expansionButton" />
         </div>

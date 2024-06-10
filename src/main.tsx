@@ -1,6 +1,5 @@
 import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
-import { StrictMode } from "react";
 import { GlobalFonts } from "@/styles/common/GlobalFonts.ts";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
