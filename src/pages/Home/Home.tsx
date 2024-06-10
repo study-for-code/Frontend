@@ -1,39 +1,44 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 //styles
 import { Container } from "@/styles/home/homeStyles";
 
 //img
-import LogOut from "@/assets/home/logout.png";
+import GoormThinking from "@/assets/home/goormThinking.jpg";
+import Plus from "@/assets/home/plus.png";
 import Expansion from "@/assets/home/expansion.png";
-import CategoryExpansion from "@/assets/home/category_expansion.png";
-import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 
 // theme
-import { theme } from "@/styles/common/ColorStyles";
 
 // libraries
-import axios from "axios";
 
 // components
 import CodeReview from "@/components/CodeReview";
 import StudyList from "@/components/Study/StudyList";
 
 // types
-import { CategoryListData, ComponentMap, PageKey } from "@/types/aboutHome";
-import AlgorithmList from "@/components/AlgorithmList";
 import { User } from "@/types/User";
 import { Study } from "@/types/aboutStudy";
 import StudyInformation from "@/components/StudyInformation";
+import AlgorithmList from "@/components/AlgorithmList";
+import HamburgerBar from "@/components/home/HamburgerBar";
 
-interface CategoryListMap {
-  [listName: string]: CategoryListData[];
-}
+// types
+import {
+  CategoryListData,
+  CategoryListMap,
+  ComponentMap,
+  PageKey,
+  useHandleToggleType,
+} from "@/types/aboutHome";
+
+// hooks
+import useHandleToggle from "@/hooks/home/useHandleToggle";
+import useGetCategoryData from "@/hooks/home/useGetCategoryData";
 
 const Home = () => {
-  const [user, setUser] = useState<User | null>(null);
-  const [studies, setStudies] = useState<Study[] | null>(null);
-
+  const navigate = useNavigate();
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
 
@@ -46,7 +51,7 @@ const Home = () => {
   const [page, setPage] = useState<PageKey>("defaultPage");
 
   // 문제 리스트
-  const [problemList, setProblemList] = useState([]);
+  const [problemList, setProblemList] = useState<string[]>([]);
   // 토글 상태 컨트롤
   const [isToggleSelected, setIsToggleSelected] = useState<boolean[]>([]);
   // 페이지
@@ -92,55 +97,46 @@ const Home = () => {
     }
   }
 
-  const getCategoryData = async () => {
+  const getUserData = async () => {
     try {
-      const response = await axios.get("/categoryList");
+      const response = await axios.get("/user");
       const data = response.data;
-
-      const findStandard = data.filter(
-        (element: CategoryListData, idx: number) => {
-          return (
-            data.findIndex((element1: CategoryListData) => {
-              return element1.listName === element.listName;
-            }) === idx
-          );
-        }
-      );
-      const listNames = findStandard.map(
-        (element: CategoryListData) => element.listName
-      );
-      setProblemList(listNames);
-
-      const result = data.reduce(
-        (
-          acc: { [key: string]: CategoryListData[] },
-          curr: CategoryListData
-        ) => {
-          if (!acc[curr.listName]) {
-            acc[curr.listName] = [];
-          }
-          acc[curr.listName].push(curr);
-          return acc;
-        },
-        {}
-      );
-
-      setCategoryList(result);
+      console.log(data);
+      setUser(data);
     } catch (e) {
       console.log(e);
     }
+  }
+
+  const getStudyList = async () => {
+    try {
+      const response = await axios.get("/studyList");
+      const data = response.data;
+      console.log("study List : ", data);
+      setStudies(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const getCategoryData = async () => {
+    const object = {
+      setProblemList,
+      setCategoryList,
+    };
+    const execute = useGetCategoryData(object);
+    execute();
   };
 
   const handleToggle = (idx: number) => {
-    if (isToggleSelected.length > 0) {
-      const newArr = [...isToggleSelected];
-      newArr[idx] = !newArr[idx];
-      setIsToggleSelected(newArr);
-    } else {
-      const newArr: boolean[] = Array(problemList.length).fill(false);
-      newArr[idx] = true;
-      setIsToggleSelected(newArr);
-    }
+    const object: useHandleToggleType = {
+      isToggleSelected,
+      setIsToggleSelected,
+      problemList,
+      idx,
+    };
+    const execute = useHandleToggle(object);
+    execute();
   };
 
   const addStudy = (newStudy: Study) => {
@@ -155,12 +151,15 @@ const Home = () => {
     // await axios.post('/studies', newStudy);
   };
 
-  const handleHamburgerBar = () => setShowHamburgerBar(!showHamburgerBar);
 
   const handleStudySelect = (study: Study) => {
     setSelectedStudy(study);
     setShowHamburgerBar(true);
   };
+  // 햄버거바 컨트롤 함수
+  const handleHamburgerBar = () => setShowHamburgerBar(!showHamburgerBar);
+
+  const goToLoginPage = () => navigate("/Login");
 
   const componentMap: ComponentMap = {
     codeReview: <CodeReview pageData={pageData} />,
@@ -172,7 +171,8 @@ const Home = () => {
 
   useEffect(() => {
     console.log("pageData: ", pageData);
-  }, [pageData]);
+    console.log("problemList: ", problemList);
+  }, [pageData, problemList]);
 
   useEffect(() => {
     getCategoryData();
@@ -248,6 +248,25 @@ const Home = () => {
             />
           </div>
         </div>
+        {/* 소희님 작업 부분 */}
+        <div className="drawer">
+          <img src={GoormThinking} className="element1" />
+          <img src={GoormThinking} className="element1" />
+          <img src={GoormThinking} className="element1" />
+          <div className="plusContainer">
+            <img src={Plus} />
+          </div>
+          {/* 소희님 작업 부분 */}
+        </div>
+        <HamburgerBar
+          handleHamburgerBar={handleHamburgerBar}
+          showHamburgerBar={showHamburgerBar}
+          categoryList={categoryList}
+          isToggleSelected={isToggleSelected}
+          handleToggle={handleToggle}
+          handlePage={handlePage}
+          goToLoginPage={goToLoginPage}
+        />
         {page !== "defaultPage" ? (
           <div className="contentSection">
             <nav className="contentHeader">
