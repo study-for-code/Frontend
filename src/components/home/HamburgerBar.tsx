@@ -2,7 +2,6 @@
 import { theme } from "@/styles/common/ColorStyles";
 
 //img
-import GoormThinking from "@/assets/home/goormThinking.jpg";
 import LogOut from "@/assets/home/logout.png";
 import Hamburger from "@/assets/home/hamburgerBar.png";
 import CategoryExpansion from "@/assets/home/category_expansion.png";
@@ -10,12 +9,16 @@ import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 
 // types
 import { CategoryListData, CategoryListMap } from "@/types/aboutHome";
+import { Study } from "@/types/aboutStudy";
+import { User } from "@/types/User";
 
 interface HamburgerBarType {
   handleHamburgerBar: () => void;
   handleToggle: (idx: number) => void;
   handlePage: (data: CategoryListData) => void;
   showHamburgerBar: boolean;
+  study: Study | null;
+  user: User | null;
   categoryList: CategoryListMap;
   isToggleSelected: boolean[];
   goToLoginPage: () => void;
@@ -24,20 +27,40 @@ interface HamburgerBarType {
 const HamburgerBar: React.FC<HamburgerBarType> = ({
   handleHamburgerBar,
   showHamburgerBar,
+  user,
+  study,
   categoryList,
   isToggleSelected,
   handleToggle,
   handlePage,
   goToLoginPage,
 }) => {
+
+  let formattedDate = 'Invalid Date';
+  if (study) {
+    try {
+      let createAtDate = new Date(study.createAt); // Date 객체로 변환
+      if (!isNaN(createAtDate.getTime())) { // 유효한 날짜인지 확인
+        formattedDate = createAtDate.toLocaleDateString('ko-KR', {
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+      }
+    } catch (error) {
+      console.error('Invalid date format:', error);
+    }
+  }
+
   return (
     <div className="hamburgerBarContainer">
       <div className="drawerSection" onClick={handleHamburgerBar}>
         <div className="hamburgerbutton">
-          {showHamburgerBar && (
+          {showHamburgerBar && study && (
             <div className="studyName">
+              {study.image && (
               <img
-                src={GoormThinking}
+                src={URL.createObjectURL(study.image)}
                 style={{
                   width: "25px",
                   height: "25px",
@@ -45,25 +68,38 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
                   marginRight: "0.5rem",
                   marginLeft: "0.5rem",
                 }}
+                alt="study"
               />
+            )}
               <span
                 style={{
                   fontSize: "1.2rem",
                   color: `${theme.fontWhiteColor}`,
                 }}
               >
-                알고리즘 스터디
+                {study.title}
               </span>
+              {user && study.host && (user.email === study.host.email) && (
+              <button style={{
+                marginLeft: "0.5rem",
+                fontSize: "1rem",
+                background: "none",
+                border: "none",
+                color: `${theme.fontWhiteColor}`,
+                cursor: "pointer"
+              }}>
+                수정
+              </button>
+            )}
             </div>
           )}
 
           <img src={Hamburger} style={{ marginRight: "1rem" }} />
         </div>
-        {showHamburgerBar && (
+        {showHamburgerBar && study && (
           <div className="StudyContent">
-            <div>개설 날짜: 2024.05.31</div>
-            <div>참여 인원: 6명</div>
-            <div>제출된 코드: 112개</div>
+            <div>개설 날짜: {formattedDate}</div>
+            <div>개설자: {study.host?.nickname}</div>
           </div>
         )}
       </div>
