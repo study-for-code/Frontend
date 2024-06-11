@@ -30,7 +30,7 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     align-items: center;
     width: 100px;
     background-color: ${theme.lightBlack};
-    z-index: 0;
+    z-index: 1;
   }
 
   .element1 {
