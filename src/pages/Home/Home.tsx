@@ -1,20 +1,21 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import axios from "axios";
+
 //styles
 import { Container } from "@/styles/home/homeStyles";
 
 //img
-import GoormThinking from "@/assets/home/goormThinking.jpg";
-import Plus from "@/assets/home/plus.png";
 import Expansion from "@/assets/home/expansion.png";
-
-// theme
-
-// libraries
 
 // components
 import CodeReview from "@/components/CodeReview";
+import StudyList from "@/components/home/StudyList";
+
+// types
+import { User } from "@/types/User";
+import { Study } from "@/types/aboutStudy";
 import AlgorithmList from "@/components/AlgorithmList";
 import HamburgerBar from "@/components/home/HamburgerBar";
 
@@ -33,6 +34,11 @@ import useGetCategoryData from "@/hooks/home/useGetCategoryData";
 
 const Home = () => {
   const navigate = useNavigate();
+
+  const [user, setUser] = useState<User | null>(null);
+  const [studies, setStudies] = useState<Study[]>([]);
+  const [selectedStudy, setSelectedStudy] = useState<Study | null>(studies.length > 0 ? studies[0] : null);
+
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
 
@@ -67,6 +73,36 @@ const Home = () => {
     setPage("codeReview");
   };
 
+  const getUserData = async () => {
+    try {
+      const response = await axios.get("/user");
+      const data = response.data;
+      console.log(data);
+      setUser(data);
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  const getStudyList = async () => {
+    try {
+      const response = await axios.get("/studyList");
+      const data = response.data;
+      console.log("study List : ", data);
+      setStudies(data);
+    } catch (e) {
+      console.log("study List error : ", e);
+    }
+  }
+
+  const addStudy = (newStudy: Study) => {
+    if (studies) {
+      setStudies([...studies, newStudy]);
+    } else {
+      setStudies([newStudy]);
+    }
+  };
+
   const getCategoryData = async () => {
     const object = {
       setProblemList,
@@ -85,6 +121,11 @@ const Home = () => {
     };
     const execute = useHandleToggle(object);
     execute();
+  };
+
+  const handleStudySelect = (study: Study) => {
+    setSelectedStudy(study);
+    setShowHamburgerBar(true);
   };
 
   // 햄버거바 컨트롤 함수
@@ -106,6 +147,15 @@ const Home = () => {
   }, [pageData, problemList]);
 
   useEffect(() => {
+    if (studies.length > 0) {
+      setSelectedStudy(studies[0]);
+    }
+  }, [studies]);
+  
+
+  useEffect(() => {
+    getUserData();
+    getStudyList();
     getCategoryData();
   }, []);
 
@@ -115,19 +165,17 @@ const Home = () => {
         <div className="header">구름적사고</div>
       </nav>
       <main>
-        {/* 소희님 작업 부분 */}
-        <div className="drawer">
-          <img src={GoormThinking} className="element1" />
-          <img src={GoormThinking} className="element1" />
-          <img src={GoormThinking} className="element1" />
-          <div className="plusContainer">
-            <img src={Plus} />
-          </div>
-          {/* 소희님 작업 부분 */}
-        </div>
+        <StudyList 
+          studies={studies || []} 
+          addStudy={addStudy} 
+          user={user}
+          onStudySelect={handleStudySelect}
+        />
         <HamburgerBar
           handleHamburgerBar={handleHamburgerBar}
           showHamburgerBar={showHamburgerBar}
+          user={user}
+          study={selectedStudy}
           categoryList={categoryList}
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}

@@ -30,14 +30,17 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     align-items: center;
     width: 100px;
     background-color: ${theme.lightBlack};
-    z-index: 0;
+    z-index: 1;
   }
 
   .element1 {
     width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-top: 0.8rem;
     margin-bottom: 0.5rem;
+    object-fit: cover;
+    object-position: center;
   }
 
   .plusContainer {
@@ -49,12 +52,28 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     justify-content: center;
     background-color: ${theme.lightGray};
     border-radius: 50%;
+    position: relative;
   }
 
   .plus {
     height: 20;
     color: ${theme.mainColor};
     font-size: 2rem;
+  }
+
+  .optionsContainer {
+    width: 100px;
+    position: absolute;
+    top: 40px;
+    left: 40px;
+    z-index: 1000;
+  }
+
+  .optionButton {
+    font-family: "GmarketSansMedium";
+    color: white;
+    background-color: ${theme.lightGray};
+    height: 30px;
   }
 
   .hamburgerBarContainer {
