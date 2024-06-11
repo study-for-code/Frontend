@@ -1,5 +1,6 @@
 import styled, { css } from "styled-components";
-import { theme } from "../common/ColorStyles";
+import { theme } from "@/styles/common/ColorStyles";
+
 import {
   backContent,
   backSideBar,
@@ -118,6 +119,13 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     display: flex;
     align-items: center;
   }
+
+  .updateStudyName {
+    margin-left: 0.5rem;
+    width: 15px;
+    cursor: pointer;
+  }
+
   .StudyContent {
     padding: 0.5rem;
     font-size: 0.8rem;
