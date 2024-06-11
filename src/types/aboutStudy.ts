@@ -1,4 +1,8 @@
+import { User } from "./User";
+
 export interface Study {
-    studyName: string;
-    studyImage: File | null;
+    title: string;
+    createAt: Date;
+    image: File | null;
+    host: User | null;
 }

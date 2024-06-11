@@ -1,7 +1,15 @@
+import { studyList } from "@/constants/StudyList";
 import { taskList } from "@/constants/TaskList";
+import { userData } from "@/constants/UserData";
 import { http, HttpResponse } from "msw";
 
 export const handlers = [
+  http.get("/user", () => {
+    return HttpResponse.json(userData);
+  }),
+  http.get("/studyList", () => {
+    return HttpResponse.json(studyList);
+  }),
   http.get("/categoryList", () => {
     return HttpResponse.json(taskList);
   }),
