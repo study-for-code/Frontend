@@ -37,7 +37,7 @@ const Home = () => {
 
   const [user, setUser] = useState<User | null>(null);
   const [studies, setStudies] = useState<Study[]>([]);
-  const [selectedStudy, setSelectedStudy] = useState<Study | null>(null);
+  const [selectedStudy, setSelectedStudy] = useState<Study | null>(studies.length > 0 ? studies[0] : null);
 
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
@@ -145,6 +145,13 @@ const Home = () => {
     console.log("pageData: ", pageData);
     console.log("problemList: ", problemList);
   }, [pageData, problemList]);
+
+  useEffect(() => {
+    if (studies.length > 0) {
+      setSelectedStudy(studies[0]);
+    }
+  }, [studies]);
+  
 
   useEffect(() => {
     getUserData();
