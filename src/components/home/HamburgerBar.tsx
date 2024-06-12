@@ -1,4 +1,3 @@
-import { useRecoilState, useRecoilValue } from "recoil";
 import { useEffect, useState } from "react";
 // theme
 import { theme } from "@/styles/common/ColorStyles";
@@ -11,11 +10,15 @@ import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 import Pen from "@/assets/home/pen.png";
 import Trash from "@/assets/home/trash.png";
 
+// component
+import DeleteStudyModal from "../modal/DeleteStudyModal";
+
+// atom
+import { useRecoilState, useRecoilValue } from "recoil";
+import { selectedStudyState, studiesState, userState } from "@/atom/stats";
+
 // types
 import { CategoryListData, CategoryListMap } from "@/types/aboutHome";
-import { User } from "@/types/User";
-import { selectedStudyState, studiesState, userState } from "@/atom/stats";
-import DeleteStudyModal from "../modal/DeleteStudyModal";
 
 interface HamburgerBarType {
   handleHamburgerBar: () => void;
@@ -75,11 +78,10 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   };
 
   const handleTitleSave = (event: React.MouseEvent) => {
-    event.stopPropagation(); // 이벤트 버블링 방지
+    event.stopPropagation();
     if (selectedStudy) {
       const updatedStudies = studies.map((s) =>
-        // 추후 스터디 ID로 수정 필요
-        s.host === selectedStudy.host ? { ...s, title: newTitle } : s
+        s.study_id === selectedStudy.study_id ? { ...s, title: newTitle } : s
       );
       setStudies(updatedStudies);
       setSelectedStudy({ ...selectedStudy, title: newTitle });
@@ -90,8 +92,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const handleDeleteStudy = () => {
     if (selectedStudy) {
       const updatedStudies = studies.filter(
-        // 추후 스터디 ID로 수정
-        (s) => s.title !== selectedStudy.title
+        (s) => s.study_id !== selectedStudy.study_id
       );
       setStudies(updatedStudies);
       setSelectedStudy(null); // 선택된 스터디 초기화
@@ -185,13 +186,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
           </div>
         )}
       </div>
-      {/* {isDeleting && (
-        <div className="deleteConfirmation">
-          <p>{`"${selectedStudy?.title}" 스터디를 정말 삭제하시겠습니까?`}</p>
-          <button onClick={handleDeleteStudy}>예</button>
-          <button onClick={handleCancelDelete}>아니오</button>
-        </div>
-      )} */}
       <div className="drawerContent">
         <div className="categorySpace">
           <div className="algorithmList">알고리즘 목록</div>
