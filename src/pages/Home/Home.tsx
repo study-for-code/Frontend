@@ -14,8 +14,6 @@ import CodeReview from "@/components/CodeReview";
 import StudyList from "@/components/home/StudyList";
 
 // types
-import { User } from "@/types/User";
-import { Study } from "@/types/aboutStudy";
 import AlgorithmList from "@/components/AlgorithmList";
 import HamburgerBar from "@/components/home/HamburgerBar";
 
@@ -31,13 +29,15 @@ import {
 // hooks
 import useHandleToggle from "@/hooks/home/useHandleToggle";
 import useGetCategoryData from "@/hooks/home/useGetCategoryData";
+import { useRecoilState } from "recoil";
+import { selectedStudyState, studiesState, userState } from "@/atom/stats";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useState<User | null>(null);
-  const [studies, setStudies] = useState<Study[]>([]);
-  const [selectedStudy, setSelectedStudy] = useState<Study | null>(studies.length > 0 ? studies[0] : null);
+  const [user, setUser] = useRecoilState(userState);
+  const [studies, setStudies] = useRecoilState(studiesState);
+  const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
 
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
@@ -82,7 +82,7 @@ const Home = () => {
     } catch (e) {
       console.log(e);
     }
-  }
+  };
 
   const getStudyList = async () => {
     try {
@@ -92,14 +92,6 @@ const Home = () => {
       setStudies(data);
     } catch (e) {
       console.log("study List error : ", e);
-    }
-  }
-
-  const addStudy = (newStudy: Study) => {
-    if (studies) {
-      setStudies([...studies, newStudy]);
-    } else {
-      setStudies([newStudy]);
     }
   };
 
@@ -123,13 +115,12 @@ const Home = () => {
     execute();
   };
 
-  const handleStudySelect = (study: Study) => {
-    setSelectedStudy(study);
-    setShowHamburgerBar(true);
-  };
-
   // 햄버거바 컨트롤 함수
-  const handleHamburgerBar = () => setShowHamburgerBar(!showHamburgerBar);
+  const handleHamburgerBar = () => {
+    if (studies.length > 0) {
+      setShowHamburgerBar(!showHamburgerBar);
+    }
+  };
 
   const goToLoginPage = () => navigate("/Login");
 
@@ -147,11 +138,10 @@ const Home = () => {
   }, [pageData, problemList]);
 
   useEffect(() => {
-    if (studies.length > 0) {
+    if (studies.length > 0 && !selectedStudy) {
       setSelectedStudy(studies[0]);
     }
-  }, [studies]);
-  
+  }, [studies, selectedStudy]);
 
   useEffect(() => {
     getUserData();
@@ -159,23 +149,22 @@ const Home = () => {
     getCategoryData();
   }, []);
 
+  useEffect(() => {
+    if (selectedStudy) {
+      setShowHamburgerBar(true);
+    }
+  }, [selectedStudy]);
+
   return (
     <Container showhamburgerBar={showHamburgerBar}>
       <nav>
         <div className="header">구름적사고</div>
       </nav>
       <main>
-        <StudyList 
-          studies={studies || []} 
-          addStudy={addStudy} 
-          user={user}
-          onStudySelect={handleStudySelect}
-        />
+        <StudyList />
         <HamburgerBar
           handleHamburgerBar={handleHamburgerBar}
           showHamburgerBar={showHamburgerBar}
-          user={user}
-          study={selectedStudy}
           categoryList={categoryList}
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}
