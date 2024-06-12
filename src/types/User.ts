@@ -1,4 +1,7 @@
+type Grade = "ADMIN" | "MEMBER";
+
 export interface User {
-    email: number;
-    nickname: string;
+  email: string;
+  nickname: string;
+  grade: Grade;
 }
