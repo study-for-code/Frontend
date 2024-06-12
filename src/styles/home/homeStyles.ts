@@ -62,6 +62,17 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     font-size: 2rem;
   }
 
+  .adminBtn {
+    cursor: pointer;
+    width: 25px;
+    position: absolute;
+    bottom: 0;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ffffff;
+    border-radius: 50%;
+  }
+
   .optionsContainer {
     width: 100px;
     position: absolute;

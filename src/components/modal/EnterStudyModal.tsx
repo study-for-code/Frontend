@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import ReactDOM from "react-dom";
+
+// style
 import { ModalContainer } from "@/styles/modal/modalStyles";
+
+// type
 import { Study } from "@/types/aboutStudy";
-import axios from "axios";
+
+// atom
+import { useRecoilValue } from "recoil";
+import { fullStudiesState } from "@/atom/stats";
 
 interface EnterStudyProps {
   isOpen: boolean;
@@ -16,18 +23,7 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({
   onEnterStudy,
 }) => {
   const [code, setCode] = useState("");
-  const [fullStudies, setFullStudies] = useState<Study[]>([]);
-
-  const getFullStudy = async () => {
-    try {
-      const response = await axios.get("/fullStudyList");
-      const data = response.data;
-      console.log(data);
-      setFullStudies(data);
-    } catch (e) {
-      console.log(e);
-    }
-  };
+  const fullStudies = useRecoilValue(fullStudiesState);
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
@@ -42,12 +38,6 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({
       alert("Invalid study code.");
     }
   };
-
-  useEffect(() => {
-    if (isOpen) {
-      getFullStudy();
-    }
-  }, [isOpen]);
 
   if (!isOpen) return null;
 

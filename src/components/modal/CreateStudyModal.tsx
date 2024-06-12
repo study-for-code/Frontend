@@ -1,12 +1,21 @@
-import { ModalContainer } from "@/styles/modal/modalStyles";
-import { User } from "@/types/User";
 import React, { useState, useCallback } from "react";
 import ReactDOM from "react-dom";
+
+// type
+import { User } from "@/types/User";
+
+// atom
+import { useRecoilValue } from "recoil";
+import { fullStudiesState } from "@/atom/stats";
+
+// style
+import { ModalContainer } from "@/styles/modal/modalStyles";
 
 interface CreateStudyProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (study: {
+    study_id: Number;
     title: string;
     createAt: Date;
     image: File | null;
@@ -22,6 +31,18 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
   onSubmit,
   user,
 }: CreateStudyProps) {
+  const fullStudies = useRecoilValue(fullStudiesState);
+
+  // study_id 설정 로직
+  let study_id: Number;
+  if (fullStudies.length > 0) {
+    const lastStudyId = fullStudies[fullStudies.length - 1].study_id.valueOf();
+    study_id = new Number(lastStudyId + 1);
+  } else {
+    study_id = new Number(1);
+  }
+  // 백엔드 연결 후 수정 필
+
   const [title, setTitle] = useState("");
   const createAt = new Date();
   const [image, setImage] = useState<File | null>(null);
@@ -31,9 +52,10 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      onSubmit({ title, createAt, image, host, code });
+      onSubmit({ study_id, title, createAt, image, host, code });
       setTitle("");
       setImage(null);
+      setCode("");
       onClose();
     },
     [title, image, onSubmit, onClose]
@@ -60,12 +82,12 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
     []
   );
 
+  console.log("study id : ", study_id);
+
   if (!isOpen) return null;
 
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
-
-  console.log("Modal is open");
 
   return ReactDOM.createPortal(
     <ModalContainer>

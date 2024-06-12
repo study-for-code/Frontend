@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-import axios from "axios";
-
 //styles
 import { Container } from "@/styles/home/homeStyles";
 
@@ -12,8 +10,6 @@ import Expansion from "@/assets/home/expansion.png";
 // components
 import CodeReview from "@/components/CodeReview";
 import StudyList from "@/components/home/StudyList";
-
-// types
 import AlgorithmList from "@/components/AlgorithmList";
 import HamburgerBar from "@/components/home/HamburgerBar";
 
@@ -26,17 +22,28 @@ import {
   useHandleToggleType,
 } from "@/types/aboutHome";
 
+// atom
+import { useRecoilState, useSetRecoilState } from "recoil";
+import {
+  fullStudiesState,
+  selectedStudyState,
+  studiesState,
+  userState,
+} from "@/atom/stats";
+
 // hooks
 import useHandleToggle from "@/hooks/home/useHandleToggle";
 import useGetCategoryData from "@/hooks/home/useGetCategoryData";
-import { useRecoilState } from "recoil";
-import { selectedStudyState, studiesState, userState } from "@/atom/stats";
+import useGetUserData from "@/hooks/home/useGetUserData";
+import useGetStudyList from "@/hooks/home/useGetStudyData";
+import useGetFullStudyList from "@/hooks/home/useGetFullStudyData";
 
 const Home = () => {
   const navigate = useNavigate();
 
-  const [user, setUser] = useRecoilState(userState);
+  const setUser = useSetRecoilState(userState);
   const [studies, setStudies] = useRecoilState(studiesState);
+  const setFullStudies = useSetRecoilState(fullStudiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
 
   // 햄버거바 컨트롤
@@ -74,25 +81,18 @@ const Home = () => {
   };
 
   const getUserData = async () => {
-    try {
-      const response = await axios.get("/user");
-      const data = response.data;
-      console.log(data);
-      setUser(data);
-    } catch (e) {
-      console.log(e);
-    }
+    const execute = useGetUserData({ setUser });
+    execute();
   };
 
   const getStudyList = async () => {
-    try {
-      const response = await axios.get("/studyList");
-      const data = response.data;
-      console.log("study List : ", data);
-      setStudies(data);
-    } catch (e) {
-      console.log("study List error : ", e);
-    }
+    const execute = useGetStudyList({ setStudies });
+    execute();
+  };
+
+  const getFullStudy = async () => {
+    const execute = useGetFullStudyList({ setFullStudies });
+    execute();
   };
 
   const getCategoryData = async () => {
@@ -147,6 +147,7 @@ const Home = () => {
     getUserData();
     getStudyList();
     getCategoryData();
+    getFullStudy();
   }, []);
 
   useEffect(() => {

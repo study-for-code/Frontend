@@ -1,16 +1,31 @@
 import { useState, useEffect, useRef } from "react";
+
+// component
+import CreateStudyModal from "../modal/CreateStudyModal";
+import EnterStudyModal from "../modal/EnterStudyModal";
+
+//atom
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  fullStudiesState,
+  selectedStudyState,
+  studiesState,
+  userState,
+} from "@/atom/stats";
+
+// type
+import { Study } from "@/types/aboutStudy";
+
+// image
 import GoormThinking from "@/assets/home/goormThinking.jpg";
 import Plus from "@/assets/home/plus.png";
-import CreateStudyModal from "../modal/CreateStudyModal";
-import { Study } from "@/types/aboutStudy";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { selectedStudyState, studiesState, userState } from "@/atom/stats";
-import EnterStudyModal from "../modal/EnterStudyModal";
+import Admin from "@/assets/home/admin.png";
 
 const StudyList = () => {
   const user = useRecoilValue(userState);
   const studies = useRecoilValue(studiesState);
   const setStudies = useSetRecoilState(studiesState);
+  const setFullStudies = useSetRecoilState(fullStudiesState);
   const setSelectedStudy = useSetRecoilState(selectedStudyState);
   const [showOptions, setShowOptions] = useState(false);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -21,16 +36,17 @@ const StudyList = () => {
     setShowOptions((prevState) => !prevState);
   };
 
-  const handleOpenCreateModal = () => {
-    setIsCreateModalOpen(true);
+  const handleCreateModal = () => {
+    setIsCreateModalOpen(!isCreateModalOpen);
   };
 
-  const handleCloseCreateModal = () => {
-    setIsCreateModalOpen(false);
+  const handleEnterModal = () => {
+    setIsEnterModalOpen(!isEnterModalOpen);
   };
 
   const handleAddStudy = (newStudy: Study) => {
     setStudies((prevStudies) => [...prevStudies, newStudy]);
+    setFullStudies((prevFullStudies) => [...prevFullStudies, newStudy]);
     setSelectedStudy(newStudy);
   };
 
@@ -38,17 +54,8 @@ const StudyList = () => {
     setSelectedStudy(study);
   };
 
-  const handleOpenEnterModal = () => {
-    setIsEnterModalOpen(true);
-  };
-
-  const handleCloseEnterModal = () => {
-    setIsEnterModalOpen(false);
-  };
-
   const handleEnterStudy = (study: Study) => {
-    // 추후 스터디 ID로 수정
-    const isStudyInList = studies.some((s) => s.title === study.title);
+    const isStudyInList = studies.some((s) => s.study_id === study.study_id);
     if (!isStudyInList) {
       setStudies((prevStudies) => [...prevStudies, study]);
       setSelectedStudy(study);
@@ -91,26 +98,29 @@ const StudyList = () => {
         <img src={Plus} onClick={handlePlusClick} />
         {showOptions && (
           <div className="optionsContainer">
-            <button className="optionButton" onClick={handleOpenCreateModal}>
+            <button className="optionButton" onClick={handleCreateModal}>
               스터디 생성
             </button>
-            <button className="optionButton" onClick={handleOpenEnterModal}>
+            <button className="optionButton" onClick={handleEnterModal}>
               스터디 입장
             </button>
           </div>
         )}
       </div>
+      {user && user.grade === "ADMIN" && (
+        <img src={Admin} className="adminBtn" />
+      )}
 
       <CreateStudyModal
         isOpen={isCreateModalOpen}
-        onClose={handleCloseCreateModal}
+        onClose={handleCreateModal}
         onSubmit={handleAddStudy}
         user={user}
       />
 
       <EnterStudyModal
         isOpen={isEnterModalOpen}
-        onClose={handleCloseEnterModal}
+        onClose={handleEnterModal}
         onEnterStudy={handleEnterStudy}
       />
     </div>
