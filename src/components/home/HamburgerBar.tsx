@@ -5,27 +5,30 @@ import { theme } from "@/styles/common/ColorStyles";
 //img
 import LogOut from "@/assets/home/logout.png";
 import Hamburger from "@/assets/home/hamburgerBar.png";
-import CategoryExpansion from "@/assets/home/category_expansion.png";
-import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 import Pen from "@/assets/home/pen.png";
 import Trash from "@/assets/home/trash.png";
 
 // component
 import DeleteStudyModal from "../modal/DeleteStudyModal";
+import CategorySpace from "./CategorySpace";
 
 // atom
 import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedStudyState, studiesState, userState } from "@/atom/stats";
+import {
+  cgListState,
+  selectedStudyState,
+  studiesState,
+  userState,
+} from "@/atom/stats";
 
 // types
-import { CategoryListData, CategoryListMap } from "@/types/aboutHome";
+import { TaskListData } from "@/types/aboutHome";
 
 interface HamburgerBarType {
   handleHamburgerBar: () => void;
-  handleToggle: (idx: number) => void;
-  handlePage: (data: CategoryListData) => void;
+  handleToggle: (category_id: number) => void;
+  handlePage: (data: TaskListData) => void;
   showHamburgerBar: boolean;
-  categoryList: CategoryListMap;
   isToggleSelected: boolean[];
   goToLoginPage: () => void;
 }
@@ -33,23 +36,23 @@ interface HamburgerBarType {
 const HamburgerBar: React.FC<HamburgerBarType> = ({
   handleHamburgerBar,
   showHamburgerBar,
-  categoryList,
   isToggleSelected,
   handleToggle,
   handlePage,
   goToLoginPage,
 }) => {
   const user = useRecoilValue(userState);
-  const [studies, setStudies] = useRecoilState(studiesState); // Recoil 상태에서 studies 가져오기
+  const [studies, setStudies] = useRecoilState(studiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
   const [isEditing, setIsEditing] = useState(false); // 제목 수정 모드 상태
   const [newTitle, setNewTitle] = useState("");
-  const [isModalOpen, setIsModalOpen] = useState(false); // 모달 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false); // 스터디 삭제 모달 상태
+  const [cgList, setCgList] = useRecoilState(cgListState);
 
   let formattedDate = "Invalid Date";
   if (selectedStudy) {
     try {
-      let createAtDate = new Date(selectedStudy.createAt); // Date 객체로 변환
+      let createAtDate = new Date(selectedStudy.createAt);
       if (!isNaN(createAtDate.getTime())) {
         formattedDate = createAtDate.toLocaleDateString("ko-KR", {
           year: "numeric",
@@ -102,16 +105,16 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
 
   const handleDeleteClick = (event: React.MouseEvent) => {
     event.stopPropagation();
-    setIsModalOpen(true); // 모달 열기
+    setIsModalOpen(true);
   };
 
   const handleModalClose = () => {
-    setIsModalOpen(false); // 모달 닫기
+    setIsModalOpen(false);
   };
 
   const handleModalConfirm = () => {
     handleDeleteStudy();
-    setIsModalOpen(false); // 모달 닫기
+    setIsModalOpen(false);
   };
 
   return (
@@ -187,43 +190,12 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
         )}
       </div>
       <div className="drawerContent">
-        <div className="categorySpace">
-          <div className="algorithmList">알고리즘 목록</div>
-          {Object.entries(categoryList).map(
-            ([listName, value], idx: number) => {
-              return (
-                <div className="categoryRow" key={listName}>
-                  <div style={{ display: "flex", alignItems: "center" }}>
-                    <span style={{ marginRight: "0.5rem" }}>{listName}</span>
-                    <span>-----------</span>
-                    <img
-                      style={{ marginLeft: "0.5rem" }}
-                      title="week1"
-                      src={
-                        isToggleSelected[idx]
-                          ? CategoryExpansion
-                          : CategoryExpansion2
-                      }
-                      onClick={() => handleToggle(idx)}
-                    />
-                  </div>
-
-                  {isToggleSelected[idx] &&
-                    value.map((item: CategoryListData, index: number) => (
-                      <div key={index} className="algorithmProblems">
-                        <li
-                          style={{ padding: "0.3rem" }}
-                          onClick={() => handlePage(item)}
-                        >
-                          {item.subjectNumber} {item.subjectName}
-                        </li>
-                      </div>
-                    ))}
-                </div>
-              );
-            }
-          )}
-        </div>
+        <CategorySpace
+          categoryList={cgList}
+          isToggleSelected={isToggleSelected}
+          handleToggle={handleToggle}
+          handlePage={handlePage}
+        />
       </div>
       <div className="drawerButton">
         <img
