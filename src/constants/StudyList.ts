@@ -1,6 +1,6 @@
 export const studyList = [
   {
-    study_id: new Number(1),
+    study_id: 1,
     title: "study 1",
     createAt: new Date("2024-06-01"),
     image: null,
@@ -11,7 +11,7 @@ export const studyList = [
     code: "123",
   },
   {
-    study_id: new Number(2),
+    study_id: 2,
     title: "study 2",
     createAt: new Date("2024-06-05"),
     image: null,
@@ -25,7 +25,7 @@ export const studyList = [
 
 export const fullStudyList = [
   {
-    study_id: new Number(1),
+    study_id: 1,
     title: "study 1",
     createAt: new Date("2024-06-01"),
     image: null,
@@ -36,7 +36,7 @@ export const fullStudyList = [
     code: "123",
   },
   {
-    study_id: new Number(2),
+    study_id: 2,
     title: "study 2",
     createAt: new Date("2024-06-05"),
     image: null,
@@ -47,7 +47,7 @@ export const fullStudyList = [
     code: "456",
   },
   {
-    study_id: new Number(3),
+    study_id: 3,
     title: "new Study",
     createAt: new Date("2024-05-05"),
     image: null,

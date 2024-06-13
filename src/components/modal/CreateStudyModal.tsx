@@ -15,7 +15,7 @@ interface CreateStudyProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (study: {
-    study_id: Number;
+    study_id: number;
     title: string;
     createAt: Date;
     image: File | null;
@@ -34,12 +34,12 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
   const fullStudies = useRecoilValue(fullStudiesState);
 
   // study_id 설정 로직
-  let study_id: Number;
+  let study_id: number;
   if (fullStudies.length > 0) {
     const lastStudyId = fullStudies[fullStudies.length - 1].study_id.valueOf();
-    study_id = new Number(lastStudyId + 1);
+    study_id = lastStudyId + 1;
   } else {
-    study_id = new Number(1);
+    study_id = 1;
   }
   // 백엔드 연결 후 수정 필
 

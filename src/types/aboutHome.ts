@@ -1,4 +1,20 @@
 import { SetStateAction } from "react";
+import { Category } from "./aboutStudy";
+
+export interface TaskListData {
+  category_id: number;
+  subjectName: string;
+  subjectNumber: number;
+  timeLimit: number;
+  memorySize: number;
+  submit: number;
+  answer: number;
+  person: number;
+  answerRate: number;
+  language: string;
+  solveTime: string;
+  codes: string;
+}
 
 export interface CategoryListData {
   listName: string;
@@ -30,8 +46,8 @@ export interface CategoryListMap {
 export interface useHandleToggleType {
   isToggleSelected: boolean[];
   setIsToggleSelected: React.Dispatch<SetStateAction<boolean[]>>;
-  problemList: string[];
-  idx: number;
+  fullCatagoryList: Category[];
+  category_id: number;
 }
 
 export interface useGetCategoryDataType {
