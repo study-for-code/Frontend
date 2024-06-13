@@ -20,8 +20,10 @@ import { Study } from "@/types/aboutStudy";
 import GoormThinking from "@/assets/home/goormThinking.jpg";
 import Plus from "@/assets/home/plus.png";
 import Admin from "@/assets/home/admin.png";
+import { useNavigate } from "react-router-dom";
 
 const StudyList = () => {
+  const navigation = useNavigate();
   const user = useRecoilValue(userState);
   const studies = useRecoilValue(studiesState);
   const setStudies = useSetRecoilState(studiesState);
@@ -78,6 +80,9 @@ const StudyList = () => {
     };
   }, [containerRef]);
 
+  // 관리자 페이지 이동
+  const goToAdmin = () => navigation("/admin");
+
   return (
     <div className="drawer" ref={containerRef}>
       <div>
@@ -108,7 +113,7 @@ const StudyList = () => {
         )}
       </div>
       {user && user.grade === "ADMIN" && (
-        <img src={Admin} className="adminBtn" />
+        <img src={Admin} className="adminBtn" onClick={goToAdmin} />
       )}
 
       <CreateStudyModal

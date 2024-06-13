@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { createContext, useEffect, useState } from "react";
 
 // styles
 import { LoginContainer } from "@/styles/login/loginStyles";
@@ -13,6 +13,8 @@ import SignupSection from "@/components/login/SignupSection";
 
 // types
 import { LoginType } from "@/types/aboutLogin";
+
+export const UserDataContext = createContext<LoginType | null>(null);
 
 const Login = () => {
   const [pwdState, setPwdState] = useState(false);
@@ -29,20 +31,23 @@ const Login = () => {
     }));
   };
 
-  useEffect(() => {
-    console.log("userData: ", userData);
-  }, [userData]);
+  // useEffect(() => {
+  //   console.log("userData: ", userData);
+  // }, [userData]);
 
   return (
     <LoginContainer>
-      <TitleContainer />
-      <InputSection
-        pwdState={pwdState}
-        setPwdState={setPwdState}
-        inputData={inputData}
-      />
-      <WrongMentContainer />
-      <button className="loginBtn">로그인</button>
+      <UserDataContext.Provider value={userData}>
+        <TitleContainer />
+        <InputSection
+          pwdState={pwdState}
+          setPwdState={setPwdState}
+          inputData={inputData}
+        />
+
+        <WrongMentContainer />
+        <button className="loginBtn">로그인</button>
+      </UserDataContext.Provider>
       <DivideSection />
       <KakaoBtnSection />
       <SignupSection />

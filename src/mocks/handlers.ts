@@ -2,6 +2,7 @@ import { categoryList } from "@/constants/CategoryList";
 import { fullStudyList, studyList } from "@/constants/StudyList";
 import { taskList } from "@/constants/TaskList";
 import { userData } from "@/constants/UserData";
+import { problemList } from "@/constants/problemList";
 import { http, HttpResponse } from "msw";
 
 export const handlers = [
@@ -19,6 +20,9 @@ export const handlers = [
   }),
   http.get("/taskList", () => {
     return HttpResponse.json(taskList);
+  }),
+  http.get("/problemList", () => {
+    return HttpResponse.json(problemList);
   }),
   http.get("/todos", () => {
     return HttpResponse.json({

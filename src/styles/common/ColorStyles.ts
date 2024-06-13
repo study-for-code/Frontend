@@ -14,4 +14,7 @@ export const theme = {
   CategoryFontColor: "#797979",
   selectedGray: "#404249",
   inputBorderColor: "#BFBFBF",
+  adminBg: "#2B2D31",
+  adminContentBg: "#313338",
+  adminInputBg: "#404249",
 };

@@ -37,7 +37,6 @@ export const LoginContainer = styled.div`
     font-family: "GmarketSansLight";
     outline: none;
     border-radius: 0.3rem 0.3rem 0 0;
-    color: #efefef;
 
     &:focus {
       border: 2px solid ${theme.mainColor};
