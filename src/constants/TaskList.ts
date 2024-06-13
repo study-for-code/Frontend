@@ -2,15 +2,15 @@ export const taskList = [
   {
     listName: "1주차 문제",
     subjectName: "치킨 배달",
-    subjectNumber: 15686,
-    timeLimit: 1000,
-    memorySize: 512,
-    submit: 91114,
-    answer: 44832,
-    correctPersons: 27111,
-    answerRate: 46.059,
-    language: "Python",
-    solveTime: "20:00",
+    subjectNumber: 15686, // 문제 이름
+    timeLimit: 1000, //  시간 제한
+    memorySize: 512, // 메모리 사이즈
+    submit: 91114, // 모든 정답 제출된 횟수
+    answer: 44832, // 정답
+    correctPersons: 27111, // 맞힌 사람
+    answerRate: 46.059, // 정답 비율
+    language: "Python", // 사용 언어
+    solveTime: "20:00", // 풀이 시간
     codes: "",
   },
   {
