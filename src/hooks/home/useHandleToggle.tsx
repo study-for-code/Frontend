@@ -3,17 +3,17 @@ import { useHandleToggleType } from "@/types/aboutHome";
 const useHandleToggle = ({
   isToggleSelected,
   setIsToggleSelected,
-  problemList,
-  idx,
+  fullCatagoryList,
+  category_id,
 }: useHandleToggleType): (() => void) => {
   function handleToggle() {
     if (isToggleSelected.length > 0) {
       const newArr = [...isToggleSelected];
-      newArr[idx] = !newArr[idx];
+      newArr[category_id] = !newArr[category_id];
       setIsToggleSelected(newArr);
     } else {
-      const newArr: boolean[] = Array(problemList.length).fill(false);
-      newArr[idx] = true;
+      const newArr: boolean[] = Array(fullCatagoryList.length).fill(false);
+      newArr[category_id] = true;
       setIsToggleSelected(newArr);
     }
   }

@@ -1,12 +1,13 @@
 import { User } from "@/types/User";
-import { Study } from "@/types/aboutStudy";
+import { TaskListData } from "@/types/aboutHome";
+import { Category, Study } from "@/types/aboutStudy";
 import { atom } from "recoil";
 
 export const userState = atom<User>({
   key: "userState",
   default: {
-    email: "sfoco@gmail.com",
-    nickname: "sfoco",
+    email: "",
+    nickname: "",
     grade: "MEMBER",
   },
 });
@@ -23,5 +24,20 @@ export const selectedStudyState = atom<Study | null>({
 
 export const fullStudiesState = atom<Study[]>({
   key: "fullStudiesState",
+  default: [],
+});
+
+export const cgListState = atom<Category[]>({
+  key: "cgListState",
+  default: [],
+});
+
+export const fullCategoryListState = atom<Category[]>({
+  key: "fullCategoryListState",
+  default: [],
+});
+
+export const taskListState = atom<TaskListData[]>({
+  key: "taskListState",
   default: [],
 });

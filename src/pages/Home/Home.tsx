@@ -15,28 +15,32 @@ import HamburgerBar from "@/components/home/HamburgerBar";
 
 // types
 import {
-  CategoryListData,
-  CategoryListMap,
   ComponentMap,
   PageKey,
+  TaskListData,
   useHandleToggleType,
 } from "@/types/aboutHome";
 
 // atom
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
+  cgListState,
+  fullCategoryListState,
   fullStudiesState,
   selectedStudyState,
   studiesState,
+  taskListState,
   userState,
 } from "@/atom/stats";
 
 // hooks
 import useHandleToggle from "@/hooks/home/useHandleToggle";
-import useGetCategoryData from "@/hooks/home/useGetCategoryData";
 import useGetUserData from "@/hooks/home/useGetUserData";
 import useGetStudyList from "@/hooks/home/useGetStudyData";
 import useGetFullStudyList from "@/hooks/home/useGetFullStudyData";
+import useGetCGData from "@/hooks/home/useGetCGData";
+import useGetTaskList from "@/hooks/home/useGetTaskData";
+import useGetFullCategoryData from "@/hooks/home/useGetFullCategoryData";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -45,23 +49,24 @@ const Home = () => {
   const [studies, setStudies] = useRecoilState(studiesState);
   const setFullStudies = useSetRecoilState(fullStudiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
+  const setCgList = useSetRecoilState(cgListState);
+  const setTaskList = useSetRecoilState(taskListState);
+  const [fullCatagoryList, setFullCategoryList] = useRecoilState(
+    fullCategoryListState
+  );
 
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
 
-  // 카테고리 데이터
-  const [categoryList, setCategoryList] = useState<CategoryListMap>({});
-
   // 페이지 상태
   const [page, setPage] = useState<PageKey>("defaultPage");
 
-  // 문제 리스트
-  const [problemList, setProblemList] = useState<string[]>([]);
   // 토글 상태 컨트롤
   const [isToggleSelected, setIsToggleSelected] = useState<boolean[]>([]);
+
   // 페이지
-  const [pageData, setPageData] = useState<CategoryListData>({
-    listName: "",
+  const [pageData, setPageData] = useState<TaskListData>({
+    category_id: 0,
     subjectName: "",
     subjectNumber: 0,
     timeLimit: 0,
@@ -75,7 +80,7 @@ const Home = () => {
     codes: "",
   });
 
-  const handlePage = (data: CategoryListData) => {
+  const handlePage = (data: TaskListData) => {
     setPageData(data);
     setPage("codeReview");
   };
@@ -95,21 +100,24 @@ const Home = () => {
     execute();
   };
 
-  const getCategoryData = async () => {
-    const object = {
-      setProblemList,
-      setCategoryList,
-    };
-    const execute = useGetCategoryData(object);
+  const getCgData = useGetCGData(setCgList);
+
+  const getFullCategoryList = async () => {
+    const execute = useGetFullCategoryData({ setFullCategoryList });
     execute();
   };
 
-  const handleToggle = (idx: number) => {
+  const getTaskList = async () => {
+    const execute = useGetTaskList({ setTaskList });
+    execute();
+  };
+
+  const handleToggle = (category_id: number) => {
     const object: useHandleToggleType = {
       isToggleSelected,
       setIsToggleSelected,
-      problemList,
-      idx,
+      fullCatagoryList,
+      category_id,
     };
     const execute = useHandleToggle(object);
     execute();
@@ -133,26 +141,25 @@ const Home = () => {
   const componentToShow = componentMap[page];
 
   useEffect(() => {
-    console.log("pageData: ", pageData);
-    console.log("problemList: ", problemList);
-  }, [pageData, problemList]);
-
-  useEffect(() => {
     if (studies.length > 0 && !selectedStudy) {
       setSelectedStudy(studies[0]);
     }
   }, [studies, selectedStudy]);
 
+  console.log("selectedStudy: ", selectedStudy);
+
   useEffect(() => {
     getUserData();
     getStudyList();
-    getCategoryData();
     getFullStudy();
+    getTaskList();
+    getFullCategoryList();
   }, []);
 
   useEffect(() => {
     if (selectedStudy) {
       setShowHamburgerBar(true);
+      getCgData();
     }
   }, [selectedStudy]);
 
@@ -166,7 +173,6 @@ const Home = () => {
         <HamburgerBar
           handleHamburgerBar={handleHamburgerBar}
           showHamburgerBar={showHamburgerBar}
-          categoryList={categoryList}
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}
           handlePage={handlePage}

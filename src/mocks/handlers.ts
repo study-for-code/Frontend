@@ -1,3 +1,4 @@
+import { categoryList } from "@/constants/CategoryList";
 import { fullStudyList, studyList } from "@/constants/StudyList";
 import { taskList } from "@/constants/TaskList";
 import { userData } from "@/constants/UserData";
@@ -14,6 +15,9 @@ export const handlers = [
     return HttpResponse.json(fullStudyList);
   }),
   http.get("/categoryList", () => {
+    return HttpResponse.json(categoryList);
+  }),
+  http.get("/taskList", () => {
     return HttpResponse.json(taskList);
   }),
   http.get("/todos", () => {

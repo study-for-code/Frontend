@@ -1,5 +1,5 @@
 // types
-import { CategoryListData } from "@/types/aboutHome";
+import { CategoryListData, TaskListData } from "@/types/aboutHome";
 // styles
 import { Container } from "@/styles/home/CodeReviewStyles";
 
@@ -17,7 +17,7 @@ import "ace-builds/src-noconflict/ext-language_tools";
 import * as ace from "ace-builds";
 
 interface CodeReviewType {
-  pageData: CategoryListData;
+  pageData: TaskListData;
 }
 
 const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {

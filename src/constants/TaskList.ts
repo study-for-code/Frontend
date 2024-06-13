@@ -1,6 +1,6 @@
 export const taskList = [
   {
-    listName: "1주차 문제",
+    category_id: 1,
     subjectName: "치킨 배달",
     subjectNumber: 15686,
     timeLimit: 1000,
@@ -14,7 +14,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "1주차 문제",
+    category_id: 1,
     subjectName: "피보나치 함수",
     subjectNumber: 1003,
     timeLimit: 250,
@@ -28,7 +28,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "1주차 문제",
+    category_id: 4,
     subjectName: "굿점원",
     subjectNumber: 1003,
     timeLimit: 1000,
@@ -42,7 +42,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "2주차 문제",
+    category_id: 2,
     subjectName: "어린 왕자",
     subjectNumber: 1004,
     timeLimit: 1000,
@@ -56,7 +56,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "2주차 문제",
+    category_id: 2,
     subjectName: "유기농 배추",
     subjectNumber: 1012,
     timeLimit: 1000,
@@ -70,7 +70,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "2주차 문제",
+    category_id: 5,
     subjectName: "수열 정렬",
     subjectNumber: 1015,
     timeLimit: 2000,
@@ -84,7 +84,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "3주차 문제",
+    category_id: 3,
     subjectName: "거짓말",
     subjectNumber: 1043,
     timeLimit: 2000,
@@ -98,7 +98,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "3주차 문제",
+    category_id: 3,
     subjectName: "설탕 배달",
     subjectNumber: 2839,
     timeLimit: 1000,
@@ -112,7 +112,7 @@ export const taskList = [
     codes: "",
   },
   {
-    listName: "3주차 문제",
+    category_id: 6,
     subjectName: "2×n 타일링",
     subjectNumber: 11726,
     timeLimit: 1,
