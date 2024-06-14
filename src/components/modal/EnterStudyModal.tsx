@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
 
 // style
@@ -33,11 +33,17 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({
     const study = fullStudies.find((study) => study.code === code);
     if (study) {
       onEnterStudy(study);
+      setCode("");
       onClose();
     } else {
-      alert("Invalid study code.");
+      alert("스터디 코드에 해당하는 스터디가 없습니다.");
     }
   };
+
+  const handleClose = useCallback(() => {
+    setCode("");
+    onClose();
+  }, [onClose]);
 
   if (!isOpen) return null;
 
@@ -49,16 +55,23 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({
       <div className="modal-content">
         <div className="modal-header">스터디 입장</div>
         <div className="modal-body">
-          <input
-            type="text"
-            value={code}
-            onChange={handleCodeChange}
-            placeholder="Enter study code"
-          />
+          <div className="text-input-area">
+            <label>입장 코드를 입력하세요.</label>
+            <input
+              type="text"
+              value={code}
+              onChange={handleCodeChange}
+              required
+            />
+          </div>
         </div>
-        <div className="modal-footer">
-          <button onClick={handleEnter}>Enter</button>
-          <button onClick={onClose}>Cancel</button>
+        <div className="btn-area">
+          <button onClick={handleEnter} className="positiveBtn">
+            입장
+          </button>
+          <button onClick={handleClose} className="negativeBtn">
+            취소
+          </button>
         </div>
       </div>
     </ModalContainer>,

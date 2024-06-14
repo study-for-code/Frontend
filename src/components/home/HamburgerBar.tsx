@@ -47,7 +47,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const [isEditing, setIsEditing] = useState(false); // 제목 수정 모드 상태
   const [newTitle, setNewTitle] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false); // 스터디 삭제 모달 상태
-  const [cgList, setCgList] = useRecoilState(cgListState);
+  const cgList = useRecoilValue(cgListState);
 
   let formattedDate = "Invalid Date";
   if (selectedStudy) {

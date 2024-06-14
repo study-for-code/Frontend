@@ -27,10 +27,10 @@ const DeleteStudyModal: React.FC<DeleteStudyProps> = ({
         <div className="modal-body">
           <p>정말 "{studyTitle}" 스터디를 삭제하시겠어요 ?</p>
           <div className="btn-area">
-            <button className="delete-btn" onClick={onConfirm}>
-              예
+            <button className="positiveBtn" onClick={onConfirm}>
+              예, 삭제할게요
             </button>
-            <button className="not-delete-btn" onClick={onClose}>
+            <button className="negativeBtn" onClick={onClose}>
               취소
             </button>
           </div>
