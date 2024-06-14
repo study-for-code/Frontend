@@ -73,22 +73,8 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     border-radius: 50%;
   }
 
-  .optionsContainer {
-    width: 100px;
-    position: absolute;
-    top: 40px;
-    left: 40px;
-    z-index: 1000;
-  }
-
-  .optionButton {
-    font-family: "GmarketSansMedium";
-    color: white;
-    background-color: ${theme.lightGray};
-    height: 30px;
-  }
-
   .hamburgerBarContainer {
+    position: relative;
     width: 40px;
     height: 100%;
     display: flex;
@@ -106,7 +92,8 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
   }
 
   .drawerSection {
-    z-index: 0;
+    position: relative;
+    z-index: 50;
     width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
     height: ${(props) => (props.showhamburgerBar ? "120px" : "40px")};
     display: flex;
@@ -162,6 +149,7 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     visibility: ${(props) => (props.showhamburgerBar ? "none" : "hidden")};
     transition: 0.75s width;
     background-color: ${theme.gray};
+    position: relative;
   }
 
   .categorySpace {
@@ -171,6 +159,7 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     padding: 1rem;
     font-family: "GmarketSansMedium";
     color: ${theme.CategoryFontColor};
+    position: relative;
   }
 
   .algorithmList {
@@ -251,5 +240,23 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
 
   .expansionButton {
     padding: 1rem 1rem 0 1rem;
+  }
+`;
+
+export const OptionsContainer = styled.div`
+  position: fixed;
+  width: 100px;
+  z-index: 1000;
+
+  .optionButton {
+    font-family: "GmarketSansMedium";
+    color: white;
+    background-color: ${theme.lightGray};
+    height: 30px;
+
+    &:hover {
+      background-color: white;
+      color: ${theme.lightGray};
+    }
   }
 `;

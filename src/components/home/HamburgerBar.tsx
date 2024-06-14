@@ -189,14 +189,12 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
           </div>
         )}
       </div>
-      <div className="drawerContent">
-        <CategorySpace
-          categoryList={cgList}
-          isToggleSelected={isToggleSelected}
-          handleToggle={handleToggle}
-          handlePage={handlePage}
-        />
-      </div>
+      <CategorySpace
+        categoryList={cgList}
+        isToggleSelected={isToggleSelected}
+        handleToggle={handleToggle}
+        handlePage={handlePage}
+      />
       <div className="drawerButton">
         <img
           src={LogOut}

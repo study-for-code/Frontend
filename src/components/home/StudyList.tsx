@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 
 // component
 import CreateStudyModal from "../modal/CreateStudyModal";
@@ -22,6 +23,8 @@ import Plus from "@/assets/home/plus.png";
 import Admin from "@/assets/home/admin.png";
 import { useNavigate } from "react-router-dom";
 
+import { OptionsContainer } from "@/styles/home/homeStyles";
+
 const StudyList = () => {
   const navigation = useNavigate();
   const user = useRecoilValue(userState);
@@ -30,19 +33,24 @@ const StudyList = () => {
   const setFullStudies = useSetRecoilState(fullStudiesState);
   const setSelectedStudy = useSetRecoilState(selectedStudyState);
   const [showOptions, setShowOptions] = useState(false);
+  const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isEnterModalOpen, setIsEnterModalOpen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const handlePlusClick = () => {
-    setShowOptions((prevState) => !prevState);
+  const handlePlusClick = (event: React.MouseEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    setMenuPosition({ x: event.clientX, y: event.clientY });
+    setShowOptions(true);
   };
 
   const handleCreateModal = () => {
+    setShowOptions(false);
     setIsCreateModalOpen(!isCreateModalOpen);
   };
 
   const handleEnterModal = () => {
+    setShowOptions(false);
     setIsEnterModalOpen(!isEnterModalOpen);
   };
 
@@ -64,6 +72,9 @@ const StudyList = () => {
     }
   };
 
+  const modalRoot = document.querySelector("#modal-container");
+  if (!modalRoot) return null;
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -84,7 +95,7 @@ const StudyList = () => {
   const goToAdmin = () => navigation("/admin");
 
   return (
-    <div className="drawer" ref={containerRef}>
+    <div className="drawer">
       <div>
         {studies.map((study, index) => (
           <div key={index} onClick={() => handleSelectStudy(study)}>
@@ -99,18 +110,28 @@ const StudyList = () => {
           </div>
         ))}
       </div>
-      <div className="plusContainer">
-        <img src={Plus} onClick={handlePlusClick} />
-        {showOptions && (
-          <div className="optionsContainer">
-            <button className="optionButton" onClick={handleCreateModal}>
-              스터디 생성
-            </button>
-            <button className="optionButton" onClick={handleEnterModal}>
-              스터디 입장
-            </button>
-          </div>
-        )}
+      <div className="plusContainer" onClick={handlePlusClick}>
+        <img src={Plus} />
+        {showOptions &&
+          createPortal(
+            <OptionsContainer
+              className="optionsContainer"
+              ref={containerRef}
+              style={{
+                position: "fixed",
+                top: menuPosition.y,
+                left: menuPosition.x,
+              }}
+            >
+              <button className="optionButton" onClick={handleCreateModal}>
+                스터디 생성
+              </button>
+              <button className="optionButton" onClick={handleEnterModal}>
+                스터디 입장
+              </button>
+            </OptionsContainer>,
+            modalRoot
+          )}
       </div>
       {user && user.grade === "ADMIN" && (
         <img src={Admin} className="adminBtn" onClick={goToAdmin} />
