@@ -49,23 +49,26 @@ export const ModalContainer = styled.div`
 
   .text-input-area > input {
     font-family: "GmarketSansMedium";
+    font-size: 1rem;
     height: 20px;
+    padding: 5px;
     background-color: ${theme.lightGray};
-    color: #fff;
-    border: none;
-    border-bottom: 2px solid ${theme.lightBlack};
+    color: ${theme.mainYellow};
+    border: 2px solid ${theme.lightBlack};
+    border-radius: 5px;
   }
 
   .text-input-area > input:focus {
     outline: none;
-    border-bottom-color: ${theme.mainColor};
+    color: ${theme.lightGray};
+    background-color: #fff;
   }
 
   .image-input-area {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    height: 80px;
+    height: 90px;
   }
 
   .image-input-area > div {
@@ -82,14 +85,20 @@ export const ModalContainer = styled.div`
     color: #fff;
     border-radius: 4px;
     padding: 5px 10px;
-    margin-right: 50px;
+    margin-right: 40px;
   }
 
   .image-preview-container {
     width: 80px;
     height: 80px;
+    border: 5px solid ${theme.lightBlack};
+    border-radius: 50%;
     overflow: hidden;
     position: relative;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .image-preview {

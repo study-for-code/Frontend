@@ -147,15 +147,17 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
                 onChange={handleimageChange}
                 className="real-input"
               />
-              {selectedImage && (
-                <div className="image-preview-container">
+              <div className="image-preview-container">
+                {selectedImage ? (
                   <img
                     src={selectedImage}
                     alt="Selected Preview"
                     className="image-preview"
                   />
-                </div>
-              )}
+                ) : (
+                  <div>image</div>
+                )}
+              </div>
             </div>
             <div className="btn-area">
               <button type="submit" className="positiveBtn">
