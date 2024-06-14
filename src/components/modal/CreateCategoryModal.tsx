@@ -81,6 +81,7 @@ const CreateCategoryModal = React.memo(function CreateCategoryModal({
                 type="text"
                 value={title}
                 onChange={handleTitleChange}
+                maxLength={8}
                 required
               />
             </div>

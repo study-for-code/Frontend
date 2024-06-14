@@ -144,6 +144,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
                     onChange={handleTitleChange}
                     onClick={(e) => e.stopPropagation()}
                     style={{ width: "50px" }}
+                    maxLength={8}
                   />
                   <button onClick={handleTitleSave}>Save</button>
                 </>
