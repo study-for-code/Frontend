@@ -163,18 +163,7 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     transition: 0.75s width;
     background-color: ${theme.gray};
   }
-  .algorithmList {
-    width: 200px;
-    font-size: 1.3rem;
-    text-align: center;
-    padding: 0.5rem;
-    border-radius: 0.5rem;
-    &:hover {
-      transition: 0.3s transform;
-      background-color: ${theme.selectedGray};
-      transform: scale(1.05);
-    }
-  }
+
   .categorySpace {
     display: flex;
     flex-direction: column;
@@ -183,11 +172,50 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     font-family: "GmarketSansMedium";
     color: ${theme.CategoryFontColor};
   }
+
+  .algorithmList {
+    width: 200px;
+    font-size: 1.3rem;
+    text-align: center;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    /* &:hover {
+      transition: 0.3s transform;
+      background-color: ${theme.selectedGray};
+      transform: scale(1.05);
+    } */
+  }
+
+  .plusBtn {
+    border-radius: 30%;
+    &:hover {
+      transition: 0.3s transform;
+      background-color: ${theme.selectedGray};
+      transform: scale(1.05);
+    }
+  }
+
   .categoryRow {
     padding: 0.5rem;
     display: flex;
     flex-direction: column;
   }
+
+  .algorithmProblems {
+    padding: 0.2rem;
+    border-radius: 0.5rem;
+    &:hover {
+      &:hover {
+        transition: 0.3s transform;
+        background-color: ${theme.selectedGray};
+        transform: scale(1.05);
+      }
+    }
+  }
+
   .contentSection {
     z-index: 0;
     transition: 0.5s width ease-in-out;
@@ -213,25 +241,15 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     padding: 0.5rem 0 0.5rem 1rem;
     font-size: 1.3rem;
   }
+
   .userSection {
     position: absolute;
     right: 0;
     height: 96vh;
     background-color: ${theme.gray};
   }
+
   .expansionButton {
     padding: 1rem 1rem 0 1rem;
-  }
-
-  .algorithmProblems {
-    padding: 0.2rem;
-    border-radius: 0.5rem;
-    &:hover {
-      &:hover {
-        transition: 0.3s transform;
-        background-color: ${theme.selectedGray};
-        transform: scale(1.05);
-      }
-    }
   }
 `;

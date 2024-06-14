@@ -46,6 +46,7 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
   const [title, setTitle] = useState("");
   const createAt = new Date();
   const [image, setImage] = useState<File | null>(null);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
   const host = user;
   const [code, setCode] = useState("");
 
@@ -56,6 +57,7 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
       setTitle("");
       setImage(null);
       setCode("");
+      setSelectedImage(null);
       onClose();
     },
     [title, image, onSubmit, onClose]
@@ -78,9 +80,30 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
   const handleimageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setImage(e.target.files ? e.target.files[0] : null);
+      const file = e.target.files ? e.target.files[0] : null;
+
+      if (file) {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          if (typeof reader.result === "string") {
+            setSelectedImage(reader.result);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
     },
     []
   );
+
+  console.log(selectedImage);
+
+  const handleClose = useCallback(() => {
+    setTitle("");
+    setImage(null);
+    setCode("");
+    setSelectedImage(null);
+    onClose();
+  }, [onClose]);
 
   console.log("study id : ", study_id);
 
@@ -95,8 +118,8 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
         <div className="modal-header">스터디 생성</div>
         <div className="modal-body">
           <form onSubmit={handleSubmit}>
-            <div className="create-study-name">
-              <label>스터디 이름</label>
+            <div className="text-input-area">
+              <label>스터디 이름 :</label>
               <input
                 type="text"
                 value={title}
@@ -104,8 +127,8 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
                 required
               />
             </div>
-            <div className="create-study-code">
-              <label>스터디 입장 코드</label>
+            <div className="text-input-area">
+              <label>스터디 입장 코드 :</label>
               <input
                 type="text"
                 value={code}
@@ -113,15 +136,38 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
                 required
               />
             </div>
-            <div className="create-study-image">
-              <label>스터디 사진</label>
-              <input type="file" onChange={handleimageChange} />
+            <div className="image-input-area">
+              <div>스터디 사진</div>
+              <label className="fake-input" htmlFor="file-input">
+                파일 선택
+              </label>
+              <input
+                type="file"
+                id="file-input"
+                onChange={handleimageChange}
+                className="real-input"
+              />
+              {selectedImage && (
+                <div className="image-preview-container">
+                  <img
+                    src={selectedImage}
+                    alt="Selected Preview"
+                    className="image-preview"
+                  />
+                </div>
+              )}
             </div>
-            <div className="modal-footer">
-              <button type="button" onClick={onClose}>
+            <div className="btn-area">
+              <button type="submit" className="positiveBtn">
+                생성
+              </button>
+              <button
+                type="button"
+                onClick={handleClose}
+                className="negativeBtn"
+              >
                 취소
               </button>
-              <button type="submit">생성</button>
             </div>
           </form>
         </div>

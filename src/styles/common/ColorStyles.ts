@@ -17,4 +17,6 @@ export const theme = {
   adminBg: "#2B2D31",
   adminContentBg: "#313338",
   adminInputBg: "#404249",
+  btnGray: "#C1C1C1",
+  btnWhite: "#565656",
 };
