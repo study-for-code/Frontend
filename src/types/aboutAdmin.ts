@@ -15,3 +15,25 @@ export interface problemListType {
   answerRate: number; // 정답 비율
   solveTime: string; // 풀이 시간
 }
+
+export interface testCaseType {
+  input: string;
+  output: string;
+}
+
+export interface limitationType {
+  limitation: string;
+}
+
+export interface createProblemType {
+  problemName: string;
+  timeLimit: number;
+  submitAnswer: number;
+  memoryLimit: number;
+  correctPerson: number;
+  answer: number;
+  answerRate: string;
+  testCases: testCaseType[];
+  inputProblem: string;
+  limitations: string[];
+}

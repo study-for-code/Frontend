@@ -1,7 +1,6 @@
 // img
 import TagIcon from "@/assets/admin/Status_list.png";
 import TimeLimitIncon from "@/assets/admin/Time_fill.png";
-import SolveTimeIcon from "@/assets/admin/Clock_fill.png";
 import MemoryLimitIcon from "@/assets/admin/Folder_fill.png";
 import AnswerRateIcon from "@/assets/admin/Percent.png";
 
@@ -31,15 +30,6 @@ const SlideModalNavBar = ({ modalData }: SlideModalNavBarType) => {
         </div>
         <div className="row">
           <span>{modalData.timeLimit}ms</span>
-        </div>
-      </div>
-      <div className="modalRow">
-        <div className="row">
-          <img src={SolveTimeIcon} />
-          <span>풀이 시간</span>
-        </div>
-        <div className="row">
-          <span>{modalData.solveTime}</span>
         </div>
       </div>
       <div className="modalRow">
