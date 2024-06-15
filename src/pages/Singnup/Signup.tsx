@@ -19,19 +19,24 @@ const Signup = () => {
     nickname: "",
     password: "",
     confirmPassword: "",
-  })
+    status: 0,
+    message: "",
+  });
 
   useEffect(() => {
-    console.log("signupData: ",signupData)
-  },[signupData]);
-
-
+    console.log("signupData: ", signupData);
+  }, [signupData]);
 
   return (
-    <SignupContainer>
+    <SignupContainer message={signupData.message}>
       <ContextData.Provider value={signupData}>
         <TitleContainer />
-      <SignupInputSection signupData={signupData} setSignupData={setSignupData} pwdState={pwdState} setPwdState={setPwdState} />
+        <SignupInputSection
+          signupData={signupData}
+          setSignupData={setSignupData}
+          pwdState={pwdState}
+          setPwdState={setPwdState}
+        />
       </ContextData.Provider>
     </SignupContainer>
   );
