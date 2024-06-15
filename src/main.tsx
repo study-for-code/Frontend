@@ -5,10 +5,10 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter } from "react-router-dom";
 import { RecoilRoot } from "recoil";
 
-import { worker } from "./mocks/browser.ts";
-if (import.meta.env.NODE_ENV !== "development") {
-  await worker.start();
-}
+// import { worker } from "./mocks/browser.ts";
+// if (import.meta.env.NODE_ENV !== "development") {
+//   await worker.start();
+// }
 
 const queryClient = new QueryClient();
 

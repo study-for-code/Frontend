@@ -1,12 +1,14 @@
 import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 
-export const AdminContainer = styled.div`
+export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
   height: auto;
-  background-color: ${theme.adminBg};
+  background-color: ${(props) =>
+    props.testcasemodal === true ? "#6F7074" : `${theme.adminBg}`};
 
   .header {
-    background-color: ${theme.black};
+    background-color: ${(props) =>
+      props.testcasemodal === true ? `rgba(35, 35, 35, 0.3)` : theme.black};
     color: white;
     font-family: "GmarketSansMedium";
     padding: 0.5rem 0 0.5rem 0.5rem;
@@ -58,6 +60,8 @@ export const AdminContainer = styled.div`
 
   .content {
     padding: 3rem 1rem 1rem 2rem;
+    background-color: ${(props) =>
+      props.testcasemodal === true ? "#6F7074" : `${theme.adminBg}`};
   }
   .title {
     font-family: "GmarketSansBold";
@@ -69,13 +73,18 @@ export const AdminContainer = styled.div`
     height: 50%;
     margin-top: 3rem;
     margin-bottom: 1rem;
-    background-color: ${theme.black};
+    background-color: ${(props) =>
+      props.testcasemodal === true
+        ? `rgba(35, 35, 35, 0.3)`
+        : `${theme.black}`};
+
     padding: 1rem;
     border-radius: 0.5rem;
   }
   .topSection {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
+    align-items: center;
     margin-bottom: 1rem;
   }
   .imgBg {
@@ -87,18 +96,19 @@ export const AdminContainer = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: ${theme.black};
+    background-color: ${(props) =>
+      props.testcasemodal === true ? `rgba(35, 35, 35, 0.3)` : theme.black};
     border-radius: 50%;
   }
   .img {
     width: 70px;
     height: 70px;
+    opacity: ${(props) => (props.testcasemodal === true ? 0.7 : 1)};
   }
   .userName {
     font-family: "GmarketSansBold";
     color: white;
     font-size: 1.1rem;
-    margin-left: 6rem;
   }
   .buttonContainer {
     width: 56%;
@@ -111,7 +121,8 @@ export const AdminContainer = styled.div`
     width: 9vw;
     font-size: 1.1rem;
     font-family: "GmarketSansBold";
-    background-color: ${theme.mainColor};
+    background-color: ${(props) =>
+      props.testcasemodal === true ? `rgba(45,168,166,0.3)` : theme.mainColor};
     color: white;
     outline: none;
     border: none;
@@ -131,7 +142,10 @@ export const AdminContainer = styled.div`
     font-family: "GmarketSansBold";
     padding-top: 0.5rem;
     border-radius: 0.3rem;
-    background-color: ${theme.adminContentBg};
+    background-color: ${(props) =>
+      props.testcasemodal === true
+        ? `rgba(49,51,56,0.3)`
+        : theme.adminContentBg};
     color: ${theme.mainColor};
 
     border: 1px solid ${theme.mainColor};
@@ -142,6 +156,55 @@ export const AdminContainer = styled.div`
       outline: none;
       border: none;
     }
+  }
+  .testCaseModal {
+    position: absolute;
+    padding: 1rem;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 50%;
+    height: 70%;
+    border-radius: 0.5rem;
+    background-color: ${theme.lightBlack};
+  }
+  .testCaseModalContents {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.5rem;
+  }
+  .testCaseRow {
+    display: flex;
+    flex-direction: row;
+  }
+  .testCaseCol {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  }
+  .testCaseTitle {
+    font-size: 1.2rem;
+    text-align: center;
+    font-family: "GmarketSansBold";
+    border-bottom: 1px solid white;
+    color: white;
+  }
+  .testCaseInput {
+    width: 2.5vw;
+    text-align: center;
+    font-size: 1.2rem;
+    font-family: "GmarketSansBold";
+    border-bottom: 1px solid white;
+    color: white;
+    margin-bottom: 0.5rem;
+  }
+
+  .testCaseCol {
+    height: 25%;
+    display: flex;
+    flex-direction: column;
   }
   .bottomSection {
     width: 90%;
@@ -168,8 +231,10 @@ export const AdminContainer = styled.div`
     margin-bottom: 1rem;
   }
   .textareaBg {
-    background-color: #1e1f22;
-    padding: 0.8rem;
+    background-color: ${(props) =>
+      props.testcasemodal === true ? `rgba(29,31,34,0.3)` : "#1e1f22"};
+    padding: 1rem;
+
     textarea {
       width: 100%;
       height: auto;
@@ -177,10 +242,29 @@ export const AdminContainer = styled.div`
       font-size: 1.1rem;
       font-family: "GmarketSansLight";
       border: 1px solid white;
-      background-color: #1e1f22;
+      background-color: ${(props) =>
+        props.testcasemodal === true ? `rgba(29,31,34,0.3)` : "#1e1f22"};
     }
   }
-  .limitElementSection {
+
+  .testCaseButtonContainer {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
+  }
+  .testCaseButton {
+    width: 7vw;
+    height: 4vh;
+    border-radius: 0.3rem;
+    margin-right: 0.4rem;
+    background-color: #565656;
+    border: 1px solid #999999;
+
+    &:hover {
+      background-color: #999999;
+    }
   }
 
   .sectionTitle2 {
@@ -193,7 +277,7 @@ export const AdminContainer = styled.div`
     margin-bottom: 2rem;
   }
   .listElement {
-    margin-bottom: 0.5rem;
+    margin-bottom: 3rem;
   }
   .problemList {
     font-family: "GmarketSansMedium";
@@ -325,10 +409,11 @@ export const ProblemDetailInput = styled.input`
   }
 `;
 
-export const LimitElmentInput = styled.input`
+export const LimitElementInput = styled.input<{ testcasemodal: boolean }>`
   width: 190px;
   height: 20px;
-  background-color: ${theme.adminInputBg};
+  background-color: ${(props) =>
+    props.testcasemodal === true ? `rgba(64,66,73,0.3)` : theme.adminInputBg};
   font-family: "GmarketSansMedium";
   color: white;
   outline: none;

@@ -14,7 +14,6 @@ import { problemListType } from "@/types/aboutAdmin";
 // styles
 import { ManageProblemsContainer } from "@/styles/admin/adminStyles";
 import SlideModalNavBar from "./ManageProblems/SlideModalNavBar";
-import ProblemList from "./ManageProblems/ProblemList";
 
 const ManageProblems = () => {
   // modal 데이터
@@ -71,10 +70,10 @@ const ManageProblems = () => {
       </div>
       {/* 문제 리스트 */}
       {/* 데이터가 가끔 못 받아오는 경우가 있어서 해결해야함 */}
-      <ProblemList
+      {/* <ProblemList
         problemList={problemList}
         getSelectedData={getSelectedData}
-      />
+      /> */}
       {/* 문제 리스트 */}
       <div className="slideModal">
         <nav style={{ padding: "0.5rem" }}>
@@ -84,7 +83,7 @@ const ManageProblems = () => {
           />
         </nav>
         {/* 내용 부분 */}
-        {modalState && (
+        {modalState ? (
           <div className="slideModalContent">
             <div className="slideModalTitle">
               {modalData.subjectNumber} {modalData.subjectName}
@@ -101,7 +100,7 @@ const ManageProblems = () => {
             </div>
             {/* 모달 content */}
           </div>
-        )}
+        ) : null}
       </div>
     </ManageProblemsContainer>
   );
