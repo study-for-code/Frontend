@@ -253,6 +253,7 @@ export const OptionsContainer = styled.div`
     color: white;
     background-color: ${theme.lightGray};
     height: 30px;
+    width: 100%;
 
     &:hover {
       background-color: white;

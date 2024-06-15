@@ -124,6 +124,7 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
                 type="text"
                 value={title}
                 onChange={handletitleChange}
+                maxLength={8}
                 required
               />
             </div>
