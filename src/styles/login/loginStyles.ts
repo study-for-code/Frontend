@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
+import { showWrongMent, showWrongMent2 } from "../keyframes";
+import { LoginType } from "@/types/aboutLogin";
+import { css } from "styled-components";
 
-export const LoginContainer = styled.div`
+export const LoginContainer = styled.div<{ mentstate: boolean }>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -82,10 +85,18 @@ export const LoginContainer = styled.div`
       border-radius: 0 0 0.3rem 0.3rem;
     }
   }
-
   .wrongMent {
     color: ${theme.wrongMent};
     font-family: "GmarketSansLight";
+    margin-bottom: 1rem;
+    animation: ${({ mentstate }) =>
+      mentstate
+        ? css`
+            ${showWrongMent} 0.5s linear
+          `
+        : css`
+            ${showWrongMent2} 0.5s linear
+          `};
   }
 
   .loginBtn {
@@ -158,6 +169,38 @@ export const LoginContainer = styled.div`
     &:hover {
       transition: 0.3s transform;
       transform: scale(1.1);
+    }
+  }
+`;
+
+export const LoginLoaderContainer = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  .loader {
+    color: ${theme.black};
+    font-family: Consolas, Menlo, Monaco, monospace;
+    font-weight: bold;
+    font-size: 78px;
+    opacity: 0.8;
+  }
+  .loader:before {
+    content: "{";
+    display: inline-block;
+    animation: pulse 0.4s alternate infinite ease-in-out;
+  }
+  .loader:after {
+    content: "}";
+    display: inline-block;
+    animation: pulse 0.4s 0.3s alternate infinite ease-in-out;
+  }
+
+  @keyframes pulse {
+    to {
+      transform: scale(0.8);
+      opacity: 0.5;
     }
   }
 `;

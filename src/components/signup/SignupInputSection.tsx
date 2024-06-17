@@ -38,20 +38,6 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
     }));
   };
 
-  const get = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/members`
-      );
-      console.log(response);
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
-  useEffect(() => {
-    get();
-  }, []);
   // 회원가입
   const signup = async () => {
     try {

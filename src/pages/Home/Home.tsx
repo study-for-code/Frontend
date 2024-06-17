@@ -42,8 +42,14 @@ import useGetCGData from "@/hooks/home/useGetCGData";
 import useGetTaskList from "@/hooks/home/useGetTaskData";
 import useGetFullCategoryData from "@/hooks/home/useGetFullCategoryData";
 
+// libraries
+import axios from "axios";
+import { useCookies } from "react-cookie";
+
 const Home = () => {
   const navigate = useNavigate();
+  const [cookies] = useCookies(["accessToken"]);
+  const { accessToken } = cookies;
 
   const setUser = useSetRecoilState(userState);
   const [studies, setStudies] = useRecoilState(studiesState);
@@ -162,6 +168,9 @@ const Home = () => {
       getCgData();
     }
   }, [selectedStudy]);
+
+  const createAt = new Date();
+  console.log("createAt: ", createAt);
 
   return (
     <Container showhamburgerBar={showHamburgerBar}>

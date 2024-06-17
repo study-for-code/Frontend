@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useEffect } from "react";
 import ReactDOM from "react-dom";
 
 // type
@@ -10,6 +10,7 @@ import { fullStudiesState } from "@/atom/stats";
 
 // style
 import { ModalContainer } from "@/styles/modal/modalStyles";
+import axios from "axios";
 
 interface CreateStudyProps {
   isOpen: boolean;
@@ -34,30 +35,51 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
   const fullStudies = useRecoilValue(fullStudiesState);
 
   // study_id 설정 로직
-  let study_id: number;
-  if (fullStudies.length > 0) {
-    const lastStudyId = fullStudies[fullStudies.length - 1].study_id.valueOf();
-    study_id = lastStudyId + 1;
-  } else {
-    study_id = 1;
-  }
+  // let study_id: number;
+  // if (fullStudies.length > 0) {
+  //   const lastStudyId = fullStudies[fullStudies.length - 1].study_id.valueOf();
+  //   study_id = lastStudyId + 1;
+  // } else {
+  //   study_id = 1;
+  // }
   // 백엔드 연결 후 수정 필
 
+  // 스터디 이름
   const [title, setTitle] = useState("");
+  // 생성 일시
   const createAt = new Date();
   const [image, setImage] = useState<File | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  // null 말고 "" 이렇게 기본값 넣어주시면 됩니다.
+  const [selectedImage, setSelectedImage] = useState<string>("");
   const host = user;
+  // 입장 코드
   const [code, setCode] = useState("");
+
+  const [userData, setUserData] = useState({
+    title: "",
+    code: "",
+    selectedImage: "",
+  });
+
+  const handleInputData = (type: string, value: string) => {
+    setUserData((prev) => ({
+      ...prev,
+      [type]: value,
+    }));
+  };
+
+  useEffect(() => {
+    console.log("userData: ", userData);
+  }, [userData]);
 
   const handleSubmit = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
-      onSubmit({ study_id, title, createAt, image, host, code });
+      // onSubmit({ study_id, title, createAt, image, host, code });
       setTitle("");
       setImage(null);
       setCode("");
-      setSelectedImage(null);
+      setSelectedImage("");
       onClose();
     },
     [title, image, onSubmit, onClose]
@@ -95,22 +117,38 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
     []
   );
 
-  console.log(selectedImage);
+  // console.log("selectedImage: ", selectedImage);
 
   const handleClose = useCallback(() => {
     setTitle("");
     setImage(null);
     setCode("");
-    setSelectedImage(null);
+    setSelectedImage("");
     onClose();
   }, [onClose]);
 
-  console.log("study id : ", study_id);
+  // console.log("study id : ", study_id);
 
   if (!isOpen) return null;
 
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
+
+  // api 생성
+  const createStudy = async () => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        {
+          id: code,
+          title,
+        }
+      );
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    }
+  };
 
   return ReactDOM.createPortal(
     <ModalContainer>
@@ -123,7 +161,8 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
               <input
                 type="text"
                 value={title}
-                onChange={handletitleChange}
+                name="title"
+                onChange={(e) => handleInputData(e.target.name, e.target.value)}
                 maxLength={8}
                 required
               />
@@ -133,7 +172,8 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
               <input
                 type="text"
                 value={code}
-                onChange={handlecodeChange}
+                name="code"
+                onChange={(e) => handleInputData(e.target.name, e.target.value)}
                 required
               />
             </div>
@@ -161,7 +201,10 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
               </div>
             </div>
             <div className="btn-area">
-              <button type="submit" className="positiveBtn">
+              {/* <button type="submit" className="positiveBtn">
+                생성
+              </button> */}
+              <button onClick={createStudy} className="positiveBtn">
                 생성
               </button>
               <button

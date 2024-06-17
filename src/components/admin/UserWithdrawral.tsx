@@ -1,4 +1,4 @@
-import { UserWithdrawContainer } from "@/styles/admin/userWithDrawralStyles";
+import { UserWithdrawContainer } from "@/styles/admin/UserWithDrawralStyles";
 
 const UserWithdrawral = () => {
   return (
