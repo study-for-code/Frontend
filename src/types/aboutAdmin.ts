@@ -30,7 +30,6 @@ export interface createProblemType {
   timeLimit: number;
   submitAnswer: number;
   memoryLimit: number;
-  correctPerson: number;
   answer: number;
   answerRate: string;
   testCases: testCaseType[];

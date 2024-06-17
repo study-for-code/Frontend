@@ -2,7 +2,6 @@ import { useContext, useEffect, useState } from "react";
 // styles
 import { LimitElementInput } from "@/styles/admin/adminStyles";
 // img
-import profileImg from "@/assets/admin/casual_man.png";
 
 // apis
 import { TestCaseModalContext } from "@/pages/Admin/Admin";
@@ -14,8 +13,12 @@ import {
   limitationType,
   testCaseType,
 } from "@/types/aboutAdmin";
+
+// componets
 import ProblemDetailSection from "@/components/admin/CreateProblems/ProblemDetailSection";
-import ProblemInputSection from "./CreateProblems/ProblemInputSection";
+import ProblemInputSection from "@/components/admin/CreateProblems/ProblemInputSection";
+
+// libraries
 import axios from "axios";
 
 const CreateProblems = () => {
@@ -44,7 +47,6 @@ const CreateProblems = () => {
     memoryLimit: 0, // 메모리 제한
     submitAnswer: 0, // 전체 정답 제출 횟수
     answer: 0, // 제출 된 정답 코드들중 통과한 횟수
-    correctPerson: 0, // 맞힌 사람
     answerRate: "", // 정답 비율
     testCases: [
       {
@@ -103,9 +105,9 @@ const CreateProblems = () => {
   };
 
   useEffect(() => {
-    console.log("testCaseData: ", testCaseData);
-    console.log("createProblem: ", createProblem);
-  }, [createProblem, testCaseData]);
+    // console.log("createProblem: ", createProblem);
+    console.log("testCases: ", testCases);
+  }, [testCases]);
 
   return (
     <div className="content">
@@ -136,6 +138,7 @@ const CreateProblems = () => {
                 openTestCase={openTestCase}
                 testCases={testCases}
                 setCreateProblem={setCreateProblem}
+                setTestCaseData={setTestCaseData}
               />
             )}
           </div>

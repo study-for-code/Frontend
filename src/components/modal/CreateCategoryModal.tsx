@@ -26,29 +26,29 @@ const CreateCategoryModal = React.memo(function CreateCategoryModal({
   const fullCategoryList = useRecoilValue(fullCategoryListState);
   const setFullCategoryList = useSetRecoilState(fullCategoryListState);
 
-  let category_id: number;
-  if (fullCategoryList.length > 0) {
-    const lastCategoryId =
-      fullCategoryList[fullCategoryList.length - 1].category_id.valueOf();
-    category_id = lastCategoryId + 1;
-  } else {
-    category_id = 1;
-  }
+  // let category_id: number;
+  // if (fullCategoryList.length > 0) {
+  //   const lastCategoryId =
+  //     fullCategoryList[fullCategoryList.length - 1].category_id.valueOf();
+  //   category_id = lastCategoryId + 1;
+  // } else {
+  //   category_id = 1;
+  // }
 
   const study_id = selectedStudy ? selectedStudy.study_id : 1;
 
   const [title, setTitle] = useState("");
 
-  const handleSubmit = useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      const newCategory = { category_id, title, study_id };
-      onSubmit(newCategory);
-      setTitle("");
-      onClose();
-    },
-    [title, category_id, study_id, onSubmit, setFullCategoryList, onClose]
-  );
+  // const handleSubmit = useCallback(
+  //   (e: React.FormEvent) => {
+  //     e.preventDefault();
+  //     const newCategory = { category_id, title, study_id };
+  //     onSubmit(newCategory);
+  //     setTitle("");
+  //     onClose();
+  //   },
+  //   [title, category_id, study_id, onSubmit, setFullCategoryList, onClose]
+  // );
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -62,7 +62,7 @@ const CreateCategoryModal = React.memo(function CreateCategoryModal({
     onClose();
   }, [onClose]);
 
-  console.log("category id : ", category_id);
+  // console.log("category id : ", category_id);
 
   if (!isOpen) return null;
 
@@ -74,7 +74,8 @@ const CreateCategoryModal = React.memo(function CreateCategoryModal({
       <div className="modal-content">
         <div className="modal-header">카테고리 생성</div>
         <div className="modal-body">
-          <form onSubmit={handleSubmit}>
+          <form>
+            {/* <form onSubmit={handleSubmit}> */}
             <div className="text-input-area">
               <label>카테고리 이름 :</label>
               <input

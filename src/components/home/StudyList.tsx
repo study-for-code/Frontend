@@ -6,7 +6,7 @@ import CreateStudyModal from "../modal/CreateStudyModal";
 import EnterStudyModal from "../modal/EnterStudyModal";
 
 //atom
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
   fullStudiesState,
   selectedStudyState,
@@ -28,8 +28,10 @@ import { OptionsContainer } from "@/styles/home/homeStyles";
 const StudyList = () => {
   const navigation = useNavigate();
   const user = useRecoilValue(userState);
-  const studies = useRecoilValue(studiesState);
-  const setStudies = useSetRecoilState(studiesState);
+  // const studies = useRecoilValue(studiesState);
+  // const setStudies = useSetRecoilState(studiesState);
+  // 아래와 같이 하나로 줄일 수 있습니다!
+  const [studies, setStudies] = useRecoilState(studiesState);
   const setFullStudies = useSetRecoilState(fullStudiesState);
   const setSelectedStudy = useSetRecoilState(selectedStudyState);
   const [showOptions, setShowOptions] = useState(false);
@@ -97,7 +99,7 @@ const StudyList = () => {
   return (
     <div className="drawer">
       <div>
-        {studies.map((study, index) => (
+        {/* {studies.map((study, index) => (
           <div key={index} onClick={() => handleSelectStudy(study)}>
             <img
               src={
@@ -108,7 +110,7 @@ const StudyList = () => {
               className="element1"
             />
           </div>
-        ))}
+        ))} */}
       </div>
       <div className="plusContainer" onClick={handlePlusClick}>
         <img src={Plus} />

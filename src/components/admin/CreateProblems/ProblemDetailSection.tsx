@@ -39,12 +39,6 @@ const ProblemDetailSection = ({ inputData }: problemDetailSectionType) => {
       />
       <ProblemDetailInput
         className="problemDetailInput"
-        placeholder="맞힌 사람"
-        name="correctPerson"
-        onChange={(e) => inputData(e.target.name, e.target.value)}
-      />
-      <ProblemDetailInput
-        className="problemDetailInput"
         placeholder="정답 비율"
         name="answerRate"
         onChange={(e) => inputData(e.target.name, e.target.value)}

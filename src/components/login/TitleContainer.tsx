@@ -10,7 +10,6 @@ import { ContextData } from "@/pages/Singnup/Signup";
 
 const TitleContainer = () => {
   const userData = useContext<signupDataType | null>(ContextData);
-  console.log("TitleContainer: ", userData);
   return (
     <>
       {userData?.status === 200 ? null : (

@@ -159,6 +159,7 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
   }
   .testCaseModal {
     position: absolute;
+    overflow-y: scroll;
     padding: 1rem;
     top: 50%;
     left: 50%;
@@ -167,11 +168,16 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
     height: 70%;
     border-radius: 0.5rem;
     background-color: ${theme.lightBlack};
+    -ms-overflow-style: none; /* 익스플로러와 엣지의 경우 */
+  }
+  .testCaseModal::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
   }
   .testCaseModalContents {
     height: auto;
     display: flex;
     flex-direction: column;
+
     margin-top: 1.5rem;
   }
   .testCaseRow {
