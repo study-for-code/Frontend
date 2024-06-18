@@ -1,55 +1,29 @@
 import React, { useState, useCallback } from "react";
 import ReactDOM from "react-dom";
 import { ModalContainer } from "@/styles/modal/modalStyles";
-import { useRecoilValue, useSetRecoilState } from "recoil";
-import { fullCategoryListState } from "@/atom/stats";
-import { Study } from "@/types/aboutStudy";
 
 interface CreateCategoryProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (category: {
-    category_id: number;
-    title: string;
-    study_id: number;
-  }) => void;
-  selectedStudy: Study | null;
+  onSubmit: (title: string) => void;
 }
 
 const CreateCategoryModal = React.memo(function CreateCategoryModal({
   isOpen,
   onClose,
   onSubmit,
-  selectedStudy,
 }: CreateCategoryProps) {
-  // category_id 설정 로직
-  const fullCategoryList = useRecoilValue(fullCategoryListState);
-  const setFullCategoryList = useSetRecoilState(fullCategoryListState);
+  const [title, setTitle] = useState<string>("");
 
-  let category_id: number;
-  if (fullCategoryList.length > 0) {
-    const lastCategory = fullCategoryList[fullCategoryList.length - 1];
-    const lastCategoryId =
-      lastCategory && lastCategory.category_id
-        ? lastCategory.category_id.valueOf()
-        : 0;
-    category_id = lastCategoryId + 1;
-  } else {
-    category_id = 1;
-  }
-
-  const [title, setTitle] = useState("");
-
-  // const handleSubmit = useCallback(
-  //   (e: React.FormEvent) => {
-  //     e.preventDefault();
-  //     const newCategory = { category_id, title, study_id };
-  //     onSubmit(newCategory);
-  //     setTitle("");
-  //     onClose();
-  //   },
-  //   [title, category_id, study_id, onSubmit, setFullCategoryList, onClose]
-  // );
+  const handleSubmit = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      onSubmit(title);
+      setTitle("");
+      onClose();
+    },
+    [title, onSubmit, onClose]
+  );
 
   const handleTitleChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -63,8 +37,6 @@ const CreateCategoryModal = React.memo(function CreateCategoryModal({
     onClose();
   }, [onClose]);
 
-  // console.log("category id : ", category_id);
-
   if (!isOpen) return null;
 
   const modalRoot = document.querySelector("#modal-container");
@@ -75,8 +47,7 @@ const CreateCategoryModal = React.memo(function CreateCategoryModal({
       <div className="modal-content">
         <div className="modal-header">카테고리 생성</div>
         <div className="modal-body">
-          <form>
-            {/* <form onSubmit={handleSubmit}> */}
+          <form onSubmit={handleSubmit}>
             <div className="text-input-area">
               <label>카테고리 이름 :</label>
               <input

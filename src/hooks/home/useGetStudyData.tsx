@@ -1,8 +1,6 @@
 import { Study } from "@/types/aboutStudy";
 import axios from "axios";
 
-import { useCookies } from "react-cookie";
-
 interface useGetStudyListType {
   setStudies: React.Dispatch<React.SetStateAction<Study[]>>;
   accessToken: string;

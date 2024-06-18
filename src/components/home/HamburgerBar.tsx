@@ -17,12 +17,7 @@ import CategorySpace from "./CategorySpace";
 
 // atom
 import { useRecoilState, useRecoilValue } from "recoil";
-import {
-  cgListState,
-  selectedStudyState,
-  studiesState,
-  userState,
-} from "@/atom/stats";
+import { selectedStudyState, studiesState, userState } from "@/atom/stats";
 
 // types
 import { TaskListData } from "@/types/aboutHome";
@@ -51,7 +46,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const [isEditing, setIsEditing] = useState(false); // 제목 수정 모드 상태
   const [newTitle, setNewTitle] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false); // 스터디 삭제 모달 상태
-  const cgList = useRecoilValue(cgListState);
   const [ownerName, setOwnerName] = useState<string>("");
 
   const [cookies] = useCookies(["accessToken"]);
@@ -122,7 +116,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
             headers: headers,
           }
         );
-        console.log(response);
         const data = response.data;
         setStudies(data.results);
         setSelectedStudy(data.results[0]);
@@ -157,7 +150,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const handleDeleteStudy = () => {
     if (selectedStudy) {
       onDelete(selectedStudy.studyId);
-      setSelectedStudy(null); // 선택된 스터디 초기화
       handleHamburgerBar();
     }
   };
@@ -175,8 +167,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
           headers: headers,
         }
       );
-
-      console.log(response.data);
       refreshStudylist(response);
     } catch (e) {
       if (axios.isAxiosError(e)) {
@@ -207,7 +197,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
 
   return (
     <div className="hamburgerBarContainer">
-      <div className="drawerSection" onClick={handleHamburgerBar}>
+      <div className="drawerSection">
         <div className="hamburgerbutton">
           {showHamburgerBar && selectedStudy && (
             <div className="studyName">
@@ -270,17 +260,21 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
             </div>
           )}
 
-          <img src={Hamburger} style={{ marginRight: "1rem" }} />
+          <img
+            src={Hamburger}
+            style={{ marginRight: "1rem" }}
+            onClick={handleHamburgerBar}
+          />
         </div>
         {showHamburgerBar && selectedStudy && (
           <div className="StudyContent">
             <div>개설 날짜: {formattedDate}</div>
             <div>개설자: {ownerName}</div>
+            <div>입장코드: {selectedStudy.joinCode}</div>
           </div>
         )}
       </div>
       <CategorySpace
-        categoryList={cgList}
         isToggleSelected={isToggleSelected}
         handleToggle={handleToggle}
         handlePage={handlePage}

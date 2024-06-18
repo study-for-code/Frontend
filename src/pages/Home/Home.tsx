@@ -24,7 +24,7 @@ import {
 // atom
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
-  cgListState,
+  categoryListState,
   fullCategoryListState,
   selectedStudyState,
   studiesState,
@@ -36,13 +36,14 @@ import {
 import useHandleToggle from "@/hooks/home/useHandleToggle";
 import useGetUserData from "@/hooks/home/useGetUserData";
 import useGetStudyList from "@/hooks/home/useGetStudyData";
-import useGetCGData from "@/hooks/home/useGetCGData";
 import useGetTaskList from "@/hooks/home/useGetTaskData";
 import useGetFullCategoryData from "@/hooks/home/useGetFullCategoryData";
 
 // libraries
 import { useCookies } from "react-cookie";
 import { User } from "@/types/User";
+import useGetCategoryData from "@/hooks/home/useGetCategoryData";
+import { Category, Study } from "@/types/aboutStudy";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -53,12 +54,14 @@ const Home = () => {
 
   const [user, setUser] = useRecoilState<User>(userState);
   const [studies, setStudies] = useRecoilState(studiesState);
-  const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
-  const setCgList = useSetRecoilState(cgListState);
+  const [selectedStudy, setSelectedStudy] =
+    useRecoilState<Study>(selectedStudyState);
   const setTaskList = useSetRecoilState(taskListState);
   const [fullCatagoryList, setFullCategoryList] = useRecoilState(
     fullCategoryListState
   );
+  const [categoryList, setCategoryList] =
+    useRecoilState<Category[]>(categoryListState);
 
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
@@ -101,10 +104,8 @@ const Home = () => {
     execute();
   };
 
-  const getCgData = useGetCGData(setCgList);
-
-  const getFullCategoryList = async () => {
-    const execute = useGetFullCategoryData({ setFullCategoryList });
+  const getCategoryList = async () => {
+    const execute = useGetCategoryData({ setCategoryList, selectedStudy });
     execute();
   };
 
@@ -155,13 +156,14 @@ const Home = () => {
     getUserData();
     getStudyList();
     getTaskList();
-    getFullCategoryList();
+    getCategoryList();
   }, []);
 
+  // console.log("category list : ", categoryList);
+
   useEffect(() => {
-    if (selectedStudy) {
+    if (selectedStudy.studyId > 0) {
       setShowHamburgerBar(true);
-      getCgData();
     } else {
       setShowHamburgerBar(false);
     }
