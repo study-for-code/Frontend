@@ -127,7 +127,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
           studyId: selectedStudy?.studyId,
         }
       );
-      // console.log(response);
+      console.log(response);
     } catch (e) {
       // console.log(e);
     }

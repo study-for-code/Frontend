@@ -12,6 +12,8 @@ export interface problemListType {
   answer: number; // 맞은 정답의 개수
   answerRate: number; // 정답 비율
   content: string; // 문제 내용
+  restrictions: string[]; // 제한 사항
+  timeLimit: number; // 시간 제한
 }
 
 export interface testCaseType {
@@ -20,7 +22,7 @@ export interface testCaseType {
 }
 
 export interface limitationType {
-  limitation: string;
+  restrictions: string;
 }
 
 export interface createProblemType {
@@ -32,5 +34,10 @@ export interface createProblemType {
   answerRate: string;
   testCase: testCaseType[];
   explanation: string;
-  limitations: string[];
+}
+
+export interface getTestCaseType {
+  input: string;
+  output: string;
+  testcaseId: number;
 }

@@ -1,4 +1,4 @@
-import { SetStateAction, forwardRef, useEffect, useRef, useState } from "react";
+import { forwardRef, useEffect, useRef } from "react";
 // img
 import Close from "@/assets/admin/Close_round.png";
 import Plus from "@/assets/home/plus_testCase.png";
@@ -44,7 +44,6 @@ const TestCaseModal = forwardRef<any, TestCaseModalType>(
     const addTestCase = () => {
       setCreateProblem((prevData) => ({
         ...prevData,
-        // 여기서 prevData를 업데이트하여 새로운 createProblemType 객체를 반환
         testCase: [...prevData.testCase, { input: "", output: "" }],
       }));
     };
@@ -55,7 +54,7 @@ const TestCaseModal = forwardRef<any, TestCaseModalType>(
         if (prevData.testCase.length > 1) {
           return {
             ...prevData,
-            testCases: prevData.testCase.slice(0, prevData.testCase.length - 1),
+            testCase: prevData.testCase.slice(0, prevData.testCase.length - 1),
           };
         }
         return prevData;

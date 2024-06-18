@@ -16,11 +16,15 @@ import { AdminComponentType } from "@/types/aboutAdmin";
 interface TestCaseModalContextType {
   testCaseModal: boolean;
   setTestCaseModal: React.Dispatch<React.SetStateAction<boolean>>;
+  isModalOpen: boolean;
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 export const TestCaseModalContext = createContext<TestCaseModalContextType>({
   testCaseModal: false,
   setTestCaseModal: () => {},
+  isModalOpen: false,
+  setIsModalOpen: () => {},
 });
 
 const Admin = () => {
@@ -29,6 +33,8 @@ const Admin = () => {
 
   // 테스트 케이스 모달
   const [testCaseModal, setTestCaseModal] = useState<boolean>(false);
+  // slideModal 테스트케이스 모달 컨트롤
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
 
   const componentMap: AdminComponentType = {
     createProblems: <CreateProblems />,
@@ -42,7 +48,7 @@ const Admin = () => {
   };
 
   return (
-    <AdminContainer testcasemodal={testCaseModal}>
+    <AdminContainer testcasemodal={testCaseModal} ismodalopen={isModalOpen}>
       <nav>
         <div className="header">구름적사고</div>
       </nav>
@@ -71,7 +77,12 @@ const Admin = () => {
           </div>
         </div>
         <TestCaseModalContext.Provider
-          value={{ testCaseModal, setTestCaseModal }}
+          value={{
+            testCaseModal,
+            setTestCaseModal,
+            isModalOpen,
+            setIsModalOpen,
+          }}
         >
           <div className="contentSection">{componentToShow}</div>
         </TestCaseModalContext.Provider>

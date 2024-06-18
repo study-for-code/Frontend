@@ -8,7 +8,6 @@ import { signupDataType } from "@/types/aboutSignup";
 
 // libraries
 import axios from "axios";
-import { useEffect } from "react";
 
 interface SignupInputSectionType {
   pwdState: boolean;

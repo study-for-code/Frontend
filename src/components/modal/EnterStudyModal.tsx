@@ -8,8 +8,6 @@ import { ModalContainer } from "@/styles/modal/modalStyles";
 import { Study } from "@/types/aboutStudy";
 
 // atom
-import { useRecoilValue } from "recoil";
-import { fullStudiesState } from "@/atom/stats";
 
 interface EnterStudyProps {
   isOpen: boolean;
@@ -23,22 +21,21 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({
   onEnterStudy,
 }) => {
   const [code, setCode] = useState("");
-  const fullStudies = useRecoilValue(fullStudiesState);
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
   };
 
-  const handleEnter = () => {
-    const study = fullStudies.find((study) => study.code === code);
-    if (study) {
-      onEnterStudy(study);
-      setCode("");
-      onClose();
-    } else {
-      alert("스터디 코드에 해당하는 스터디가 없습니다.");
-    }
-  };
+  // const handleEnter = () => {
+  //   const study = fullStudies.find((study) => study.code === code);
+  //   if (study) {
+  //     onEnterStudy(study);
+  //     setCode("");
+  //     onClose();
+  //   } else {
+  //     alert("스터디 코드에 해당하는 스터디가 없습니다.");
+  //   }
+  // };
 
   const handleClose = useCallback(() => {
     setCode("");
@@ -66,9 +63,9 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({
           </div>
         </div>
         <div className="btn-area">
-          <button onClick={handleEnter} className="positiveBtn">
+          {/* <button onClick={handleEnter} className="positiveBtn">
             입장
-          </button>
+          </button> */}
           <button onClick={handleClose} className="negativeBtn">
             취소
           </button>
