@@ -50,7 +50,7 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
           confirmPassword,
         }
       );
-      console.log(response);
+      // console.log(response);
       setSignupData((prev) => ({
         ...prev,
         status: response.data.code,
@@ -62,7 +62,7 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
         }
       }, 5000);
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   };
 

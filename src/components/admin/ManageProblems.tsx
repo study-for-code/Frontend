@@ -54,7 +54,7 @@ const ManageProblems = () => {
   };
 
   useEffect(() => {
-    console.log("modalData: ", modalData);
+    // console.log("modalData: ", modalData);
   }, [modalData]);
 
   useEffect(() => {

@@ -12,7 +12,7 @@ const useGetFullCategoryData = ({
       const data: Category[] = response.data;
       setFullCategoryList(data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 

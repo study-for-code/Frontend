@@ -6,9 +6,10 @@ import { atom } from "recoil";
 export const userState = atom<User>({
   key: "userState",
   default: {
+    memberId: 0,
     email: "",
     nickname: "",
-    grade: "MEMBER",
+    role: "MEMBER",
   },
 });
 
@@ -20,11 +21,6 @@ export const studiesState = atom<Study[]>({
 export const selectedStudyState = atom<Study | null>({
   key: "selectedStudyState",
   default: null,
-});
-
-export const fullStudiesState = atom<Study[]>({
-  key: "fullStudiesState",
-  default: [],
 });
 
 export const cgListState = atom<Category[]>({

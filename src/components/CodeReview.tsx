@@ -72,10 +72,10 @@ const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
           fontSize="1.2rem"
           value={`
           /*** [section title] ***/
-          console.log('This code will be folded');
-          console.log('This code will also be folded');
+          // console.log('This code will be folded');
+          // console.log('This code will also be folded');
           /*** [next section title] ***/
-          console.log('This code will not be folded');
+          // console.log('This code will not be folded');
               `}
           setOptions={{
             enableBasicAutocompletion: false,

@@ -1,12 +1,11 @@
-import { User } from "./User";
-
 export interface Study {
-  study_id: number;
+  studyId: number;
   title: string;
+  ownerId: number;
   createAt: Date;
-  image: File | null;
-  host: User | null;
-  code: string;
+  // image: File | null;
+  // host: User | null;
+  // code: string;
 }
 
 export interface Category {

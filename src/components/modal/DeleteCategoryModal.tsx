@@ -2,18 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { ModalContainer } from "@/styles/modal/modalStyles";
 
-interface DeleteStudyProps {
+interface DeleteCategoryProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  studyTitle: String;
 }
 
-const DeleteStudyModal: React.FC<DeleteStudyProps> = ({
+const DeleteCategoryModal: React.FC<DeleteCategoryProps> = ({
   isOpen,
   onClose,
   onConfirm,
-  studyTitle,
 }) => {
   if (!isOpen) return null;
 
@@ -25,7 +23,7 @@ const DeleteStudyModal: React.FC<DeleteStudyProps> = ({
       <div className="modal-content">
         <div className="modal-header">스터디 삭제</div>
         <div className="modal-body">
-          <p>정말 "{studyTitle}" 스터디를 삭제하시겠어요 ?</p>
+          <p>정말 해당 카테고리를 삭제하시겠어요 ?</p>
           <div className="btn-area">
             <button className="positiveBtn" onClick={onConfirm}>
               예, 삭제할게요
@@ -41,4 +39,4 @@ const DeleteStudyModal: React.FC<DeleteStudyProps> = ({
   );
 };
 
-export default DeleteStudyModal;
+export default DeleteCategoryModal;
