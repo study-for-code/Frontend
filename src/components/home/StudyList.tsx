@@ -67,7 +67,6 @@ const StudyList = () => {
             headers: headers,
           }
         );
-        console.log(response);
         const data = response.data;
         setStudies(data.results);
         setSelectedStudy(data.results[0]);
@@ -79,14 +78,6 @@ const StudyList = () => {
 
   const handleSelectStudy = (study: Study) => {
     setSelectedStudy(study);
-  };
-
-  const handleEnterStudy = (study: Study) => {
-    const isStudyInList = studies.some((s) => s.title === study.title);
-    if (!isStudyInList) {
-      setStudies((prevStudies) => [...prevStudies, study]);
-      setSelectedStudy(study);
-    }
   };
 
   const onCreate = async (newStudy: { title: string }) => {
@@ -184,11 +175,7 @@ const StudyList = () => {
         onSubmit={onCreate}
       />
 
-      <EnterStudyModal
-        isOpen={isEnterModalOpen}
-        onClose={handleEnterModal}
-        onEnterStudy={handleEnterStudy}
-      />
+      <EnterStudyModal isOpen={isEnterModalOpen} onClose={handleEnterModal} />
     </div>
   );
 };

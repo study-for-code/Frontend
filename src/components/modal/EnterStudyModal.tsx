@@ -1,42 +1,73 @@
 import React, { useCallback, useState } from "react";
 import ReactDOM from "react-dom";
+import axios from "axios";
+import { useCookies } from "react-cookie";
 
 // style
 import { ModalContainer } from "@/styles/modal/modalStyles";
 
-// type
-import { Study } from "@/types/aboutStudy";
-
 // atom
-import { useRecoilValue } from "recoil";
-import { fullStudiesState } from "@/atom/stats";
+import { useSetRecoilState } from "recoil";
+import { selectedStudyState, studiesState } from "@/atom/stats";
 
 interface EnterStudyProps {
   isOpen: boolean;
   onClose: () => void;
-  onEnterStudy: (study: Study) => void;
 }
 
-const EnterStudyModal: React.FC<EnterStudyProps> = ({
-  isOpen,
-  onClose,
-  onEnterStudy,
-}) => {
-  const [code, setCode] = useState("");
-  const fullStudies = useRecoilValue(fullStudiesState);
+const EnterStudyModal: React.FC<EnterStudyProps> = ({ isOpen, onClose }) => {
+  const [code, setCode] = useState<string>("");
+  const setStudies = useSetRecoilState(studiesState);
+  const setSelectedStudy = useSetRecoilState(selectedStudyState);
+
+  const [cookies] = useCookies(["accessToken"]);
+  const { accessToken } = cookies;
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setCode(e.target.value);
   };
 
-  const handleEnter = () => {
-    const study = fullStudies.find((study) => study.code === code);
-    if (study) {
-      onEnterStudy(study);
-      setCode("");
-      onClose();
-    } else {
-      alert("스터디 코드에 해당하는 스터디가 없습니다.");
+  const onJoin = async () => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+      };
+      const response = await axios.post(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies/join`,
+        null,
+        {
+          headers: headers,
+          params: {
+            joinCode: code,
+          },
+        }
+      );
+      if (response.data.code === 200) {
+        setCode("");
+        onClose();
+        try {
+          const headers = {
+            Authorization: `Bearer ${accessToken}`,
+          };
+          const response = await axios.get(
+            `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+            {
+              headers: headers,
+            }
+          );
+          const data = response.data;
+          setStudies(data.results);
+          setSelectedStudy(data.results[0]);
+        } catch (e) {
+          console.log(e);
+        }
+      } else if (response.data.code === 404) {
+        setCode("");
+        alert("스터디 코드에 해당하는 스터디가 없습니다.");
+      }
+      // refreshStudylist(response);
+    } catch (e) {
+      console.error(e);
     }
   };
 
@@ -66,7 +97,7 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({
           </div>
         </div>
         <div className="btn-area">
-          <button onClick={handleEnter} className="positiveBtn">
+          <button onClick={onJoin} className="positiveBtn">
             입장
           </button>
           <button onClick={handleClose} className="negativeBtn">
