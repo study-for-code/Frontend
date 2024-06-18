@@ -121,10 +121,10 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const onCreate = async (newCategory: Category) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/api/${selectedStudy?.study_id}/create`,
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/api/${selectedStudy?.studyId}/create`,
         {
           category: newCategory,
-          studyId: selectedStudy?.study_id,
+          studyId: selectedStudy?.studyId,
         }
       );
       // console.log(response);
@@ -173,8 +173,6 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     });
     setNewTitle((prev) => ({ ...prev, [category_id]: "" }));
   };
-
-  // console.log("full Category : ", fullCatagoryList);
 
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
@@ -274,8 +272,8 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
           >
             {user &&
               selectedStudy &&
-              selectedStudy.host &&
-              user.email === selectedStudy.host.email && (
+              selectedStudy.ownerId &&
+              user.memberId === selectedStudy.ownerId && (
                 <button className="optionButton" onClick={handleCreateModal}>
                   카테고리 생성
                 </button>
@@ -288,8 +286,8 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
       {showInnerOptions &&
         user &&
         selectedStudy &&
-        selectedStudy.host &&
-        user.email === selectedStudy.host.email &&
+        selectedStudy.ownerId &&
+        user.memberId === selectedStudy.ownerId &&
         createPortal(
           <OptionsContainer
             ref={containerRef}

@@ -24,6 +24,7 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
 
   .list {
     width: 30%;
+    height: 100%; // list 영역 높이를 100%로 설정
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -291,7 +292,10 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
     color: white;
   }
 `;
-export const ManageProblemsContainer = styled.div<{ modalstate: boolean }>`
+export const ManageProblemsContainer = styled.div<{
+  modalstate: boolean;
+  ismodify: boolean;
+}>`
   height: 100vh;
   padding: 3rem 1rem 1rem 2rem;
   .container {
@@ -338,6 +342,7 @@ export const ManageProblemsContainer = styled.div<{ modalstate: boolean }>`
     top: 0;
     height: 100%;
     background-color: ${theme.adminBg};
+    border-radius: 0.5rem;
   }
   .slideModalContent {
     width: 90%;
@@ -354,7 +359,7 @@ export const ManageProblemsContainer = styled.div<{ modalstate: boolean }>`
   }
 
   .slideModalNav {
-    height: 20%;
+    height: 12%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -373,6 +378,10 @@ export const ManageProblemsContainer = styled.div<{ modalstate: boolean }>`
     display: flex;
     flex-direction: row;
     align-items: center;
+
+    img {
+      margin-right: 0.3rem;
+    }
   }
   .tag {
     background-color: ${theme.mainColor};
@@ -381,7 +390,7 @@ export const ManageProblemsContainer = styled.div<{ modalstate: boolean }>`
     border-radius: 0.5rem;
   }
   .slideModalContents {
-    height: 100%;
+    height: 50%;
     display: flex;
     flex-direction: column;
     font-family: "GmarketSansLight";
@@ -424,4 +433,22 @@ export const LimitElementInput = styled.input<{ testcasemodal: boolean }>`
   color: white;
   outline: none;
   border: 1px solid ${theme.adminInputBg};
+`;
+
+export const ModifyBtn = styled.button`
+  width: 100px;
+  height: 30px;
+  background-color: ${theme.mainColor};
+  color: white;
+  font-family: "GmarketSansMedium";
+  font-size: 1.2rem;
+  border: 1px solid ${theme.mainColor};
+  border-radius: 0.2rem;
+  outline: none;
+
+  &:hover {
+    background-color: white;
+    border: 1px solid ${theme.mainColor};
+    color: ${theme.mainColor};
+  }
 `;

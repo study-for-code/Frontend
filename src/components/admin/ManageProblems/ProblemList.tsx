@@ -20,12 +20,12 @@ const ProblemList = ({ problemList, getSelectedData }: ProblemListType) => {
               <div>
                 📕
                 <span style={{ marginLeft: "0.3rem" }}>
-                  {problem.subjectNumber} {problem.subjectName}
+                  {problem.algorithmTitle}
                 </span>
               </div>
               {/* 문제 요소 */}
               <div>
-                <span className="type">{problem.algorithmType}</span>
+                <span className="type">{problem.algorithmId}</span>
               </div>
             </div>
           ))

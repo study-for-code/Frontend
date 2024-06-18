@@ -41,7 +41,6 @@ import useGetTaskList from "@/hooks/home/useGetTaskData";
 import useGetFullCategoryData from "@/hooks/home/useGetFullCategoryData";
 
 // libraries
-import axios from "axios";
 import { useCookies } from "react-cookie";
 import { User } from "@/types/User";
 

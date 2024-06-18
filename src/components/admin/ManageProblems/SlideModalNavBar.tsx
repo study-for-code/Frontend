@@ -1,8 +1,8 @@
 // img
 import TagIcon from "@/assets/admin/Status_list.png";
-import TimeLimitIncon from "@/assets/admin/Time_fill.png";
-import MemoryLimitIcon from "@/assets/admin/Folder_fill.png";
 import AnswerRateIcon from "@/assets/admin/Percent.png";
+import CorrectIcon from "@/assets/admin/check_ring_round.png";
+import SubmitIcon from "@/assets/admin/File_dock.png";
 
 // types
 import { problemListType } from "@/types/aboutAdmin";
@@ -15,30 +15,23 @@ const SlideModalNavBar = ({ modalData }: SlideModalNavBarType) => {
   return (
     <div className="slideModalNav">
       <div className="modalRow">
+        {/* 제출된 총 횟수 */}
         <div className="row">
-          <img src={TagIcon} />
-          <span>태그</span>
+          <img src={SubmitIcon} />
+          <span>제출된 횟수</span>
         </div>
         <div className="row">
-          <span className="tag">{modalData.algorithmType}</span>
-        </div>
-      </div>
-      <div className="modalRow">
-        <div className="row">
-          <img src={TimeLimitIncon} />
-          <span>시간 제한</span>
-        </div>
-        <div className="row">
-          <span>{modalData.timeLimit}ms</span>
+          <span>{modalData.submit}</span>
         </div>
       </div>
       <div className="modalRow">
+        {/* 제출된 총 횟수중 맞은 횟수 */}
         <div className="row">
-          <img src={MemoryLimitIcon} />
-          <span>메모리 제한</span>
+          <img src={CorrectIcon} />
+          <span>맞힌 횟수</span>
         </div>
         <div className="row">
-          <span>{modalData.memorySize}MB</span>
+          <span>{modalData.answer}</span>
         </div>
       </div>
       <div className="modalRow">
@@ -47,7 +40,7 @@ const SlideModalNavBar = ({ modalData }: SlideModalNavBarType) => {
           <span>정답 비율</span>
         </div>
         <div className="row">
-          <span>{modalData.answerRate}</span>
+          <span>{modalData.answerRate}%</span>
         </div>
       </div>
     </div>

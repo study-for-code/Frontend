@@ -12,25 +12,27 @@ import useManageProblemData, {
 import { problemListType } from "@/types/aboutAdmin";
 
 // styles
-import { ManageProblemsContainer } from "@/styles/admin/adminStyles";
-import SlideModalNavBar from "./ManageProblems/SlideModalNavBar";
+import { ManageProblemsContainer, ModifyBtn } from "@/styles/admin/adminStyles";
+// components
+import SlideModalNavBar from "@/components/admin/ManageProblems/SlideModalNavBar";
+import ProblemList from "@/components/admin/ManageProblems/ProblemList";
 
 const ManageProblems = () => {
   // modal 데이터
   const [modalData, setModalData] = useState<problemListType>({
-    subjectName: "",
-    subjectNumber: 0, // 문제 번호
-    algorithmType: "", // 알고리즘 종류
-    problemDescription: "",
-    timeLimit: 0, //  시간 제한
-    memorySize: 0, // 메모리 사이즈
+    algorithmId: 0,
+    algorithmTitle: "",
+    submit: 0, // 제출된 정답의 개수
+    answer: 0, // 맞은 정답의 개수
     answerRate: 0, // 정답 비율
-    solveTime: "", // 풀이 시간
+    content: "", // 문제 내용
   });
 
   // modal 제어
   const [modalState, setModalState] = useState<boolean>(false);
 
+  // modal 수정 제어
+  const [isModify, setIsModify] = useState<boolean>(false);
   // 전체 문제 리스트
   const [problemList, setProblemList] = useState<problemListType[]>([]);
 
@@ -53,16 +55,23 @@ const ManageProblems = () => {
     setModalState(!modalState);
   };
 
+  // modify controll
+  const handleModdalModify = () => {
+    setIsModify(!isModify);
+  };
+
   useEffect(() => {
-    // console.log("modalData: ", modalData);
-  }, [modalData]);
+    console.log("modalData: ", modalData);
+    console.log("problemList: ", problemList);
+    console.log("isModify: ", isModify);
+  }, [modalData, problemList, isModify]);
 
   useEffect(() => {
     getData();
   }, []);
 
   return (
-    <ManageProblemsContainer modalstate={modalState}>
+    <ManageProblemsContainer modalstate={modalState} ismodify={isModify}>
       <span className="title">문제 관리</span>
       <div className="container">
         <img src={ListIcon} />
@@ -70,10 +79,10 @@ const ManageProblems = () => {
       </div>
       {/* 문제 리스트 */}
       {/* 데이터가 가끔 못 받아오는 경우가 있어서 해결해야함 */}
-      {/* <ProblemList
+      <ProblemList
         problemList={problemList}
         getSelectedData={getSelectedData}
-      /> */}
+      />
       {/* 문제 리스트 */}
       <div className="slideModal">
         <nav style={{ padding: "0.5rem" }}>
@@ -85,9 +94,7 @@ const ManageProblems = () => {
         {/* 내용 부분 */}
         {modalState ? (
           <div className="slideModalContent">
-            <div className="slideModalTitle">
-              {modalData.subjectNumber} {modalData.subjectName}
-            </div>
+            <div className="slideModalTitle">{modalData.algorithmTitle}</div>
             {/* 모달 nav바 */}
             <SlideModalNavBar modalData={modalData} />
             {/* 모달 nav바 */}
@@ -96,7 +103,16 @@ const ManageProblems = () => {
               <div style={{ marginBottom: "0.5rem" }}>
                 <span className="problem">문제</span>
               </div>
-              <div>{modalData.problemDescription}</div>
+              <div>{modalData.content}</div>
+            </div>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                justifyContent: "flex-end",
+              }}
+            >
+              <ModifyBtn onClick={handleModdalModify}>수정</ModifyBtn>
             </div>
             {/* 모달 content */}
           </div>

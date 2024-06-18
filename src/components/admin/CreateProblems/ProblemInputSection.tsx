@@ -8,7 +8,7 @@ const ProblemInputSection = ({ inputData }: problemDetailSectionType) => {
       <span className="sectionTitle">문제 입력</span>
       <div className="textareaBg">
         <textarea
-          name="inputProblem"
+          name="explanation"
           onChange={(e) => inputData(e.target.name, e.target.value)}
         />
       </div>

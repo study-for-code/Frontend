@@ -118,6 +118,9 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
               <button type="submit" className="positiveBtn">
                 생성
               </button>
+              {/* <button onClick={createStudy} className="positiveBtn">
+                생성
+              </button> */}
               <button
                 type="button"
                 onClick={handleClose}
