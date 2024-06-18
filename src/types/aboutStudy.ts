@@ -3,13 +3,13 @@ export interface Study {
   title: string;
   ownerId: number;
   createAt: Date;
+  joinCode: string;
   // image: File | null;
   // host: User | null;
   // code: string;
 }
 
 export interface Category {
-  category_id: number;
+  categoryId: number;
   title: string;
-  study_id: number;
 }

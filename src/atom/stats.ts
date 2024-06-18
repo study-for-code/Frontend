@@ -18,13 +18,19 @@ export const studiesState = atom<Study[]>({
   default: [],
 });
 
-export const selectedStudyState = atom<Study | null>({
+export const selectedStudyState = atom<Study>({
   key: "selectedStudyState",
-  default: null,
+  default: {
+    studyId: 0,
+    title: "",
+    ownerId: 0,
+    createAt: new Date(),
+    joinCode: "",
+  },
 });
 
-export const cgListState = atom<Category[]>({
-  key: "cgListState",
+export const categoryListState = atom<Category[]>({
+  key: "categoryListState",
   default: [],
 });
 
