@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import axios from "axios";
 
 // image
 import CategoryExpansion from "@/assets/home/category_expansion.png";
@@ -23,6 +24,7 @@ import {
 } from "@/atom/stats";
 
 import { OptionsContainer } from "@/styles/home/homeStyles";
+import DeleteCategoryModal from "../modal/DeleteCategoryModal";
 
 interface CategorySpaceProps {
   categoryList: Category[];
@@ -45,6 +47,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [cgList, setCgList] = useRecoilState(cgListState);
   const selectedStudy = useRecoilValue(selectedStudyState);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [showOuterOptions, setShowOuterOptions] = useState(false);
   const [showInnerOptions, setShowInnerOptions] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -55,9 +58,9 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [newTitle, setNewTitle] = useState<{ [key: number]: string }>({});
   const [selectedCgID, setSelectedCgID] = useState(0);
 
-  console.log("task list: ", taskList);
-  console.log("category ID : ", categoryList);
-  console.log("isToggleSelected: ", isToggleSelected);
+  // console.log("task list: ", taskList);
+  // console.log("category ID : ", categoryList);
+  // console.log("isToggleSelected: ", isToggleSelected);
 
   const getHyphens = (length: number) => {
     let num = 16 - length;
@@ -92,6 +95,42 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
       newEditTitle[selectedCgID] = true;
       return newEditTitle;
     });
+  };
+
+  const handleDeleteModal = () => {
+    handleDeleteCategory();
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteCategory = () => {
+    if (selectedCgID) {
+      const updatedCategory = fullCatagoryList.filter(
+        (cg) => cg.study_id !== selectedCgID
+      );
+      setFullCategoryList(updatedCategory);
+      setSelectedCgID(0);
+    }
+  };
+
+  const handleDeleteClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setShowInnerOptions(false);
+    setIsDeleteModalOpen(true);
+  };
+
+  const onCreate = async (newCategory: Category) => {
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/api/${selectedStudy?.study_id}/create`,
+        {
+          category: newCategory,
+          studyId: selectedStudy?.study_id,
+        }
+      );
+      // console.log(response);
+    } catch (e) {
+      // console.log(e);
+    }
   };
 
   const handleAddCategory = (newCategory: Category) => {
@@ -135,7 +174,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     setNewTitle((prev) => ({ ...prev, [category_id]: "" }));
   };
 
-  console.log("full Category : ", fullCatagoryList);
+  // console.log("full Category : ", fullCatagoryList);
 
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
@@ -264,7 +303,9 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
             <button className="optionButton" onClick={handleCgTitleEdit}>
               카테고리 이름 변경
             </button>
-            <button className="optionButton">카테고리 삭제</button>
+            <button className="optionButton" onClick={handleDeleteClick}>
+              카테고리 삭제
+            </button>
           </OptionsContainer>,
           modalRoot
         )}
@@ -272,8 +313,14 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
       <CreateCategoryModal
         isOpen={isCreateModalOpen}
         onClose={handleCreateModal}
-        onSubmit={handleAddCategory}
+        onSubmit={onCreate}
         selectedStudy={selectedStudy}
+      />
+
+      <DeleteCategoryModal
+        isOpen={isDeleteModalOpen}
+        onClose={handleDeleteModal}
+        onConfirm={handleDeleteModal}
       />
     </div>
   );
