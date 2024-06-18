@@ -26,16 +26,17 @@ const CreateCategoryModal = React.memo(function CreateCategoryModal({
   const fullCategoryList = useRecoilValue(fullCategoryListState);
   const setFullCategoryList = useSetRecoilState(fullCategoryListState);
 
-  // let category_id: number;
-  // if (fullCategoryList.length > 0) {
-  //   const lastCategoryId =
-  //     fullCategoryList[fullCategoryList.length - 1].category_id.valueOf();
-  //   category_id = lastCategoryId + 1;
-  // } else {
-  //   category_id = 1;
-  // }
-
-  const study_id = selectedStudy ? selectedStudy.study_id : 1;
+  let category_id: number;
+  if (fullCategoryList.length > 0) {
+    const lastCategory = fullCategoryList[fullCategoryList.length - 1];
+    const lastCategoryId =
+      lastCategory && lastCategory.category_id
+        ? lastCategory.category_id.valueOf()
+        : 0;
+    category_id = lastCategoryId + 1;
+  } else {
+    category_id = 1;
+  }
 
   const [title, setTitle] = useState("");
 

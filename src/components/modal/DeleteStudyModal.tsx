@@ -6,7 +6,7 @@ interface DeleteStudyProps {
   isOpen: boolean;
   onClose: () => void;
   onConfirm: () => void;
-  studyTitle: string;
+  studyTitle: String;
 }
 
 const DeleteStudyModal: React.FC<DeleteStudyProps> = ({

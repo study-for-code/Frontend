@@ -26,7 +26,6 @@ import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   cgListState,
   fullCategoryListState,
-  fullStudiesState,
   selectedStudyState,
   studiesState,
   taskListState,
@@ -37,7 +36,6 @@ import {
 import useHandleToggle from "@/hooks/home/useHandleToggle";
 import useGetUserData from "@/hooks/home/useGetUserData";
 import useGetStudyList from "@/hooks/home/useGetStudyData";
-import useGetFullStudyList from "@/hooks/home/useGetFullStudyData";
 import useGetCGData from "@/hooks/home/useGetCGData";
 import useGetTaskList from "@/hooks/home/useGetTaskData";
 import useGetFullCategoryData from "@/hooks/home/useGetFullCategoryData";
@@ -45,15 +43,17 @@ import useGetFullCategoryData from "@/hooks/home/useGetFullCategoryData";
 // libraries
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { User } from "@/types/User";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [cookies] = useCookies(["accessToken"]);
+  const [cookies] = useCookies<string>(["accessToken"]);
   const { accessToken } = cookies;
 
-  const setUser = useSetRecoilState(userState);
+  // console.log("cookies: ", cookies);
+
+  const [user, setUser] = useRecoilState<User>(userState);
   const [studies, setStudies] = useRecoilState(studiesState);
-  const setFullStudies = useSetRecoilState(fullStudiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
   const setCgList = useSetRecoilState(cgListState);
   const setTaskList = useSetRecoilState(taskListState);
@@ -92,17 +92,13 @@ const Home = () => {
   };
 
   const getUserData = async () => {
-    const execute = useGetUserData({ setUser });
-    execute();
+    const memberId = cookies.memberId;
+    const execute = useGetUserData({ setUser, memberId });
+    await execute();
   };
 
   const getStudyList = async () => {
-    const execute = useGetStudyList({ setStudies });
-    execute();
-  };
-
-  const getFullStudy = async () => {
-    const execute = useGetFullStudyList({ setFullStudies });
+    const execute = useGetStudyList({ setStudies, accessToken });
     execute();
   };
 
@@ -152,12 +148,13 @@ const Home = () => {
     }
   }, [studies, selectedStudy]);
 
-  console.log("selectedStudy: ", selectedStudy);
+  // console.log("studies: ", studies);
+  // console.log("user: ", user);
+  // console.log("selectedStudy: ", selectedStudy);
 
   useEffect(() => {
     getUserData();
     getStudyList();
-    getFullStudy();
     getTaskList();
     getFullCategoryList();
   }, []);
@@ -166,11 +163,10 @@ const Home = () => {
     if (selectedStudy) {
       setShowHamburgerBar(true);
       getCgData();
+    } else {
+      setShowHamburgerBar(false);
     }
   }, [selectedStudy]);
-
-  const createAt = new Date();
-  console.log("createAt: ", createAt);
 
   return (
     <Container showhamburgerBar={showHamburgerBar}>

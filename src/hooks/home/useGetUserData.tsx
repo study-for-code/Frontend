@@ -1,15 +1,21 @@
+import { User } from "@/types/User";
 import axios from "axios";
 
 const useGetUserData = ({
   setUser,
+  memberId,
 }: {
-  setUser: React.Dispatch<React.SetStateAction<any>>;
+  setUser: React.Dispatch<React.SetStateAction<User>>;
+  memberId: number;
 }): (() => Promise<void>) => {
   const getUserData = async () => {
     try {
-      const response = await axios.get("/user");
+      const response = await axios.get(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/members/${memberId}`
+      );
+      console.log(response);
       const data = response.data;
-      setUser(data);
+      setUser(data.results[0]);
     } catch (e) {
       console.log(e);
     }

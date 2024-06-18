@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
+import axios, { AxiosResponse } from "axios";
+import { useCookies } from "react-cookie";
 
 // component
 import CreateStudyModal from "../modal/CreateStudyModal";
@@ -7,12 +9,7 @@ import EnterStudyModal from "../modal/EnterStudyModal";
 
 //atom
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import {
-  fullStudiesState,
-  selectedStudyState,
-  studiesState,
-  userState,
-} from "@/atom/stats";
+import { selectedStudyState, studiesState, userState } from "@/atom/stats";
 
 // type
 import { Study } from "@/types/aboutStudy";
@@ -27,12 +24,12 @@ import { OptionsContainer } from "@/styles/home/homeStyles";
 
 const StudyList = () => {
   const navigation = useNavigate();
+
+  const [cookies] = useCookies(["accessToken"]);
+  const { accessToken } = cookies;
+
   const user = useRecoilValue(userState);
-  // const studies = useRecoilValue(studiesState);
-  // const setStudies = useSetRecoilState(studiesState);
-  // 아래와 같이 하나로 줄일 수 있습니다!
   const [studies, setStudies] = useRecoilState(studiesState);
-  const setFullStudies = useSetRecoilState(fullStudiesState);
   const setSelectedStudy = useSetRecoilState(selectedStudyState);
   const [showOptions, setShowOptions] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
@@ -56,10 +53,47 @@ const StudyList = () => {
     setIsEnterModalOpen(!isEnterModalOpen);
   };
 
-  const handleAddStudy = (newStudy: Study) => {
-    setStudies((prevStudies) => [...prevStudies, newStudy]);
-    setFullStudies((prevFullStudies) => [...prevFullStudies, newStudy]);
-    setSelectedStudy(newStudy);
+  const refreshStudylist = async (response: AxiosResponse<any, any>) => {
+    if (response.data.code === 200) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${accessToken}`,
+        };
+        const response = await axios.get(
+          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+          {
+            headers: headers,
+          }
+        );
+        console.log(response);
+        const data = response.data;
+        setStudies(data.results);
+        setSelectedStudy(data.results[0]);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const onCreate = async (newStudy: { title: string }) => {
+    try {
+      const { title } = newStudy;
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+      };
+      const response = await axios.post(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        {
+          title: title,
+        },
+        {
+          headers: headers,
+        }
+      );
+      refreshStudylist(response);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   const handleSelectStudy = (study: Study) => {
@@ -67,7 +101,7 @@ const StudyList = () => {
   };
 
   const handleEnterStudy = (study: Study) => {
-    const isStudyInList = studies.some((s) => s.study_id === study.study_id);
+    const isStudyInList = studies.some((s) => s.title === study.title);
     if (!isStudyInList) {
       setStudies((prevStudies) => [...prevStudies, study]);
       setSelectedStudy(study);
@@ -99,18 +133,21 @@ const StudyList = () => {
   return (
     <div className="drawer">
       <div>
-        {/* {studies.map((study, index) => (
-          <div key={index} onClick={() => handleSelectStudy(study)}>
-            <img
-              src={
-                study.image ? URL.createObjectURL(study.image) : GoormThinking
-              }
-              alt={study.title}
-              width="100"
-              className="element1"
-            />
-          </div>
-        ))} */}
+        {Array.isArray(studies) &&
+          studies.length > 0 &&
+          studies.map((study, index) => (
+            <div key={index} onClick={() => handleSelectStudy(study)}>
+              <img
+                src={
+                  // 이미지 데이터 생기면 주석 해제 -> 현재는 디폴트 이미지로 설정
+                  // study.image ? URL.createObjectURL(study.image) :
+                  GoormThinking
+                }
+                width="100"
+                className="element1"
+              />
+            </div>
+          ))}
       </div>
       <div className="plusContainer" onClick={handlePlusClick}>
         <img src={Plus} />
@@ -135,15 +172,14 @@ const StudyList = () => {
             modalRoot
           )}
       </div>
-      {user && user.grade === "ADMIN" && (
+      {user && user.role === "ADMIN" && (
         <img src={Admin} className="adminBtn" onClick={goToAdmin} />
       )}
 
       <CreateStudyModal
         isOpen={isCreateModalOpen}
         onClose={handleCreateModal}
-        onSubmit={handleAddStudy}
-        user={user}
+        onSubmit={onCreate}
       />
 
       <EnterStudyModal

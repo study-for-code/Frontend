@@ -1,4 +1,7 @@
 import { useEffect, useState } from "react";
+import axios, { AxiosResponse } from "axios";
+import { useCookies } from "react-cookie";
+
 // theme
 import { theme } from "@/styles/common/ColorStyles";
 
@@ -23,6 +26,7 @@ import {
 
 // types
 import { TaskListData } from "@/types/aboutHome";
+import useGetOwnerData from "@/hooks/home/useGetOwnerData";
 
 interface HamburgerBarType {
   handleHamburgerBar: () => void;
@@ -45,10 +49,15 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const [studies, setStudies] = useRecoilState(studiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
   const [isEditing, setIsEditing] = useState(false); // 제목 수정 모드 상태
-  const [newTitle, setNewTitle] = useState("");
+  const [newTitle, setNewTitle] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false); // 스터디 삭제 모달 상태
   const cgList = useRecoilValue(cgListState);
+  const [ownerName, setOwnerName] = useState<string>("");
 
+  const [cookies] = useCookies(["accessToken"]);
+  const { accessToken } = cookies;
+
+  // 날짜 형식 변환
   let formattedDate = "Invalid Date";
   if (selectedStudy) {
     try {
@@ -64,6 +73,19 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
       console.error("Invalid date format:", error);
     }
   }
+
+  // 스터디 Host 이름 가져오기
+  const getOwnerName = async () => {
+    const ownerId = selectedStudy?.ownerId;
+    if (ownerId !== undefined) {
+      const execute = useGetOwnerData({ setOwnerName, ownerId });
+      execute();
+    }
+  };
+
+  useEffect(() => {
+    getOwnerName();
+  }, [selectedStudy]);
 
   useEffect(() => {
     if (selectedStudy) {
@@ -83,23 +105,85 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const handleTitleSave = (event: React.MouseEvent) => {
     event.stopPropagation();
     if (selectedStudy) {
-      const updatedStudies = studies.map((s) =>
-        s.study_id === selectedStudy.study_id ? { ...s, title: newTitle } : s
-      );
-      setStudies(updatedStudies);
-      setSelectedStudy({ ...selectedStudy, title: newTitle });
+      onModify(selectedStudy.studyId, newTitle);
       setIsEditing(false);
+    }
+  };
+
+  const refreshStudylist = async (response: AxiosResponse<any, any>) => {
+    if (response.data.code === 200) {
+      try {
+        const headers = {
+          Authorization: `Bearer ${accessToken}`,
+        };
+        const response = await axios.get(
+          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+          {
+            headers: headers,
+          }
+        );
+        console.log(response);
+        const data = response.data;
+        setStudies(data.results);
+        setSelectedStudy(data.results[0]);
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  const onModify = async (studyId: number, title: string) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axios.patch(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        {
+          studyId: studyId,
+          title: title,
+        },
+        {
+          headers: headers,
+        }
+      );
+      refreshStudylist(response);
+    } catch (e) {
+      console.error(e);
     }
   };
 
   const handleDeleteStudy = () => {
     if (selectedStudy) {
-      const updatedStudies = studies.filter(
-        (s) => s.study_id !== selectedStudy.study_id
-      );
-      setStudies(updatedStudies);
+      onDelete(selectedStudy.studyId);
       setSelectedStudy(null); // 선택된 스터디 초기화
       handleHamburgerBar();
+    }
+  };
+
+  const onDelete = async (studyId: number) => {
+    try {
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      };
+
+      const response = await axios.delete(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies/${studyId}`,
+        {
+          headers: headers,
+        }
+      );
+
+      console.log(response.data);
+      refreshStudylist(response);
+    } catch (e) {
+      if (axios.isAxiosError(e)) {
+        console.error("Axios error:", e.response?.data);
+      } else {
+        console.error(e);
+      }
     }
   };
 
@@ -117,13 +201,18 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
     setIsModalOpen(false);
   };
 
+  useEffect(() => {
+    console.log("selected study", selectedStudy);
+  }, [selectedStudy]);
+
   return (
     <div className="hamburgerBarContainer">
       <div className="drawerSection" onClick={handleHamburgerBar}>
         <div className="hamburgerbutton">
           {showHamburgerBar && selectedStudy && (
             <div className="studyName">
-              {selectedStudy.image && (
+              {/* 이미지 데이터 추가 시 주석 해제 */}
+              {/* {selectedStudy.image && (
                 <img
                   src={URL.createObjectURL(selectedStudy.image)}
                   style={{
@@ -135,7 +224,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
                   }}
                   alt="study"
                 />
-              )}
+              )} */}
               {isEditing ? (
                 <>
                   <input
@@ -159,8 +248,8 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
                     {selectedStudy.title}
                   </span>
                   {user &&
-                    selectedStudy.host &&
-                    user.email === selectedStudy.host.email && (
+                    selectedStudy.ownerId &&
+                    user.memberId === selectedStudy.ownerId && (
                       <>
                         <img
                           src={Pen}
@@ -186,7 +275,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
         {showHamburgerBar && selectedStudy && (
           <div className="StudyContent">
             <div>개설 날짜: {formattedDate}</div>
-            <div>개설자: {selectedStudy.host?.nickname}</div>
+            <div>개설자: {ownerName}</div>
           </div>
         )}
       </div>
