@@ -6,14 +6,12 @@ export interface AdminComponentType {
 }
 
 export interface problemListType {
-  subjectName: string;
-  subjectNumber: number; // 문제 번호
-  algorithmType: string; // 알고리즘 종류
-  problemDescription: string;
-  timeLimit: number; //  시간 제한
-  memorySize: number; // 메모리 사이즈
+  algorithmId: number;
+  algorithmTitle: string;
+  submit: number; // 제출된 정답의 개수
+  answer: number; // 맞은 정답의 개수
   answerRate: number; // 정답 비율
-  solveTime: string; // 풀이 시간
+  content: string; // 문제 내용
 }
 
 export interface testCaseType {
@@ -26,13 +24,13 @@ export interface limitationType {
 }
 
 export interface createProblemType {
-  problemName: string;
+  title: string;
   timeLimit: number;
-  submitAnswer: number;
+  submit: number;
   memoryLimit: number;
   answer: number;
   answerRate: string;
-  testCases: testCaseType[];
-  inputProblem: string;
+  testCase: testCaseType[];
+  explanation: string;
   limitations: string[];
 }

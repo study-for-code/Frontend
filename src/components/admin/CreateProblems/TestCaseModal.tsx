@@ -9,14 +9,14 @@ import { createProblemType, testCaseType } from "@/types/aboutAdmin";
 
 interface TestCaseModalType {
   openTestCase: () => void;
-  testCases: testCaseType[];
+  testCase: testCaseType[];
   setTestCaseData: React.Dispatch<React.SetStateAction<testCaseType[]>>;
   setCreateProblem: React.Dispatch<React.SetStateAction<createProblemType>>;
   ref: (node?: Element | null | undefined) => void;
 }
 
 const TestCaseModal = forwardRef<any, TestCaseModalType>(
-  ({ openTestCase, testCases, setCreateProblem }, ref) => {
+  ({ openTestCase, testCase, setCreateProblem }, ref) => {
     const containerRef = useRef<HTMLDivElement>(null);
     useEffect(() => {
       const handleScroll = () => {
@@ -45,20 +45,17 @@ const TestCaseModal = forwardRef<any, TestCaseModalType>(
       setCreateProblem((prevData) => ({
         ...prevData,
         // 여기서 prevData를 업데이트하여 새로운 createProblemType 객체를 반환
-        testCases: [...prevData.testCases, { input: "", output: "" }],
+        testCase: [...prevData.testCase, { input: "", output: "" }],
       }));
     };
 
     // 삭제
     const removeTestCase = () => {
       setCreateProblem((prevData) => {
-        if (prevData.testCases.length > 1) {
+        if (prevData.testCase.length > 1) {
           return {
             ...prevData,
-            testCases: prevData.testCases.slice(
-              0,
-              prevData.testCases.length - 1
-            ),
+            testCases: prevData.testCase.slice(0, prevData.testCase.length - 1),
           };
         }
         return prevData;
@@ -68,7 +65,7 @@ const TestCaseModal = forwardRef<any, TestCaseModalType>(
     const inputData = (type: string, value: string, index: number) => {
       setCreateProblem((prevData) => ({
         ...prevData,
-        testCases: prevData.testCases.map((item, i) => {
+        testCase: prevData.testCase.map((item, i) => {
           if (i === index) {
             return {
               ...item,
@@ -92,14 +89,14 @@ const TestCaseModal = forwardRef<any, TestCaseModalType>(
         <span className="testCaseTitle">테스트 케이스</span>
         <div className="testCaseModalContents">
           {/* 입출력 */}
-          {testCases.map((testCase, index) => (
+          {testCase.map((testCaseData, index) => (
             <div key={index} className="testCaseRow" ref={ref}>
               <div className="testCaseCol">
                 <span className="testCaseInput">입력</span>
                 <div className="textareaBg">
                   <textarea
                     className="textarea"
-                    value={testCase.input}
+                    value={testCaseData.input}
                     onChange={(e) => inputData("input", e.target.value, index)}
                   />
                 </div>
@@ -109,7 +106,7 @@ const TestCaseModal = forwardRef<any, TestCaseModalType>(
                 <div className="textareaBg">
                   <textarea
                     className="textarea"
-                    value={testCase.output}
+                    value={testCaseData.output}
                     onChange={(e) => inputData("output", e.target.value, index)}
                   />
                 </div>

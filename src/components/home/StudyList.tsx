@@ -24,11 +24,13 @@ import { OptionsContainer } from "@/styles/home/homeStyles";
 
 const StudyList = () => {
   const navigation = useNavigate();
+  const user = useRecoilValue(userState);
 
   const [cookies] = useCookies(["accessToken"]);
   const { accessToken } = cookies;
-
-  const user = useRecoilValue(userState);
+  // const studies = useRecoilValue(studiesState);
+  // const setStudies = useSetRecoilState(studiesState);
+  // 아래와 같이 하나로 줄일 수 있습니다!
   const [studies, setStudies] = useRecoilState(studiesState);
   const setSelectedStudy = useSetRecoilState(selectedStudyState);
   const [showOptions, setShowOptions] = useState(false);
@@ -75,6 +77,18 @@ const StudyList = () => {
     }
   };
 
+  const handleSelectStudy = (study: Study) => {
+    setSelectedStudy(study);
+  };
+
+  const handleEnterStudy = (study: Study) => {
+    const isStudyInList = studies.some((s) => s.title === study.title);
+    if (!isStudyInList) {
+      setStudies((prevStudies) => [...prevStudies, study]);
+      setSelectedStudy(study);
+    }
+  };
+
   const onCreate = async (newStudy: { title: string }) => {
     try {
       const { title } = newStudy;
@@ -93,18 +107,6 @@ const StudyList = () => {
       refreshStudylist(response);
     } catch (e) {
       console.error(e);
-    }
-  };
-
-  const handleSelectStudy = (study: Study) => {
-    setSelectedStudy(study);
-  };
-
-  const handleEnterStudy = (study: Study) => {
-    const isStudyInList = studies.some((s) => s.title === study.title);
-    if (!isStudyInList) {
-      setStudies((prevStudies) => [...prevStudies, study]);
-      setSelectedStudy(study);
     }
   };
 

@@ -10,7 +10,7 @@ const ProblemDetailSection = ({ inputData }: problemDetailSectionType) => {
       <ProblemDetailInput
         className="problemDetailInput"
         placeholder="문제 이름"
-        name="problemName"
+        name="title"
         onChange={(e) => inputData(e.target.name, e.target.value)}
       />
       <ProblemDetailInput
@@ -28,7 +28,7 @@ const ProblemDetailSection = ({ inputData }: problemDetailSectionType) => {
       <ProblemDetailInput
         className="problemDetailInput"
         placeholder="정답 제출 수"
-        name="submitAnswer"
+        name="submit"
         onChange={(e) => inputData(e.target.name, e.target.value)}
       />
       <ProblemDetailInput

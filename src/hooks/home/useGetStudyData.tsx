@@ -1,14 +1,17 @@
 import { Study } from "@/types/aboutStudy";
 import axios from "axios";
 
+import { useCookies } from "react-cookie";
+
+interface useGetStudyListType {
+  setStudies: React.Dispatch<React.SetStateAction<Study[]>>;
+  accessToken: string;
+}
+
 const useGetStudyList = ({
   setStudies,
   accessToken,
-}: {
-  setStudies: React.Dispatch<React.SetStateAction<Study[]>>;
-
-  accessToken: string;
-}): (() => Promise<void>) => {
+}: useGetStudyListType): (() => Promise<void>) => {
   const getStudiesData = async () => {
     try {
       const headers = {

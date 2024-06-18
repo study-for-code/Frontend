@@ -42,23 +42,31 @@ const CreateProblems = () => {
 
   // 문제 생성 데이터
   const [createProblem, setCreateProblem] = useState<createProblemType>({
-    problemName: "", // 문제 이름
+    title: "", // 문제 이름
     timeLimit: 0, // 시간 제한
     memoryLimit: 0, // 메모리 제한
-    submitAnswer: 0, // 전체 정답 제출 횟수
+    submit: 0, // 전체 정답 제출 횟수
     answer: 0, // 제출 된 정답 코드들중 통과한 횟수
     answerRate: "", // 정답 비율
-    testCases: [
+    testCase: [
       {
         input: "",
         output: "",
       },
     ], // 테스트 케이스
-    inputProblem: "", // 문제 설명
+    explanation: "", // 문제 설명
     limitations: [], // 제한 사항
   });
 
-  const { problemName, inputProblem, testCases } = createProblem;
+  const {
+    title,
+    explanation,
+    timeLimit,
+    submit,
+    answer,
+    answerRate,
+    testCase,
+  } = createProblem;
 
   // 테스트 케이스 닫기
   const closeTestCase = () => {
@@ -91,11 +99,14 @@ const CreateProblems = () => {
   const onCreate = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/api/algorithm/create`,
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms`,
         {
-          title: problemName,
-          explanation: inputProblem,
-          testCase: testCaseData,
+          title,
+          timeLimit,
+          submit,
+          answer,
+          answerRate,
+          explanation,
         }
       );
       // console.log(response);
@@ -105,9 +116,8 @@ const CreateProblems = () => {
   };
 
   useEffect(() => {
-    // console.log("createProblem: ", createProblem);
-    console.log("testCases: ", testCases);
-  }, [testCases]);
+    console.log("createProblem: ", createProblem);
+  }, [createProblem]);
 
   return (
     <div className="content">
@@ -136,7 +146,7 @@ const CreateProblems = () => {
             {testCaseModal && (
               <TestCaseModal
                 openTestCase={openTestCase}
-                testCases={testCases}
+                testCase={testCase}
                 setCreateProblem={setCreateProblem}
                 setTestCaseData={setTestCaseData}
               />

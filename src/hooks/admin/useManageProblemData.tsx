@@ -11,9 +11,12 @@ const useManageProblemData = ({
 }: useManageProblemDataType): (() => Promise<void>) => {
   async function ManageProblemData() {
     try {
-      const response = await axios.get("/problemList");
-      // console.log(response);
-      setProblemList(response.data);
+      const response = await axios.get(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms`
+      );
+      console.log(response);
+      const { results } = response.data;
+      setProblemList(results);
     } catch (err) {
       console.error(err);
     }
