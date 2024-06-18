@@ -24,7 +24,7 @@ const Signup = () => {
   });
 
   useEffect(() => {
-    console.log("signupData: ", signupData);
+    // console.log("signupData: ", signupData);
   }, [signupData]);
 
   return (

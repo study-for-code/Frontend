@@ -12,7 +12,7 @@ const useManageProblemData = ({
   async function ManageProblemData() {
     try {
       const response = await axios.get("/problemList");
-      console.log(response);
+      // console.log(response);
       setProblemList(response.data);
     } catch (err) {
       console.error(err);

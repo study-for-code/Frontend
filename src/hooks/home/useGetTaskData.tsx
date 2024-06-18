@@ -11,7 +11,7 @@ const useGetTaskList = ({
       const data = response.data;
       setTaskList(data);
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
   return getTaskList;

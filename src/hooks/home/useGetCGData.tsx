@@ -8,7 +8,7 @@ const useGetCGData = (
 ) => {
   const selectedStudy = useRecoilValue(selectedStudyState);
 
-  console.log("selected Study: ", selectedStudy);
+  // console.log("selected Study: ", selectedStudy);
 
   const getCgData = async () => {
     try {
@@ -21,7 +21,7 @@ const useGetCGData = (
         setCgList(filteredData);
       }
     } catch (e) {
-      console.log(e);
+      // console.log(e);
     }
   };
 
