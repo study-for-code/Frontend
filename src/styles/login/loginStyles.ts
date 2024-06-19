@@ -85,19 +85,25 @@ export const LoginContainer = styled.div<{ mentstate: boolean }>`
       border-radius: 0 0 0.3rem 0.3rem;
     }
   }
+  /*  */
   .wrongMent {
     color: ${theme.wrongMent};
     font-family: "GmarketSansLight";
     margin-bottom: 1rem;
-    animation: ${({ mentstate }) =>
-      mentstate
+    animation: ${({ mentstate }) => {
+      console.log("mentstate: ", mentstate);
+      console.log("showWrongMent: ", showWrongMent);
+      console.log("showWrongMent2: ", showWrongMent2);
+      return mentstate
         ? css`
             ${showWrongMent} 0.5s linear
           `
         : css`
             ${showWrongMent2} 0.5s linear
-          `};
+          `;
+    }};
   }
+  /*  */
 
   .loginBtn {
     width: 30vw;

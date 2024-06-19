@@ -7,6 +7,7 @@ import { useCookies } from "react-cookie";
 import { ModalContainer } from "@/styles/modal/modalStyles";
 
 // atom
+=======
 import { useSetRecoilState } from "recoil";
 import { selectedStudyState, studiesState } from "@/atom/stats";
 
@@ -99,7 +100,7 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({ isOpen, onClose }) => {
         <div className="btn-area">
           <button onClick={onJoin} className="positiveBtn">
             입장
-          </button>
+          </button> */}
           <button onClick={handleClose} className="negativeBtn">
             취소
           </button>

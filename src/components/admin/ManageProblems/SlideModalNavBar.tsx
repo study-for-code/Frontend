@@ -1,17 +1,30 @@
 // img
-import TagIcon from "@/assets/admin/Status_list.png";
 import AnswerRateIcon from "@/assets/admin/Percent.png";
 import CorrectIcon from "@/assets/admin/check_ring_round.png";
 import SubmitIcon from "@/assets/admin/File_dock.png";
+import TimeLimitIcon from "@/assets/admin/Clock_fill.png";
 
 // types
 import { problemListType } from "@/types/aboutAdmin";
 
+// styles
+import { ModifyOtherInput } from "@/styles/admin/adminStyles";
+import { useContext } from "react";
+import { TestCaseModalContext } from "@/pages/Admin/Admin";
+
 interface SlideModalNavBarType {
   modalData: problemListType;
+  isModify: boolean;
+  inputData: (type: string, value: string | number) => void;
 }
 
-const SlideModalNavBar = ({ modalData }: SlideModalNavBarType) => {
+const SlideModalNavBar = ({
+  modalData,
+  isModify,
+  inputData,
+}: SlideModalNavBarType) => {
+  const { timeLimit } = modalData;
+  const context = useContext(TestCaseModalContext);
   return (
     <div className="slideModalNav">
       <div className="modalRow">
@@ -41,6 +54,25 @@ const SlideModalNavBar = ({ modalData }: SlideModalNavBarType) => {
         </div>
         <div className="row">
           <span>{modalData.answerRate}%</span>
+        </div>
+      </div>
+      <div className="modalRow">
+        {/* 제출된 총 횟수 */}
+        <div className="row">
+          <img src={TimeLimitIcon} />
+          <span>시간 제한</span>
+        </div>
+        <div className="row">
+          {isModify ? (
+            <ModifyOtherInput
+              ismodify={context.isModalOpen}
+              name="timeLimit"
+              onChange={(e) => inputData(e.target.name, e.target.value)}
+              value={timeLimit}
+            />
+          ) : (
+            <span>{modalData.timeLimit}</span>
+          )}
         </div>
       </div>
     </div>

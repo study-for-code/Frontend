@@ -1,14 +1,26 @@
 import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 
-export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
+export const AdminContainer = styled.div<{
+  testcasemodal: boolean;
+  ismodalopen: boolean;
+}>`
   height: auto;
   background-color: ${(props) =>
-    props.testcasemodal === true ? "#6F7074" : `${theme.adminBg}`};
+    props.testcasemodal === true || props.ismodalopen === true
+      ? "#6F7074"
+      : `${theme.adminBg}`};
 
   .header {
-    background-color: ${(props) =>
-      props.testcasemodal === true ? `rgba(35, 35, 35, 0.3)` : theme.black};
+    background-color: ${({ testcasemodal, ismodalopen }) => {
+      if (ismodalopen === true) {
+        return `rgba(35, 35, 35, 0.3)`;
+      } else if (testcasemodal === true) {
+        return `rgba(35, 35, 35, 0.3)`;
+      } else {
+        return `${theme.black}`;
+      }
+    }};
     color: white;
     font-family: "GmarketSansMedium";
     padding: 0.5rem 0 0.5rem 0.5rem;
@@ -62,7 +74,9 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
   .content {
     padding: 3rem 1rem 1rem 2rem;
     background-color: ${(props) =>
-      props.testcasemodal === true ? "#6F7074" : `${theme.adminBg}`};
+      props.testcasemodal === true || props.ismodalopen === true
+        ? "#6F7074"
+        : `${theme.adminContentBg}`};
   }
   .title {
     font-family: "GmarketSansBold";
@@ -75,7 +89,7 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
     margin-top: 3rem;
     margin-bottom: 1rem;
     background-color: ${(props) =>
-      props.testcasemodal === true
+      props.testcasemodal === true || props.ismodalopen === true
         ? `rgba(35, 35, 35, 0.3)`
         : `${theme.black}`};
 
@@ -143,16 +157,16 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
     font-family: "GmarketSansBold";
     padding-top: 0.5rem;
     border-radius: 0.3rem;
-    background-color: ${(props) =>
-      props.testcasemodal === true
+    background-color: ${({ testcasemodal, ismodalopen }) =>
+      testcasemodal === true || ismodalopen === true
         ? `rgba(49,51,56,0.3)`
         : theme.adminContentBg};
     color: ${theme.mainColor};
-
     border: 1px solid ${theme.mainColor};
 
     &:hover {
       background-color: ${theme.mainColor};
+      border: 1px solid ${theme.mainColor};
       color: white;
       outline: none;
       border: none;
@@ -184,6 +198,7 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
   .testCaseRow {
     display: flex;
     flex-direction: row;
+    margin-top: 0.8rem;
   }
   .testCaseCol {
     height: auto;
@@ -238,8 +253,10 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
     margin-bottom: 1rem;
   }
   .textareaBg {
-    background-color: ${(props) =>
-      props.testcasemodal === true ? `rgba(29,31,34,0.3)` : "#1e1f22"};
+    background-color: ${({ testcasemodal, ismodalopen }) =>
+      testcasemodal === true || ismodalopen === true
+        ? `rgba(29,31,34,0.3)`
+        : "#1e1f22"};
     padding: 1rem;
 
     textarea {
@@ -249,8 +266,10 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
       font-size: 1.1rem;
       font-family: "GmarketSansLight";
       border: 1px solid white;
-      background-color: ${(props) =>
-        props.testcasemodal === true ? `rgba(29,31,34,0.3)` : "#1e1f22"};
+      background-color: ${({ testcasemodal, ismodalopen }) =>
+        testcasemodal === true || ismodalopen === true
+          ? `rgba(29,31,34,0.3)`
+          : "#1e1f22"};
     }
   }
 
@@ -284,7 +303,7 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
     margin-bottom: 2rem;
   }
   .listElement {
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
   }
   .problemList {
     font-family: "GmarketSansMedium";
@@ -292,12 +311,16 @@ export const AdminContainer = styled.div<{ testcasemodal: boolean }>`
     color: white;
   }
 `;
+
 export const ManageProblemsContainer = styled.div<{
   modalstate: boolean;
   ismodify: boolean;
+  ismodalopen: boolean;
 }>`
   height: 100vh;
   padding: 3rem 1rem 1rem 2rem;
+  background-color: ${({ ismodalopen }) =>
+    ismodalopen === true ? "#6f7074" : null};
   .container {
     width: 90%;
     border-bottom: 1px solid white;
@@ -325,6 +348,7 @@ export const ManageProblemsContainer = styled.div<{
       border-radius: 0.3rem;
     }
   }
+
   .type {
     background-color: ${theme.mainColor};
     border-radius: 0.3rem;
@@ -334,14 +358,17 @@ export const ManageProblemsContainer = styled.div<{
     border: none;
     outline: none;
   }
+
   .slideModal {
     transition: width 0.5s ease-in-out;
     width: ${(props) => (props.modalstate === true ? "40%" : "3%")};
-    position: absolute;
+    background-color: ${({ ismodalopen }) =>
+      ismodalopen === true ? `rgba(35, 35, 35, 0.3)` : theme.adminBg};
+    position: fixed;
     right: 0;
     top: 0;
-    height: 100%;
-    background-color: ${theme.adminBg};
+    bottom: 0;
+    /* background-color: ${theme.adminBg}; */
     border-radius: 0.5rem;
   }
   .slideModalContent {
@@ -359,7 +386,7 @@ export const ManageProblemsContainer = styled.div<{
   }
 
   .slideModalNav {
-    height: 12%;
+    height: 15%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -378,6 +405,7 @@ export const ManageProblemsContainer = styled.div<{
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: flex-end;
 
     img {
       margin-right: 0.3rem;
@@ -401,6 +429,21 @@ export const ManageProblemsContainer = styled.div<{
     color: white;
     border-bottom: 1px solid white;
     font-size: 1.2rem;
+  }
+  .testCaseModifyModal {
+    position: absolute;
+    overflow-y: scroll;
+    padding: 1rem;
+    top: 20%;
+    right: 70%;
+    width: 100%;
+    height: 70%;
+    border-radius: 0.5rem;
+    background-color: ${theme.lightBlack};
+    -ms-overflow-style: none; /* 익스플로러와 엣지의 경우 */
+  }
+  .testCaseModifyModal::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
   }
 `;
 
@@ -435,10 +478,11 @@ export const LimitElementInput = styled.input<{ testcasemodal: boolean }>`
   border: 1px solid ${theme.adminInputBg};
 `;
 
-export const ModifyBtn = styled.button`
+export const ModifyBtn = styled.button<{ ismodalopen: boolean }>`
   width: 100px;
   height: 30px;
-  background-color: ${theme.mainColor};
+  background-color: ${({ ismodalopen }) =>
+    ismodalopen === true ? `rgba(49,51,56,0.3)` : theme.mainColor};
   color: white;
   font-family: "GmarketSansMedium";
   font-size: 1.2rem;
@@ -447,8 +491,46 @@ export const ModifyBtn = styled.button`
   outline: none;
 
   &:hover {
-    background-color: white;
+    background-color: ${theme.adminContentBg};
     border: 1px solid ${theme.mainColor};
     color: ${theme.mainColor};
+  }
+`;
+export const ModifyTitleInput = styled.input<{ ismodify: boolean }>`
+  width: 100%;
+  font-size: 1.8rem;
+  color: white;
+  font-family: "GmarketSansMedium";
+  background-color: ${({ ismodify }) =>
+    ismodify === true ? `rgba(64,66,73,0.3)` : theme.selectedGray};
+  border-radius: 0.3rem;
+  outline: none;
+  border: none;
+  margin-bottom: 1rem;
+
+  &:hover {
+    border: 1px solid ${theme.black};
+    background-color: white;
+    color: ${theme.black};
+  }
+`;
+
+export const ModifyOtherInput = styled.input<{ ismodify: boolean }>`
+  width: 30%;
+  text-align: end;
+  color: white;
+  font-family: "GmarketSansMedium";
+  background-color: ${({ ismodify }) =>
+    ismodify === true ? `rgba(64,66,73,0.3)` : theme.selectedGray};
+  border-radius: 0.2rem;
+  outline: none;
+  border: none;
+  margin-bottom: 0.3rem;
+  padding-right: 0.3rem;
+
+  &:hover {
+    border: 1px solid ${theme.black};
+    background-color: white;
+    color: ${theme.black};
   }
 `;

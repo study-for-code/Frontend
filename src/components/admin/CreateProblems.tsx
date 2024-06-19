@@ -34,11 +34,7 @@ const CreateProblems = () => {
   ]);
 
   // 제한 사항
-  const [limitationList, setLimitationList] = useState<limitationType[]>([
-    {
-      limitation: "",
-    },
-  ]);
+  const [limitationList, setLimitationList] = useState<string[]>([" "]);
 
   // 문제 생성 데이터
   const [createProblem, setCreateProblem] = useState<createProblemType>({
@@ -55,7 +51,6 @@ const CreateProblems = () => {
       },
     ], // 테스트 케이스
     explanation: "", // 문제 설명
-    limitations: [], // 제한 사항
   });
 
   const {
@@ -90,12 +85,7 @@ const CreateProblems = () => {
     });
   };
 
-  // 멘토링 물어보기
-  const inputLimitationData = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.target;
-    setLimitationList((prev) => [{ limitation: value }]);
-  };
-
+  // create problem
   const onCreate = async () => {
     try {
       const response = await axios.post(
@@ -107,17 +97,32 @@ const CreateProblems = () => {
           answer,
           answerRate,
           explanation,
+          restrictions: limitationList,
         }
       );
-      // console.log(response);
+      console.log(response);
+      const { algorithmId } = response.data.results[0];
+
+      const response2 = testCase.map((testCase) =>
+        axios.post(
+          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/${algorithmId}`,
+          {
+            input: testCase.input,
+            output: testCase.output,
+          }
+        )
+      );
+      const res = await Promise.all(response2);
+      console.log(res);
     } catch (e) {
-      // console.log(e);
+      console.log(e);
     }
   };
 
   useEffect(() => {
     console.log("createProblem: ", createProblem);
-  }, [createProblem]);
+    console.log("limitationList: ", limitationList);
+  }, [createProblem, limitationList]);
 
   return (
     <div className="content">
@@ -180,13 +185,26 @@ const CreateProblems = () => {
             marginTop: "1rem",
           }}
         >
-          <li className="listElement">
-            <LimitElementInput
-              testcasemodal={testCaseModal}
-              name="limitations"
-              onChange={(e) => inputLimitationData(e)}
-            />
-          </li>
+          {limitationList.map((item, i: number) => (
+            <li className="listElement" key={i}>
+              <LimitElementInput
+                testcasemodal={testCaseModal}
+                name="restrictions"
+                onChange={(e) => {
+                  limitationList[i] = e.target.value;
+                  setLimitationList([...limitationList]);
+                }}
+                onKeyDown={(e) => {
+                  const key = e.key.toUpperCase();
+                  if (key === "ENTER") {
+                    e.preventDefault();
+                    setLimitationList([...limitationList, ""]);
+                  }
+                }}
+                value={item}
+              />
+            </li>
+          ))}
         </div>
       </div>
     </div>

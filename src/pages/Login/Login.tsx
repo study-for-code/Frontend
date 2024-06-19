@@ -51,7 +51,6 @@ const Login = () => {
   };
 
   const login = async () => {
-    changeMentState();
     try {
       const response: AxiosResponse = await axios.post(
         `${import.meta.env.VITE_LOCAL_API_ADDRESS}/login`,
@@ -61,16 +60,18 @@ const Login = () => {
         }
       );
       console.log(response);
-      const { memberId, nickname, token } = response.data.results[0];
-      setCookies("accessToken", token, { path: "/" });
-      setCookies("email", email, { path: "/" });
-      setCookies("memberId", memberId, { path: "/" });
-      setCookies("nickname", nickname, { path: "/" });
       const { code } = response.data;
       setUserData((prev) => ({
         ...prev,
         code,
       }));
+      changeMentState();
+
+      const { memberId, nickname, token } = response.data.results[0];
+      setCookies("accessToken", token, { path: "/" });
+      setCookies("email", email, { path: "/" });
+      setCookies("memberId", memberId, { path: "/" });
+      setCookies("nickname", nickname, { path: "/" });
 
       if (code === 200) {
         setTimeout(() => {

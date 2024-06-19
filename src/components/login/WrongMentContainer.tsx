@@ -1,5 +1,4 @@
 import { UserDataContext } from "@/pages/Login/Login";
-import { showWrongMent, showWrongMent2 } from "@/styles/keyframes";
 import { LoginType } from "@/types/aboutLogin";
 import { useContext } from "react";
 
@@ -7,7 +6,7 @@ interface WrongMentContainerType {
   mentState: boolean;
 }
 
-const WrongMentContainer = ({ mentState }: WrongMentContainerType) => {
+const WrongMentContainer = ({}: WrongMentContainerType) => {
   const userDataContext = useContext<LoginType | null>(UserDataContext);
   console.log("userDataContext: ", userDataContext);
 
