@@ -2,7 +2,19 @@ import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 
 export const Container = styled.div`
-  padding: 1rem;
+  /* padding: 1rem; */
+
+  .contentHeader {
+    padding: 0.5rem;
+    border-bottom: 1px solid ${theme.lightBlack};
+  }
+
+  .problemTitle {
+    font-family: "GmarketSansBold";
+    color: ${theme.fontWhiteColor};
+    padding: 0.5rem 0 0.5rem 1rem;
+    font-size: 1.3rem;
+  }
 
   .header {
     display: flex;

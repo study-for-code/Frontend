@@ -1,12 +1,7 @@
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/common/ColorStyles";
 
-import {
-  backContent,
-  backSideBar,
-  moveContent,
-  moveSideBar,
-} from "../keyframes";
+import { backSideBar, moveSideBar, showDrawer, hideDrawer } from "../keyframes";
 
 export const Container = styled.div<{ showhamburgerBar: boolean }>`
   height: 96vh;
@@ -75,19 +70,20 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
 
   .hamburgerBarContainer {
     position: relative;
-    width: 40px;
+    transition: 0.75s width;
+    width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
     height: 100%;
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-between;
     background-color: ${theme.gray};
-    animation: ${(props) =>
+    /* animation: ${(props) =>
       props.showhamburgerBar
         ? css`0.5s ${moveSideBar}
       ease-in-out`
         : css`0.5s ${backSideBar}
-      ease-in-out`};
+      ease-in-out`}; */
     animation-fill-mode: forwards;
   }
 
@@ -105,12 +101,18 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     font-family: "GmarketSansMedium";
     padding-top: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
     background-color: ${theme.black};
-    padding-left: 1rem;
+    padding-left: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
   }
+
   .hamburgerbutton {
     display: flex;
     justify-content: space-between;
     width: 100%;
+  }
+
+  .hamburgerImage {
+    margin-right: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
+    margin-left: ${(props) => (props.showhamburgerBar ? null : "0.5rem")};
   }
 
   .studyName {
@@ -128,7 +130,15 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     padding: 0.5rem;
     font-size: 0.8rem;
     color: ${theme.fontWhiteColor};
+
+    animation: ${(props) =>
+      props.showhamburgerBar
+        ? css`0.5s ${showDrawer}
+      ease-in-out`
+        : css`0.2s ${hideDrawer}
+      ease-in-out`};
   }
+
   .drawerButton {
     transition: 0.75s width;
     width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
@@ -138,18 +148,27 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
       props.showhamburgerBar ? "flex-start" : "flex-end"};
     justify-content: ${(props) =>
       props.showhamburgerBar ? "flex-end" : "center"};
-    padding-right: ${(props) => (props.showhamburgerBar ? "0.5rem" : null)};
+    padding-right: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
     padding-top: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
     background-color: ${theme.black};
   }
 
   .drawerContent {
+    transition: 0.75s width;
     width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
     height: 90%;
-    visibility: ${(props) => (props.showhamburgerBar ? "none" : "hidden")};
-    transition: 0.75s width;
+    opacity: ${(props) => (props.showhamburgerBar ? 1 : 0)};
     background-color: ${theme.gray};
+    color: ${(props) =>
+      props.showhamburgerBar ? theme.CategoryFontColor : theme.gray};
     position: relative;
+    padding-left: 1rem;
+    animation: ${(props) =>
+      props.showhamburgerBar
+        ? css`0.5s ${showDrawer}
+      ease-in-out`
+        : css`0s ${hideDrawer}
+      ease-in-out`};
   }
 
   .categorySpace {
@@ -158,8 +177,9 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     justify-content: center;
     padding: 1rem;
     font-family: "GmarketSansMedium";
-    color: ${theme.CategoryFontColor};
     position: relative;
+    transition: 0.75s width;
+    width: ${(props) => (props.showhamburgerBar ? null : "40px")};
   }
 
   .algorithmList {
@@ -193,6 +213,14 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     flex-direction: column;
   }
 
+  .categoryRow .hr-line {
+    flex: 1;
+    background-color: ${theme.CategoryFontColor};
+    border: none;
+    height: 1px;
+    margin: 9px 0px;
+  }
+
   .algorithmProblems {
     padding: 0.2rem;
     border-radius: 0.5rem;
@@ -206,33 +234,14 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
   }
 
   .contentSection {
-    z-index: 0;
     transition: 0.5s width ease-in-out;
-    width: ${(props) => (props.showhamburgerBar ? "75%" : "100%")};
+    flex: 1;
+    padding-left: ${(props) => (props.showhamburgerBar ? "0.5rem" : null)};
     background-color: ${theme.lightGray};
-    animation: ${(props) =>
-      props.showhamburgerBar
-        ? css`0.5s ${moveContent}
-      ease-in-out`
-        : css`0.5s ${backContent}
-      ease-in-out`};
     animation-fill-mode: forwards;
   }
 
-  .contentHeader {
-    padding: 0.5rem;
-    border-bottom: 1px solid ${theme.lightBlack};
-  }
-
-  .problemTitle {
-    font-family: "GmarketSansBold";
-    color: ${theme.fontWhiteColor};
-    padding: 0.5rem 0 0.5rem 1rem;
-    font-size: 1.3rem;
-  }
-
   .userSection {
-    position: absolute;
     right: 0;
     height: 96vh;
     background-color: ${theme.gray};
