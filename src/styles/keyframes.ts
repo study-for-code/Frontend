@@ -2,19 +2,22 @@ import { keyframes } from "styled-components";
 
 export const showDrawer = keyframes`
   0% {
-    transform: translateX(-100px);
+    opacity: 0;
   }
-  100%{
-    transform: translateX(0px);
+  50%{
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
   }
 `;
 
 export const hideDrawer = keyframes`
-  0% {
-    transform: translateX(0px);
+  from {
+    opacity: 1;
   }
-  100%{
-    transform: translateX(-100px);
+  to {
+    opacity: 0;
   }
 `;
 
@@ -31,24 +34,6 @@ export const moveSideBar = keyframes`
 export const backSideBar = keyframes`
   0% {
     transform: translateX(100px);
-  }
-  100%{
-    transform: translateX(0px);
-  }
-`;
-
-export const moveContent = keyframes`
-  0% {
-    transform: translateX(0);
-  }
-  100%{
-    transform: translateX(200px);
-  }
-`;
-
-export const backContent = keyframes`
-  0% {
-    transform: translateX(200px);
   }
   100%{
     transform: translateX(0px);

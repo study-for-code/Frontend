@@ -28,7 +28,9 @@ const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
   );
   return (
     <Container>
-      {/* header 부분 */}
+      <nav className="contentHeader">
+        <div className="problemTitle">15888 치킨 배달</div>
+      </nav>
       <div className="header">
         <div className="userRow">
           <img src={GoormThinking} className="profile" />

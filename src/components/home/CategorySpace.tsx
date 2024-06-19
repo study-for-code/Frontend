@@ -31,12 +31,14 @@ interface CategorySpaceProps {
   isToggleSelected: boolean[];
   handleToggle: (categoryId: number) => void;
   handlePage: (data: TaskListData) => void;
+  handleSubscribe: () => void;
 }
 
 const CategorySpace: React.FC<CategorySpaceProps> = ({
   isToggleSelected,
   handleToggle,
   handlePage,
+  handleSubscribe,
 }) => {
   const user = useRecoilValue(userState);
   const taskList = useRecoilValue(taskListState);
@@ -184,6 +186,11 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
   };
 
+  const handleSubscribePage = () => {
+    setShowOuterOptions(false);
+    handleSubscribe();
+  };
+
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
 
@@ -244,9 +251,9 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                   <span style={{ marginRight: "0.5rem" }}>
                     {category.title}
                   </span>
-                  <span>
-                    {getHyphens(category.title ? category.title.length : 0)}
-                  </span>
+
+                  <div className="hr-line"></div>
+
                   <img
                     style={{ marginLeft: "0.5rem" }}
                     title={`${category.title}}`}
@@ -293,7 +300,9 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                   카테고리 생성
                 </button>
               )}
-            <button className="optionButton">문제 검색</button>
+            <button className="optionButton" onClick={handleSubscribePage}>
+              문제 검색
+            </button>
           </OptionsContainer>,
           modalRoot
         )}

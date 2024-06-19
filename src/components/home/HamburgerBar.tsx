@@ -27,6 +27,7 @@ interface HamburgerBarType {
   handleHamburgerBar: () => void;
   handleToggle: (category_id: number) => void;
   handlePage: (data: TaskListData) => void;
+  handleSubscribe: () => void;
   showHamburgerBar: boolean;
   isToggleSelected: boolean[];
   goToLoginPage: () => void;
@@ -38,6 +39,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   isToggleSelected,
   handleToggle,
   handlePage,
+  handleSubscribe,
   goToLoginPage,
 }) => {
   const user = useRecoilValue(userState);
@@ -262,7 +264,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
 
           <img
             src={Hamburger}
-            style={{ marginRight: "1rem" }}
+            className="hamburgerImage"
             onClick={handleHamburgerBar}
           />
         </div>
@@ -278,6 +280,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
         isToggleSelected={isToggleSelected}
         handleToggle={handleToggle}
         handlePage={handlePage}
+        handleSubscribe={handleSubscribe}
       />
       <div className="drawerButton">
         <img

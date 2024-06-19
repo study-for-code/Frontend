@@ -93,6 +93,10 @@ const Home = () => {
     setPage("codeReview");
   };
 
+  const handleSubscribe = () => {
+    setPage("algorithmList");
+  };
+
   const getUserData = async () => {
     const memberId = cookies.memberId;
     const execute = useGetUserData({ setUser, memberId });
@@ -182,15 +186,11 @@ const Home = () => {
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}
           handlePage={handlePage}
+          handleSubscribe={handleSubscribe}
           goToLoginPage={goToLoginPage}
         />
         {page !== "defaultPage" ? (
-          <div className="contentSection">
-            <nav className="contentHeader">
-              <div className="problemTitle">15888 치킨 배달</div>
-            </nav>
-            {componentToShow}
-          </div>
+          <div className="contentSection">{componentToShow}</div>
         ) : (
           <div className="contentSection"></div>
         )}
