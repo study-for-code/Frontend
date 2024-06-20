@@ -15,6 +15,7 @@ import { getTestCaseType, problemListType } from "@/types/aboutAdmin";
 import {
   ManageProblemsContainer,
   ModifyBtn,
+  ModifyLimitElementInput,
   ModifyTitleInput,
 } from "@/styles/admin/adminStyles";
 // components
@@ -24,7 +25,12 @@ import TestCaseModifyModal from "./ManageProblems/TestCaseModifyModal";
 
 // apis
 import { TestCaseModalContext } from "@/pages/Admin/Admin";
-import axios from "axios";
+import useHandleTestCaseModal, {
+  useHandleTestCaseModalType,
+} from "@/hooks/admin/ManageProblems/useHandleTestCaseModal";
+import useModifyData, {
+  useModifyDataType,
+} from "@/hooks/admin/ManageProblems/useModifyData";
 
 const ManageProblems = () => {
   // testCase modal
@@ -37,12 +43,19 @@ const ManageProblems = () => {
     submit: 0, // 제출된 정답의 개수
     answer: 0, // 맞은 정답의 개수
     answerRate: 0.0, // 정답 비율
-    content: "", // 문제 내용
+    explanation: "", // 문제 내용
     restrictions: [],
     timeLimit: 0,
+    memorySize: 0,
   });
-  const { algorithmTitle, content, algorithmId, restrictions, timeLimit } =
-    modalData;
+  const {
+    algorithmTitle,
+    explanation,
+    algorithmId,
+    restrictions,
+    timeLimit,
+    memorySize,
+  } = modalData;
 
   // modal 제어
   const [modalState, setModalState] = useState<boolean>(false);
@@ -72,65 +85,48 @@ const ManageProblems = () => {
 
   // modal open
   const handleTestCaseModal = async () => {
-    setIsModalOpen(true);
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/${algorithmId}`
-      );
-      console.log("testCase: ", res);
-      const { results } = res.data;
-      console.log("results: ", results);
-      setTestcaseList(results);
-    } catch (error) {
-      console.log(error);
-    }
+    const object: useHandleTestCaseModalType = {
+      setIsModalOpen,
+      setTestcaseList,
+      algorithmId,
+    };
+    const execute = useHandleTestCaseModal(object);
+    execute();
   };
   // 수정 데이터 통신
   const modifyData = async () => {
-    try {
-      const res = await axios.patch(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/${algorithmId}`,
-        {
-          title: algorithmTitle,
-          explanation: content,
-          restrictions, // string 배열
-          timeLimit,
-        }
-      );
-      setIsModify(false);
-      console.log(res);
-      const { code } = res.data;
-      if (code === "200") {
-        const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms`
-        );
-        console.log(response);
-        const { results } = response.data;
-        setProblemList(results);
-      }
-
-      console.log(res);
-    } catch (error) {
-      console.log(error);
-    }
+    const object: useModifyDataType = {
+      algorithmId,
+      algorithmTitle,
+      explanation,
+      restrictions,
+      timeLimit,
+      memorySize,
+      setIsModify,
+      setProblemList,
+    };
+    const execute = useModifyData(object);
+    execute();
   };
   // 입력
   const inputData = (type: string, value: string | number) => {
-    setModalData((prev) => {
-      let newValue = value;
-      if (typeof value === "string") {
-        newValue =
-          value.trim() === ""
-            ? ""
-            : !isNaN(Number(value))
-              ? Number(value)
-              : newValue;
-      }
-      return {
-        ...prev,
-        [type]: newValue,
-      };
-    });
+    if (value !== "-") {
+      setModalData((prev) => {
+        let newValue = value;
+        if (typeof value === "string") {
+          newValue =
+            value.trim() === ""
+              ? ""
+              : !isNaN(Number(value))
+                ? Number(value)
+                : newValue;
+        }
+        return {
+          ...prev,
+          [type]: newValue,
+        };
+      });
+    }
   };
   // 선택된 데이터
   const getSelectedData = (data: problemListType) => {
@@ -213,15 +209,54 @@ const ManageProblems = () => {
               {isModify ? (
                 <div className="textareaBg">
                   <textarea
-                    name="content"
+                    name="explanation"
                     onChange={(e) => inputData(e.target.name, e.target.value)}
-                    value={content}
+                    value={explanation}
                   />
                 </div>
               ) : (
-                <div>{modalData.content}</div>
+                <div>{modalData.explanation}</div>
               )}
             </div>
+            <div className="limitElementSection">
+              <span className="sectionTitle2">제한 사항</span>
+              <div
+                style={{
+                  height: "auto",
+                  display: "flex",
+                  justifyContent: "space-between",
+                  flexDirection: "column",
+                  marginTop: "1rem",
+                }}
+              >
+                {restrictions.map((item, i: number) => (
+                  <li className="listElement" key={i}>
+                    <ModifyLimitElementInput
+                      name="restrictions"
+                      onChange={(e) => {
+                        restrictions[i] = e.target.value;
+                        setModalData((prev) => ({
+                          ...prev,
+                          restrictions,
+                        }));
+                      }}
+                      onKeyDown={(e) => {
+                        const key = e.key.toUpperCase();
+                        if (key === "ENTER") {
+                          e.preventDefault();
+                          setModalData((prev) => ({
+                            ...prev,
+                            restrictions,
+                          }));
+                        }
+                      }}
+                      value={item}
+                    />
+                  </li>
+                ))}
+              </div>
+            </div>
+            {/* 버튼 */}
             <div
               style={{
                 display: "flex",

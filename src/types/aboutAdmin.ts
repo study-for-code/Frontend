@@ -11,9 +11,10 @@ export interface problemListType {
   submit: number; // 제출된 정답의 개수
   answer: number; // 맞은 정답의 개수
   answerRate: number; // 정답 비율
-  content: string; // 문제 내용
+  explanation: string; // 문제 내용
   restrictions: string[]; // 제한 사항
   timeLimit: number; // 시간 제한
+  memorySize: number; // 메모리 제한
 }
 
 export interface testCaseType {
@@ -28,10 +29,7 @@ export interface limitationType {
 export interface createProblemType {
   title: string;
   timeLimit: number;
-  submit: number;
-  memoryLimit: number;
-  answer: number;
-  answerRate: string;
+  memorySize: number;
   testCase: testCaseType[];
   explanation: string;
 }

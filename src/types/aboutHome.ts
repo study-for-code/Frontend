@@ -2,28 +2,28 @@ import { SetStateAction } from "react";
 import { Category } from "./aboutStudy";
 
 export interface TaskListData {
-  category_id: number;
-  subjectName: string;
-  subjectNumber: number;
+  algorithmId: number;
+  algorithmTitle: string;
   timeLimit: number;
   memorySize: number;
   submit: number;
   answer: number;
-  // person: number;
   answerRate: number;
   language: string;
-  solveTime: string;
   codes: string;
 }
 
-// title =
-// explanation =
-// restrictions =
-// memorySize =
-// timeLimit =
-// submit = 0;
-// answer = 0;
-// answerRate = 0.0;
+export interface problemListType {
+  algorithmId: number;
+  algorithmTitle: string;
+  submit: number; // 제출된 정답의 개수
+  answer: number; // 맞은 정답의 개수
+  answerRate: number; // 정답 비율
+  explanation: string; // 문제 내용
+  restrictions: string[]; // 제한 사항
+  timeLimit: number; // 시간 제한
+  memorySize: number; // 메모리 제한
+}
 
 export interface CategoryListData {
   listName: string;
@@ -57,7 +57,7 @@ export interface CategoryListMap {
 export interface useHandleToggleType {
   isToggleSelected: boolean[];
   setIsToggleSelected: React.Dispatch<SetStateAction<boolean[]>>;
-  fullCatagoryList: Category[];
+  categoryList: Category[];
   category_id: number;
 }
 
@@ -72,4 +72,24 @@ export interface ContentSectionType {
     any,
     string | React.JSXElementConstructor<any>
   > | null;
+}
+
+export interface AlgorithmListType {
+  algorithmId: number;
+  algorithmTitle: string;
+  solvedMembers: string[];
+  SubscribeStatus: boolean;
+}
+export interface SpecificCategoryData {
+  categoryId: number;
+  subscribes: string[];
+  title: string;
+}
+
+export interface categoryToggleListType {
+  algorithm: {
+    algorithmId: number;
+    algorithmTitle: string;
+  };
+  subscribeId: number;
 }

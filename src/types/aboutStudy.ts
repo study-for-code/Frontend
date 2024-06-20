@@ -12,4 +12,5 @@ export interface Study {
 export interface Category {
   categoryId: number;
   title: string;
+  subscribes: string[];
 }

@@ -10,10 +10,11 @@ import LogOut from "@/assets/home/logout.png";
 import Hamburger from "@/assets/home/hamburgerBar.png";
 import Pen from "@/assets/home/pen.png";
 import Trash from "@/assets/home/trash.png";
+import UserIcon from "@/assets/home/User.png";
 
 // component
 import DeleteStudyModal from "../modal/DeleteStudyModal";
-import CategorySpace from "./CategorySpace";
+import CategorySpace from "./hamburgerBar/CategorySpace";
 
 // atom
 import { useRecoilState, useRecoilValue } from "recoil";
@@ -46,7 +47,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const [isModalOpen, setIsModalOpen] = useState(false); // 스터디 삭제 모달 상태
   const [ownerName, setOwnerName] = useState<string>("");
 
-  const [cookies] = useCookies(["accessToken"]);
+  const [cookies] = useCookies(["accessToken", `nickname`]);
   const { accessToken } = cookies;
 
   // 날짜 형식 변환
@@ -195,6 +196,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
 
   return (
     <div className="hamburgerBarContainer">
+      {/* 햄버거 header */}
       <div className="drawerSection">
         <div className="hamburgerbutton">
           {showHamburgerBar && selectedStudy && (
@@ -257,7 +259,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
               )}
             </div>
           )}
-
           <img
             src={Hamburger}
             className="hamburgerImage"
@@ -272,18 +273,30 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
           </div>
         )}
       </div>
+      {/* 햄버거 header */}
+      {/* 햄버거 카테고리 섹션 */}
       <CategorySpace
         isToggleSelected={isToggleSelected}
         handleToggle={handleToggle}
       />
+      {/* 햄버거 카테고리 섹션 */}
+      {/* 햄버거 하단 섹션 */}
       <div className="drawerButton">
-        <img
-          src={LogOut}
-          style={{ width: "20px", height: "20px", marginBottom: "0.5rem" }}
-          onClick={goToLoginPage}
-        />
-      </div>
+        <div className="drawerButtonContainer">
+          {showHamburgerBar && (
+            <div className="profileContainer">
+              <img
+                src={UserIcon}
+                style={{ border: "1px solid white", borderRadius: "50%" }}
+              />
+              <span>{cookies.nickname}</span>
+            </div>
+          )}
 
+          <img className="logOut" src={LogOut} onClick={goToLoginPage} />
+        </div>
+      </div>
+      {/* 햄버거 하단 섹션 */}
       <DeleteStudyModal
         isOpen={isModalOpen}
         onClose={handleModalClose}
