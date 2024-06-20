@@ -1,14 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import axios from "axios";
-import { useCookies } from "react-cookie";
 
 // image
 import CategoryExpansion from "@/assets/home/category_expansion.png";
 import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 
 // type
-import { TaskListData } from "@/types/aboutHome";
+import { PageKey, TaskListData } from "@/types/aboutHome";
 import { Category } from "@/types/aboutStudy";
 
 // component
@@ -18,7 +17,8 @@ import CreateCategoryModal from "../modal/CreateCategoryModal";
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
   categoryListState,
-  fullCategoryListState,
+  pageDataState,
+  pageState,
   selectedStudyState,
   taskListState,
   userState,
@@ -26,19 +26,16 @@ import {
 
 import { OptionsContainer } from "@/styles/home/homeStyles";
 import DeleteCategoryModal from "../modal/DeleteCategoryModal";
+import { problemListType } from "@/types/aboutAdmin";
 
 interface CategorySpaceProps {
   isToggleSelected: boolean[];
   handleToggle: (categoryId: number) => void;
-  handlePage: (data: TaskListData) => void;
-  handleSubscribe: () => void;
 }
 
 const CategorySpace: React.FC<CategorySpaceProps> = ({
   isToggleSelected,
   handleToggle,
-  handlePage,
-  handleSubscribe,
 }) => {
   const user = useRecoilValue(userState);
   const taskList = useRecoilValue(taskListState);
@@ -57,23 +54,21 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [newTitle, setNewTitle] = useState<{ [key: number]: string }>({});
   const [selectedCgID, setSelectedCgID] = useState(0);
 
-  const [cookies] = useCookies(["accessToken"]);
-  const { accessToken } = cookies;
-
-  const getHyphens = (length: number) => {
-    let num = 16 - length;
-    return "-".repeat(num);
-  };
+  const [page, setPage] = useRecoilState<PageKey>(pageState);
+  const [pageData, setPageData] =
+    useRecoilState<problemListType>(pageDataState);
 
   const getCategoryData = async () => {
-    try {
-      const response = await axios.get(
-        `http://localhost:8080/categories/${selectedStudy?.studyId}/study`
-      );
-      const data = response.data;
-      setCategoryList(data.results);
-    } catch (e) {
-      console.log(e);
+    if (selectedStudy) {
+      try {
+        const response = await axios.get(
+          `http://localhost:8080/categories/${selectedStudy?.studyId}/study`
+        );
+        const data = response.data;
+        setCategoryList(data.results);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -186,10 +181,18 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
   };
 
-  const handleSubscribePage = () => {
+  const handlePage = (page: PageKey, task?: problemListType) => {
     setShowOuterOptions(false);
-    handleSubscribe();
+    if (task) {
+      setPageData(task);
+    }
+    setPage(page);
   };
+
+  // const handleSubscribePage = () => {
+  //   setShowOuterOptions(false);
+  //   handleSubscribe();
+  // };
 
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
@@ -234,7 +237,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                     type="text"
                     value={newTitle[category.categoryId] || category.title}
                     onChange={(event) => handleInputChange(event, category)}
-                    maxLength={8}
+                    maxLength={10}
                   />
                   <button onClick={() => handleEditTitle(category.categoryId)}>
                     수정
@@ -271,12 +274,24 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                   <div key={index} className="algorithmProblems">
                     <li
                       style={{ padding: "0.3rem" }}
-                      onClick={() => handlePage(task)}
+                      onClick={() => handlePage("algorithmDescription", task)}
                     >
                       {task.subjectNumber} {task.subjectName}
                     </li>
                   </div>
                 ))} */}
+
+              {/* task 연결 전 임시 데이터 */}
+              {isToggleSelected[category.categoryId] && (
+                <div className="algorithmProblems">
+                  <li
+                    style={{ padding: "0.3rem" }}
+                    onClick={() => handlePage("algorithmDescription")}
+                  >
+                    제목
+                  </li>
+                </div>
+              )}
             </div>
           );
         })}
@@ -300,7 +315,10 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                   카테고리 생성
                 </button>
               )}
-            <button className="optionButton" onClick={handleSubscribePage}>
+            <button
+              className="optionButton"
+              onClick={() => handlePage("algorithmList")}
+            >
               문제 검색
             </button>
           </OptionsContainer>,
