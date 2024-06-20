@@ -11,6 +11,7 @@ import UserWithdrawral from "@/components/admin/UserWithdrawral";
 
 // types
 import { AdminComponentType } from "@/types/aboutAdmin";
+import { useNavigate } from "react-router-dom";
 
 // Context 생성
 interface TestCaseModalContextType {
@@ -28,6 +29,8 @@ export const TestCaseModalContext = createContext<TestCaseModalContextType>({
 });
 
 const Admin = () => {
+  // 네비게이션
+  const navigation = useNavigate();
   // 페이지 컨트롤
   const [page, setPage] = useState<string>("createProblems");
 
@@ -73,6 +76,9 @@ const Admin = () => {
               onClick={() => showComponents("userWithdrawal")}
             >
               유저 탈퇴
+            </div>
+            <div className="sub_element" onClick={() => navigation("/")}>
+              메인 이동
             </div>
           </div>
         </div>

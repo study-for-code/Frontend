@@ -22,25 +22,7 @@ const ProblemDetailSection = ({ inputData }: problemDetailSectionType) => {
       <ProblemDetailInput
         className="problemDetailInput"
         placeholder="메모리 제한"
-        name="memoryLimit"
-        onChange={(e) => inputData(e.target.name, e.target.value)}
-      />
-      <ProblemDetailInput
-        className="problemDetailInput"
-        placeholder="정답 제출 수"
-        name="submit"
-        onChange={(e) => inputData(e.target.name, e.target.value)}
-      />
-      <ProblemDetailInput
-        className="problemDetailInput"
-        placeholder="정답"
-        name="answer"
-        onChange={(e) => inputData(e.target.name, e.target.value)}
-      />
-      <ProblemDetailInput
-        className="problemDetailInput"
-        placeholder="정답 비율"
-        name="answerRate"
+        name="memorySize"
         onChange={(e) => inputData(e.target.name, e.target.value)}
       />
     </div>

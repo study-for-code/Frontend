@@ -100,7 +100,7 @@ export const Container = styled.div<{
     font-family: "GmarketSansMedium";
     padding-top: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
     background-color: ${theme.black};
-    padding-left: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
+    padding-left: ${(props) => (props.showhamburgerBar ? "0" : null)};
   }
 
   .hamburgerbutton {
@@ -110,11 +110,14 @@ export const Container = styled.div<{
   }
 
   .hamburgerImage {
+    width: 20px;
+    height: 20px;
     margin-right: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
     margin-left: ${(props) => (props.showhamburgerBar ? null : "0.5rem")};
   }
 
   .studyName {
+    padding: 0.3rem;
     display: flex;
     align-items: center;
   }
@@ -126,7 +129,7 @@ export const Container = styled.div<{
   }
 
   .StudyContent {
-    padding: 0.5rem;
+    padding: 0.3rem;
     font-size: 0.8rem;
     color: ${theme.fontWhiteColor};
 
@@ -141,44 +144,56 @@ export const Container = styled.div<{
   .drawerButton {
     transition: 0.75s width;
     width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
-    height: ${(props) => (props.showhamburgerBar ? "40px" : "40px")};
+    height: ${(props) => (props.showhamburgerBar ? "60px" : "40px")};
     display: flex;
-    align-items: ${(props) =>
-      props.showhamburgerBar ? "flex-start" : "flex-end"};
+    align-items: ${(props) => (props.showhamburgerBar ? "center" : "center")};
     justify-content: ${(props) =>
-      props.showhamburgerBar ? "flex-end" : "center"};
-    padding-right: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
-    padding-top: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
+      props.showhamburgerBar ? "space-between" : "center"};
+    padding-right: ${(props) => (props.showhamburgerBar ? "0" : null)};
+    padding-top: ${(props) => (props.showhamburgerBar ? "0" : null)};
     background-color: ${theme.black};
+    font-family: "GmarketSansMedium";
+    color: white;
   }
 
+  .drawerButtonContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: ${({ showhamburgerBar }) =>
+      showhamburgerBar ? "space-between" : "center"};
+    align-items: center;
+  }
+  .profileContainer {
+    width: 35%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-left: 0.5rem;
+    animation: ${({ showhamburgerBar }) =>
+      showhamburgerBar ? css`0.3s ${showDrawer}` : css`0.3s ${hideDrawer}`};
+  }
+  .logOut {
+    width: 20px;
+    height: 20px;
+    margin-right: 0.5rem;
+  }
   .drawerContent {
     transition: 0.75s width;
     width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
-    height: 90%;
+    flex: 1;
     opacity: ${(props) => (props.showhamburgerBar ? 1 : 0)};
     background-color: ${theme.gray};
     color: ${(props) =>
       props.showhamburgerBar ? theme.CategoryFontColor : theme.gray};
     position: relative;
-    padding-left: 1rem;
+    /* padding-left: 1rem; */
     animation: ${(props) =>
       props.showhamburgerBar
         ? css`0.5s ${showDrawer}
       ease-in-out`
         : css`0s ${hideDrawer}
       ease-in-out`};
-  }
-
-  .categorySpace {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 1rem;
-    font-family: "GmarketSansMedium";
-    position: relative;
-    transition: 0.75s width;
-    width: ${(props) => (props.showhamburgerBar ? null : "40px")};
   }
 
   .algorithmList {
@@ -207,9 +222,22 @@ export const Container = styled.div<{
   }
 
   .categoryRow {
-    padding: 0.5rem;
     display: flex;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 45px;
+  }
+  .categoryTitle {
+    width: 90%;
+    display: flex;
+    align-items: center;
+    height: 30px;
+    &:hover {
+      background-color: ${theme.selectedGray};
+      border-radius: 0.5rem;
+      padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+    }
   }
 
   .categoryRow .hr-line {
@@ -218,6 +246,16 @@ export const Container = styled.div<{
     border: none;
     height: 1px;
     margin: 9px 0px;
+  }
+  .categorySpace {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 1rem;
+    font-family: "GmarketSansMedium";
+    position: relative;
+    transition: 0.75s width;
+    width: ${(props) => (props.showhamburgerBar ? null : "40px")};
   }
 
   .algorithmProblems {

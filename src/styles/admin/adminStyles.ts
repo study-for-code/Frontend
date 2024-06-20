@@ -5,11 +5,11 @@ export const AdminContainer = styled.div<{
   testcasemodal: boolean;
   ismodalopen: boolean;
 }>`
-  height: auto;
   background-color: ${(props) =>
     props.testcasemodal === true || props.ismodalopen === true
       ? "#6F7074"
       : `${theme.adminBg}`};
+  min-height: 100vh; // 화면 전체를 채움
 
   .header {
     background-color: ${({ testcasemodal, ismodalopen }) => {
@@ -28,10 +28,8 @@ export const AdminContainer = styled.div<{
 
   main {
     width: 100%;
-    height: 100%;
     display: flex;
     flex-direction: row;
-    /* background-color: ${theme.adminContentBg}; */
   }
 
   .list {
@@ -67,8 +65,11 @@ export const AdminContainer = styled.div<{
   }
   .contentSection {
     width: 100%;
-    height: 100%;
-    background-color: ${theme.adminContentBg};
+    min-height: 100vh;
+    background-color: ${(props) =>
+      props.testcasemodal === true || props.ismodalopen === true
+        ? "#6F7074"
+        : `${theme.adminContentBg}`};
   }
 
   .content {
@@ -86,8 +87,8 @@ export const AdminContainer = styled.div<{
   .problemSection {
     width: 45%;
     height: 50%;
-    margin-top: 3rem;
-    margin-bottom: 1rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
     background-color: ${(props) =>
       props.testcasemodal === true || props.ismodalopen === true
         ? `rgba(35, 35, 35, 0.3)`
@@ -98,7 +99,7 @@ export const AdminContainer = styled.div<{
   }
   .topSection {
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
   }
@@ -241,7 +242,7 @@ export const AdminContainer = styled.div<{
     width: 90%;
     display: flex;
     flex-direction: column;
-    margin-bottom: 1rem;
+    margin-bottom: 2rem;
   }
   .sectionTitle {
     width: 9%;
@@ -368,6 +369,7 @@ export const ManageProblemsContainer = styled.div<{
     right: 0;
     top: 0;
     bottom: 0;
+    height: auto;
     /* background-color: ${theme.adminBg}; */
     border-radius: 0.5rem;
   }
@@ -386,7 +388,7 @@ export const ManageProblemsContainer = styled.div<{
   }
 
   .slideModalNav {
-    height: 15%;
+    height: 18%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -472,6 +474,15 @@ export const LimitElementInput = styled.input<{ testcasemodal: boolean }>`
   height: 20px;
   background-color: ${(props) =>
     props.testcasemodal === true ? `rgba(64,66,73,0.3)` : theme.adminInputBg};
+  font-family: "GmarketSansMedium";
+  color: white;
+  outline: none;
+  border: 1px solid ${theme.adminInputBg};
+`;
+export const ModifyLimitElementInput = styled.input`
+  width: 190px;
+  height: 20px;
+  background-color: ${theme.adminInputBg};
   font-family: "GmarketSansMedium";
   color: white;
   outline: none;

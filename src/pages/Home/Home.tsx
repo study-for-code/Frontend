@@ -6,9 +6,9 @@ import axios from "axios";
 import { Container } from "@/styles/home/homeStyles";
 
 // components
-import CodeReview from "@/components/CodeReview";
+import CodeReview from "@/components/home/CodeReview";
 import StudyList from "@/components/home/StudyList";
-import AlgorithmList from "@/components/AlgorithmList";
+import AlgorithmList from "@/components/home/AlgorithmList";
 import AlgorithmDescription from "@/components/AlgorithmDescription";
 import HamburgerBar from "@/components/home/HamburgerBar";
 
@@ -56,6 +56,7 @@ const Home = () => {
     selectedStudyState
   );
   const setTaskList = useSetRecoilState(taskListState);
+  // 전체 카테고리 데이터
   const [fullCatagoryList, setFullCategoryList] = useRecoilState(
     fullCategoryListState
   );
@@ -133,7 +134,7 @@ const Home = () => {
     const object: useHandleToggleType = {
       isToggleSelected,
       setIsToggleSelected,
-      fullCatagoryList,
+      categoryList,
       category_id,
     };
     const execute = useHandleToggle(object);
@@ -199,6 +200,11 @@ const Home = () => {
       setShowHamburgerBar(false);
     }
   }, [selectedStudy]);
+
+  // useEffect(() => {
+  //   console.log("categoryList: ", categoryList);
+  //   console.log("isToggleSelected: ", isToggleSelected);
+  // }, [categoryList, isToggleSelected]);
 
   return (
     <Container
