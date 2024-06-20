@@ -165,7 +165,7 @@ const StudyList = () => {
             modalRoot
           )}
       </div>
-      {user && user.role === "ADMIN" && (
+      {user && user.nickname.toUpperCase() === "ADMIN" && (
         <img src={Admin} className="adminBtn" onClick={goToAdmin} />
       )}
 

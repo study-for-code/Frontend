@@ -19,4 +19,5 @@ export const theme = {
   adminInputBg: "#404249",
   btnGray: "#C1C1C1",
   btnWhite: "#565656",
+  white: "#FFFFFF",
 };

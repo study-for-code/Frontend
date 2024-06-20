@@ -1,49 +1,47 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 //styles
 import { Container } from "@/styles/home/homeStyles";
-
-//img
-import Expansion from "@/assets/home/expansion.png";
 
 // components
 import CodeReview from "@/components/CodeReview";
 import StudyList from "@/components/home/StudyList";
 import AlgorithmList from "@/components/AlgorithmList";
+import AlgorithmDescription from "@/components/AlgorithmDescription";
 import HamburgerBar from "@/components/home/HamburgerBar";
 
 // types
-import {
-  ComponentMap,
-  PageKey,
-  TaskListData,
-  useHandleToggleType,
-} from "@/types/aboutHome";
+import { ComponentMap, PageKey, useHandleToggleType } from "@/types/aboutHome";
 
 // atom
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   categoryListState,
   fullCategoryListState,
+  pageDataState,
+  pageState,
   selectedStudyState,
   studiesState,
   taskListState,
+  userSectionState,
   userState,
 } from "@/atom/stats";
 
 // hooks
 import useHandleToggle from "@/hooks/home/useHandleToggle";
 import useGetUserData from "@/hooks/home/useGetUserData";
-import useGetStudyList from "@/hooks/home/useGetStudyData";
 import useGetTaskList from "@/hooks/home/useGetTaskData";
-import useGetFullCategoryData from "@/hooks/home/useGetFullCategoryData";
 
 // libraries
 import { useCookies } from "react-cookie";
 import { User } from "@/types/User";
 import useGetCategoryData from "@/hooks/home/useGetCategoryData";
 import { Category, Study } from "@/types/aboutStudy";
+import { problemListType } from "@/types/aboutAdmin";
+import CodeIDE from "@/components/CodeIDE";
+import UserSection from "@/components/home/UserSection";
 
 const Home = () => {
   const navigate = useNavigate();
@@ -54,8 +52,9 @@ const Home = () => {
 
   const [user, setUser] = useRecoilState<User>(userState);
   const [studies, setStudies] = useRecoilState(studiesState);
-  const [selectedStudy, setSelectedStudy] =
-    useRecoilState<Study>(selectedStudyState);
+  const [selectedStudy, setSelectedStudy] = useRecoilState<Study | null>(
+    selectedStudyState
+  );
   const setTaskList = useSetRecoilState(taskListState);
   const [fullCatagoryList, setFullCategoryList] = useRecoilState(
     fullCategoryListState
@@ -66,51 +65,63 @@ const Home = () => {
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
 
+  const [showUserSection, setShowUserSection] =
+    useRecoilState(userSectionState);
+
   // 페이지 상태
-  const [page, setPage] = useState<PageKey>("defaultPage");
+  const [page, setPage] = useRecoilState<PageKey>(pageState);
 
   // 토글 상태 컨트롤
   const [isToggleSelected, setIsToggleSelected] = useState<boolean[]>([]);
 
   // 페이지
-  const [pageData, setPageData] = useState<TaskListData>({
-    category_id: 0,
-    subjectName: "",
-    subjectNumber: 0,
-    timeLimit: 0,
-    memorySize: 0,
-    submit: 0,
-    answer: 0,
-    person: 0,
-    answerRate: 0,
-    language: "",
-    solveTime: "",
-    codes: "",
-  });
+  const [pageData, setPageData] =
+    useRecoilState<problemListType>(pageDataState);
 
-  const handlePage = (data: TaskListData) => {
-    setPageData(data);
-    setPage("codeReview");
-  };
+  // const handlePage = (data: TaskListData) => {
+  //   setPageData(data);
+  //   setPage("codeReview");
+  // };
 
-  const handleSubscribe = () => {
-    setPage("algorithmList");
-  };
+  // const handleSubscribe = () => {
+  //   setPage("algorithmList");
+  // };
+
+  // const handleDescription = () => {
+  //   setPage("algorithmDescription");
+  // };
 
   const getUserData = async () => {
     const memberId = cookies.memberId;
+    if (memberId === undefined) {
+      goToLoginPage();
+    }
     const execute = useGetUserData({ setUser, memberId });
     await execute();
   };
 
   const getStudyList = async () => {
-    const execute = useGetStudyList({ setStudies, accessToken });
-    execute();
+    // const execute = useGetStudyList({ setStudies, accessToken });
+    // execute();
+    try {
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+      };
+      const response = await axios.get("http://localhost:8080/studies", {
+        headers: headers,
+      });
+      const data = response.data;
+      setStudies(data.results);
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const getCategoryList = async () => {
-    const execute = useGetCategoryData({ setCategoryList, selectedStudy });
-    execute();
+    if (selectedStudy) {
+      const execute = useGetCategoryData({ setCategoryList, selectedStudy });
+      execute();
+    }
   };
 
   const getTaskList = async () => {
@@ -136,37 +147,53 @@ const Home = () => {
     }
   };
 
+  const handleUserSection = () => {
+    if (selectedStudy) {
+      setShowUserSection(!showUserSection);
+    }
+  };
+
   const goToLoginPage = () => navigate("/Login");
 
   const componentMap: ComponentMap = {
     codeReview: <CodeReview pageData={pageData} />,
     algorithmList: <AlgorithmList />,
+    algorithmDescription: <AlgorithmDescription />,
+    codeIde: <CodeIDE />,
     defaultPage: null,
   };
-
-  const componentToShow = componentMap[page];
 
   useEffect(() => {
     if (studies.length > 0 && !selectedStudy) {
       setSelectedStudy(studies[0]);
+    } else if (studies.length === 0) {
+      setSelectedStudy(null);
     }
-  }, [studies, selectedStudy]);
+  }, [studies]);
 
-  // console.log("studies: ", studies);
-  // console.log("user: ", user);
-  // console.log("selectedStudy: ", selectedStudy);
+  useEffect(() => {
+    getStudyList();
+    setSelectedStudy(null);
+    setPage("defaultPage");
+  }, [user]);
 
   useEffect(() => {
     getUserData();
-    getStudyList();
     getTaskList();
     getCategoryList();
   }, []);
 
-  // console.log("category list : ", categoryList);
+  let componentToShow = componentMap[page];
 
   useEffect(() => {
-    if (selectedStudy.studyId > 0) {
+    if (page === "codeIde") {
+      setShowHamburgerBar(false);
+    }
+    componentToShow = componentMap[page];
+  }, [page]);
+
+  useEffect(() => {
+    if (selectedStudy && selectedStudy.studyId > 0) {
       setShowHamburgerBar(true);
     } else {
       setShowHamburgerBar(false);
@@ -174,7 +201,10 @@ const Home = () => {
   }, [selectedStudy]);
 
   return (
-    <Container showhamburgerBar={showHamburgerBar}>
+    <Container
+      showhamburgerBar={showHamburgerBar}
+      showUserSection={showUserSection}
+    >
       <nav>
         <div className="header">구름적사고</div>
       </nav>
@@ -185,8 +215,9 @@ const Home = () => {
           showHamburgerBar={showHamburgerBar}
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}
-          handlePage={handlePage}
-          handleSubscribe={handleSubscribe}
+          // handlePage={handlePage}
+          // handleSubscribe={handleSubscribe}
+          // handleDescription={handleDescription}
           goToLoginPage={goToLoginPage}
         />
         {page !== "defaultPage" ? (
@@ -195,9 +226,7 @@ const Home = () => {
           <div className="contentSection"></div>
         )}
 
-        <div className="userSection">
-          <img src={Expansion} className="expansionButton" />
-        </div>
+        <UserSection />
       </main>
     </Container>
   );

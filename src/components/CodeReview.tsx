@@ -15,9 +15,10 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 import * as ace from "ace-builds";
+import { problemListType } from "@/types/aboutAdmin";
 
 interface CodeReviewType {
-  pageData: TaskListData;
+  pageData: problemListType;
 }
 
 const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
@@ -42,16 +43,16 @@ const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
                 color: `${theme.CategoryFontColor}`,
               }}
             >
-              {pageData.language}
+              {/* {pageData.language} */}
             </span>
           </div>
         </div>
         <div className="problemRow">
           <span>풀이 시간: </span>
-          <span className="data">{pageData.solveTime}</span>
+          {/* <span className="data">{pageData.solveTime}</span> */}
           <span>메모리: </span>
           <div>
-            <span className="data">{pageData.memorySize}</span>
+            {/* <span className="data">{pageData.memorySize}</span> */}
             <span className="unit">MB</span>
           </div>
 
@@ -62,7 +63,7 @@ const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
           </div>
 
           <span>사용 언어: </span>
-          <span className="data">{pageData.language}</span>
+          {/* <span className="data">{pageData.language}</span> */}
         </div>
       </div>
       <div>

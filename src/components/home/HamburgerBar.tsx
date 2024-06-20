@@ -26,8 +26,6 @@ import useGetOwnerData from "@/hooks/home/useGetOwnerData";
 interface HamburgerBarType {
   handleHamburgerBar: () => void;
   handleToggle: (category_id: number) => void;
-  handlePage: (data: TaskListData) => void;
-  handleSubscribe: () => void;
   showHamburgerBar: boolean;
   isToggleSelected: boolean[];
   goToLoginPage: () => void;
@@ -38,8 +36,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   showHamburgerBar,
   isToggleSelected,
   handleToggle,
-  handlePage,
-  handleSubscribe,
   goToLoginPage,
 }) => {
   const user = useRecoilValue(userState);
@@ -279,8 +275,6 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
       <CategorySpace
         isToggleSelected={isToggleSelected}
         handleToggle={handleToggle}
-        handlePage={handlePage}
-        handleSubscribe={handleSubscribe}
       />
       <div className="drawerButton">
         <img

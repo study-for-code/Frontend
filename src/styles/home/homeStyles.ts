@@ -3,9 +3,15 @@ import { theme } from "@/styles/common/ColorStyles";
 
 import { backSideBar, moveSideBar, showDrawer, hideDrawer } from "../keyframes";
 
-export const Container = styled.div<{ showhamburgerBar: boolean }>`
+export const Container = styled.div<{
+  showhamburgerBar: boolean;
+  showUserSection: boolean;
+}>`
   height: 96vh;
+  min-width: 73rem;
   background-color: ${theme.lightGray};
+  display: flex;
+  flex-direction: column;
 
   .header {
     background-color: ${theme.black};
@@ -24,7 +30,7 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 100px;
+    width: 6.25rem;
     background-color: ${theme.lightBlack};
     z-index: 1;
   }
@@ -78,18 +84,11 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
     align-items: center;
     justify-content: space-between;
     background-color: ${theme.gray};
-    /* animation: ${(props) =>
-      props.showhamburgerBar
-        ? css`0.5s ${moveSideBar}
-      ease-in-out`
-        : css`0.5s ${backSideBar}
-      ease-in-out`}; */
     animation-fill-mode: forwards;
   }
 
   .drawerSection {
     position: relative;
-    z-index: 50;
     width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
     height: ${(props) => (props.showhamburgerBar ? "120px" : "40px")};
     display: flex;
@@ -242,13 +241,44 @@ export const Container = styled.div<{ showhamburgerBar: boolean }>`
   }
 
   .userSection {
-    right: 0;
     height: 96vh;
     background-color: ${theme.gray};
+    transition: 0.75s width;
+    width: ${(props) => (props.showUserSection ? "240px" : "40px")};
+    font-family: "GmarketSansMedium";
+    color: ${theme.white};
   }
 
   .expansionButton {
-    padding: 1rem 1rem 0 1rem;
+    padding: 0.5rem;
+    transform: ${(props) =>
+      props.showUserSection ? "rotate(180deg)" : "none"};
+    transition: transform 0.75s ease;
+  }
+
+  .userContent {
+    padding-left: 1rem;
+  }
+
+  .title {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+  }
+
+  .mini-title {
+    color: ${theme.CategoryFontColor};
+    margin-top: 1.5rem;
+    font-size: 0.8rem;
+  }
+
+  .members > div {
+    padding: 0.5rem 0 0.5rem;
+  }
+
+  .small-text {
+    font-size: 0.7rem;
+    padding-left: 0.5rem;
+    color: ${theme.CategoryFontColor};
   }
 `;
 
