@@ -9,12 +9,21 @@ export interface TaskListData {
   memorySize: number;
   submit: number;
   answer: number;
-  person: number;
+  // person: number;
   answerRate: number;
   language: string;
   solveTime: string;
   codes: string;
 }
+
+// title =
+// explanation =
+// restrictions =
+// memorySize =
+// timeLimit =
+// submit = 0;
+// answer = 0;
+// answerRate = 0.0;
 
 export interface CategoryListData {
   listName: string;
@@ -34,6 +43,8 @@ export interface CategoryListData {
 export interface ComponentMap {
   codeReview: React.ReactElement;
   algorithmList: React.ReactElement;
+  algorithmDescription: React.ReactElement;
+  codeIde: React.ReactElement;
   defaultPage: React.ReactElement | null;
 }
 
