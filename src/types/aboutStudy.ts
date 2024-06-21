@@ -14,3 +14,19 @@ export interface Category {
   title: string;
   subscribes: string[];
 }
+
+export interface TestResult {
+  actualResult: string;
+  status: string;
+  testNum: number;
+  executionTime: number;
+  usedMemory: number;
+}
+
+export interface Result {
+  answerType: string;
+  language: string;
+  results: TestResult[];
+  solveMemory: number;
+  solveTime: number;
+}

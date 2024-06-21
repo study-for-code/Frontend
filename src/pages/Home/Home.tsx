@@ -24,12 +24,10 @@ import {
 import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   categoryListState,
-  fullCategoryListState,
   pageDataState,
   pageState,
   selectedStudyState,
   studiesState,
-  taskListState,
   userSectionState,
   userState,
 } from "@/atom/stats";
@@ -60,11 +58,7 @@ const Home = () => {
   const [selectedStudy, setSelectedStudy] = useRecoilState<Study | null>(
     selectedStudyState
   );
-  const setTaskList = useSetRecoilState(taskListState);
-  // 전체 카테고리 데이터
-  const [fullCatagoryList, setFullCategoryList] = useRecoilState(
-    fullCategoryListState
-  );
+
   const [categoryList, setCategoryList] =
     useRecoilState<SpecificCategoryData[]>(categoryListState);
 
@@ -84,19 +78,6 @@ const Home = () => {
   const [pageData, setPageData] =
     useRecoilState<problemListType>(pageDataState);
 
-  // const handlePage = (data: TaskListData) => {
-  //   setPageData(data);
-  //   setPage("codeReview");
-  // };
-
-  // const handleSubscribe = () => {
-  //   setPage("algorithmList");
-  // };
-
-  // const handleDescription = () => {
-  //   setPage("algorithmDescription");
-  // };
-
   const getUserData = async () => {
     const memberId = cookies.memberId;
     if (memberId === undefined) {
@@ -107,17 +88,21 @@ const Home = () => {
   };
 
   const getStudyList = async () => {
-    // const execute = useGetStudyList({ setStudies, accessToken });
-    // execute();
     try {
       const headers = {
         Authorization: `Bearer ${accessToken}`,
       };
-      const response = await axios.get("http://localhost:8080/studies", {
-        headers: headers,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        {
+          headers: headers,
+        }
+      );
       const data = response.data;
       setStudies(data.results);
+      if (data.results.length > 0) {
+        setSelectedStudy(data.results[0]);
+      }
     } catch (e) {
       console.log(e);
     }
@@ -128,11 +113,6 @@ const Home = () => {
       const execute = useGetCategoryData({ setCategoryList, selectedStudy });
       execute();
     }
-  };
-
-  const getTaskList = async () => {
-    const execute = useGetTaskList({ setTaskList });
-    execute();
   };
 
   const handleToggle = (category_id: number) => {
@@ -148,14 +128,11 @@ const Home = () => {
 
   // 햄버거바 컨트롤 함수
   const handleHamburgerBar = () => {
-    if (studies.length > 0) {
+    if (page === "codeIde") {
+      setPage("algorithmDescription");
       setShowHamburgerBar(!showHamburgerBar);
-    }
-  };
-
-  const handleUserSection = () => {
-    if (selectedStudy) {
-      setShowUserSection(!showUserSection);
+    } else if (studies.length > 0) {
+      setShowHamburgerBar(!showHamburgerBar);
     }
   };
 
@@ -185,7 +162,6 @@ const Home = () => {
 
   useEffect(() => {
     getUserData();
-    getTaskList();
     getCategoryList();
   }, []);
 
@@ -194,6 +170,7 @@ const Home = () => {
   useEffect(() => {
     if (page === "codeIde") {
       setShowHamburgerBar(false);
+      setShowUserSection(false);
     }
     componentToShow = componentMap[page];
   }, [page]);
@@ -225,9 +202,6 @@ const Home = () => {
           showHamburgerBar={showHamburgerBar}
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}
-          // handlePage={handlePage}
-          // handleSubscribe={handleSubscribe}
-          // handleDescription={handleDescription}
           goToLoginPage={goToLoginPage}
         />
         {page !== "defaultPage" ? (

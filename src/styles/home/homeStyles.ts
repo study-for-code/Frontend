@@ -295,7 +295,7 @@ export const Container = styled.div<{
     height: 96vh;
     background-color: ${theme.gray};
     transition: 0.75s width;
-    width: ${(props) => (props.showUserSection ? "240px" : "40px")};
+    width: ${(props) => (props.showUserSection ? "15rem" : "2.5rem")};
     font-family: "GmarketSansMedium";
     color: ${theme.white};
   }

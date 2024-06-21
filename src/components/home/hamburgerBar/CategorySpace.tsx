@@ -87,11 +87,15 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [categoryList, setCategoryList] =
     useRecoilState<SpecificCategoryData[]>(categoryListState);
   const selectedStudy = useRecoilValue(selectedStudyState);
+
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [showOuterOptions, setShowOuterOptions] = useState(false);
   const [showInnerOptions, setShowInnerOptions] = useState(false);
+
+  // 우클릭 시 나타나는 버튼 위치
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [isEditTitle, setIsEditTitle] = useState(
     new Array(categoryList.length).fill(false)
@@ -113,7 +117,6 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
       categoryRowRef.current.style.overflowY = "auto"; // 세로 스크롤 추가
     }
   }, []);
-
   const getCategoryData = async () => {
     try {
       const response = await axios.get(
@@ -157,7 +160,37 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     }
   };
 
-  // 카테고리 수정
+  // 카테고리 이름 수정
+  const handleCgTitleEdit = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsEditTitle((prev) => {
+      const newEditTitle = [...prev];
+      newEditTitle[selectedCgID] = true;
+      return newEditTitle;
+    });
+  };
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    category: Category
+  ) => {
+    setNewTitle((prev) => ({
+      ...prev,
+      [category.categoryId]: event.target.value,
+    }));
+  };
+
+  const handleEditTitle = (categoryId: number) => {
+    onModify(newTitle[categoryId]);
+
+    setIsEditTitle((prev) => {
+      const newEditTitle = [...prev];
+      newEditTitle[categoryId] = false;
+      return newEditTitle;
+    });
+    setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
+  };
+  
   const onModify = async (title: string) => {
     try {
       const response = await axios.patch(
@@ -173,6 +206,18 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   };
 
   // 카테고리 삭제
+  const handleDeleteModal = () => {
+    setShowInnerOptions(false);
+    setShowOuterOptions(false);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setShowOuterOptions(false);
+    setShowInnerOptions(false);
+    setIsDeleteModalOpen(true);
+  };
   const onDelete = async () => {
     const object = {
       getCategoryData,
@@ -203,10 +248,21 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     setSelectedCgID(categoryId);
   };
 
-  const handlePage = (page: PageKey, task?: problemListType) => {
+  // 버튼 클릭시 content 섹션 page 변경
+  const handlePage = async (page: PageKey, algorithmID?: number) => {
     setShowOuterOptions(false);
-    if (task) {
-      setPageData(task);
+    if (algorithmID) {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/${algorithmID}`
+        );
+        const data = response.data;
+        if (pageData.algorithmId !== data.results[0].algorithmId) {
+          setPageData(data.results[0]);
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
     setPage(page);
   };
@@ -274,6 +330,12 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     // console.log("specificCategory: ", specificCategory);
     // console.log("CTid: ", CTid);
   }, [selectedStudy, specificCategory, CTid]);
+  
+  useEffect(() => {
+    if (selectedStudy) {
+      getCategoryData();
+    }
+  }, [selectedStudy]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
