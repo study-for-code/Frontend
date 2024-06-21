@@ -1,27 +1,50 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useCookies } from "react-cookie";
 import axios from "axios";
 
 // styles
-import { Container } from "@/styles/home/DescriptionStyles";
-import { useRecoilState, useRecoilValue } from "recoil";
-import { pageDataState, pageState, testDataState } from "@/atom/stats";
-import { problemListType, testCaseType } from "@/types/aboutAdmin";
+import { Container } from "@/styles/home/IDEStyles";
 
-// algorithmId : 1
-// algorithmTitle : "1-가나다"
-// answer : 0
-// answerRate : 0
-// content : "문제입니다"
-// restrictions : (3) [' 11', '22', '']
-// submit : 0
-// timeLimit : 1
+// atom
+import { useRecoilState } from "recoil";
+import { pageDataState, testDataState } from "@/atom/stats";
+
+// type
+import { problemListType, testCaseType } from "@/types/aboutAdmin";
+import { Result, TestResult } from "@/types/aboutStudy";
+import CodeSpace from "./CodeSpace";
 
 const CodeIDE = () => {
-  const page = useRecoilValue(pageState);
-  const [pageData, setPageData] =
-    useRecoilState<problemListType>(pageDataState);
-  const [testData, setTestData] = useRecoilState<testCaseType[]>(testDataState);
+  const [cookies] = useCookies(["accessToken"]);
+  const { accessToken } = cookies;
 
+  // 알고리즘 문제 정보, 테스트 케이스 정보
+  const [pageData] = useRecoilState<problemListType>(pageDataState);
+  const [testData] = useRecoilState<testCaseType[]>(testDataState);
+
+  // 코드 제출 후 결과
+  const [result, setResult] = useState<Result>();
+  const [testResult, setTestResult] = useState<TestResult[]>();
+
+  // language 선택 토글 상태
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedLang, setSelectedLang] = useState("java");
+
+  // 코드 채점 결과 별 class
+  const getStatusClass = (status: string) => {
+    switch (status) {
+      case "PASS":
+        return "pass";
+      case "FAIL":
+        return "fail";
+      case "ERROR":
+        return "error";
+      default:
+        return "";
+    }
+  };
+
+  // 스크롤 구현
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleScroll = () => {
@@ -44,91 +67,157 @@ const CodeIDE = () => {
     };
   }, []);
 
-  const getPageData = async () => {
+  // language 선택 관련
+  const toggleDropdown = () => {
+    setIsOpen(!isOpen);
+  };
+
+  const selectItem = (item: string) => {
+    setSelectedLang(item);
+    setIsOpen(false);
+  };
+
+  // 코드 제출
+  const onSubmit = async () => {
+    const code = sessionStorage.getItem(pageData.algorithmId.toString()) || "";
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/1`
+      const headers = {
+        Authorization: `Bearer ${accessToken}`,
+        "Content-Type": "application/json",
+      };
+      const response = await axios.put(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/submit`,
+        {
+          algorithmId: pageData.algorithmId,
+          language: selectedLang,
+          detail: code,
+        },
+        {
+          headers: headers,
+        }
       );
-      const data = response.data;
-      console.log("data : ", data.results[0]);
-      setPageData(data.results[0]);
+      setResult(response.data.results[0]);
+      // TestCase가 늦게 나타남 수정 필요
+      setTestResult(result?.results);
     } catch (e) {
-      console.log(e);
+      console.error(e);
     }
   };
 
-  const getTestData = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/1`
-      );
-      const data = response.data;
-      setTestData(data.results);
-    } catch (e) {
-      console.log(e);
-    }
+  const handleSubmit = () => {
+    setResult(undefined);
+    setTestResult(undefined);
+    onSubmit();
   };
-
-  useEffect(() => {
-    getPageData();
-    getTestData();
-  }, []);
 
   return (
-    <Container ref={containerRef}>
-      <nav className="title">IDE</nav>
-      <div className="problem-details">
-        <div className="infoTable">
-          <div className="information">
-            <div className="info-header">시간 제한</div>
-            <div className="info-header">메모리 제한</div>
-            <div className="info-header">제출</div>
-            <div className="info-header">정답</div>
-            <div className="info-header">맞힌 사람</div>
-            <div className="info-header">정답 비율</div>
-          </div>
-          <hr className="divider" />
-          <div className="information">
-            <div className="info-value">{pageData.timeLimit}초</div>
-            <div className="info-value">MB</div>
-            <div className="info-value">{pageData.submit}</div>
-            <div className="info-value"></div>
-            <div className="info-value">{pageData.answer}</div>
-            <div className="info-value">{pageData.answerRate}%</div>
-          </div>
-        </div>
-        <div className="content">
-          <h2 className="task">문제</h2>
-          <p className="description">{pageData.content}</p>
-          <div className="example">
-            <pre>0 2 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 2</pre>
-          </div>
-        </div>
-        <div className="restriction">
-          <h2 className="task">제한 사항</h2>
-          <ul>
-            {pageData.restrictions.map((rest, index) => (
-              <li key={index}>{rest}</li>
-            ))}
-          </ul>
-        </div>
-        {testData.map((test, index) => (
-          <div className="testcase" key={index}>
-            <div className="content">
-              <h2 className="task">입력</h2>
-              <div className="example">
-                <pre>{test.input}</pre>
-              </div>
-            </div>
-            <div className="content">
-              <h2 className="task">출력</h2>
-              <div className="example">
-                <pre>{test.output}</pre>
-              </div>
+    <Container>
+      <nav className="title">
+        {pageData.algorithmTitle}
+        <div>
+          <div className="toggle-button-container" onClick={toggleDropdown}>
+            <span className="label">{selectedLang}</span>
+            <span className={`arrow ${isOpen ? "open" : "closed"}`} />
+            <div className={`dropdown-menu ${isOpen ? "open" : ""}`}>
+              {["java", "c++", "python"].map((item) => (
+                <div
+                  key={item}
+                  className="dropdown-item"
+                  onClick={() => selectItem(item)}
+                >
+                  {item}
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-        <div className="togoIDE">문제 풀기</div>
+        </div>
+      </nav>
+      <div className="divideContainer" ref={containerRef}>
+        <div className="problem-details">
+          <div className="content">
+            <h2 className="task">문제</h2>
+            <p className="description">{pageData.explanation}</p>
+            {/*
+              문제 생성 시 예시 데이터 입력란이 없음
+              <div className="example">
+                <pre></pre>
+              </div> 
+            */}
+          </div>
+          <div className="content">
+            <h2 className="task">제한 사항</h2>
+            <ul>
+              {pageData.restrictions.map((rest, index) => (
+                <li key={index}>{rest}</li>
+              ))}
+            </ul>
+          </div>
+          {testData.map((test, index) => (
+            <div className="testcase" key={index}>
+              <div className="content">
+                <h2 className="task">입력</h2>
+                <div className="example">
+                  <pre>{test.input}</pre>
+                </div>
+              </div>
+              <div className="content">
+                <h2 className="task">출력</h2>
+                <div className="example">
+                  <pre>{test.output}</pre>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="IDEContainer">
+          <CodeSpace
+            selectedLang={selectedLang}
+            algorithmId={pageData.algorithmId}
+          />
+          <div className="resultSpace">
+            <div className="task">실행 결과</div>
+            <div className="result">
+              {result && (
+                <div className="elements">
+                  <div className="element">
+                    전체 결과:{" "}
+                    <span className={`${getStatusClass(result?.answerType)}`}>
+                      {result?.answerType}
+                    </span>
+                  </div>
+                  <div className="element">언어: {result?.language}</div>
+                  <div className="element">
+                    사용 메모리: {result?.solveMemory.toFixed(2)}KB
+                  </div>
+                  <div className="element">
+                    경과 시간 : {result?.solveTime}ms
+                  </div>
+                </div>
+              )}
+              {testResult?.map((test) => (
+                <div className="testResult" key={test.testNum}>
+                  테스트 케이스 {test.testNum} :{" "}
+                  <span className={`${getStatusClass(test.status)}`}>
+                    {test.status}
+                  </span>
+                  {test.usedMemory >= 0 && (
+                    <span className="small">
+                      사용 메모리 : {test.usedMemory.toFixed(2)}KB
+                    </span>
+                  )}
+                  {test.executionTime && (
+                    <span className="small">시간 : {test.executionTime}ms</span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="footer">
+        <button className="submit" onClick={handleSubmit}>
+          제출 후 채점하기
+        </button>
       </div>
     </Container>
   );

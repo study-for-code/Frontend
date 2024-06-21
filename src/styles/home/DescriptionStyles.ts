@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 
-export const Container = styled.div`
+export const Container = styled.div<{
+  showUserSection: boolean;
+}>`
   height: 96vh;
   overflow: hidden;
   font-family: "GmarketSansMedium";
@@ -88,6 +90,15 @@ export const Container = styled.div`
     border-bottom: 2px solid ${theme.white};
   }
 
+  .content > ul {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  .content li {
+    margin-bottom: 0.5rem;
+  }
+
   .shortDivider {
     border: none;
     width: 3rem;
@@ -121,9 +132,10 @@ export const Container = styled.div`
 
   .togoIDE {
     cursor: pointer;
-    position: fixed;
+    position: absolute;
     bottom: 3rem;
-    right: 5rem;
+    right: ${(props) => (props.showUserSection ? "20rem" : "5rem")};
+    transition: 0.75s right;
 
     width: 10rem;
     height: 3rem;
