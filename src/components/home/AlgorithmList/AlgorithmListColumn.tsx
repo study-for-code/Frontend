@@ -12,6 +12,7 @@ import { useRecoilState } from "recoil";
 import { AlgorithmListType, SpecificCategoryData } from "@/types/aboutHome";
 import {
   algorithmLists,
+  categoryId,
   selectedStudyState,
   specificCategoryData,
 } from "@/atom/stats";
@@ -48,21 +49,24 @@ export const column: GridColDef[] = [
       const [selectedStudy, setSelectedStudy] = useRecoilState<Study | null>(
         selectedStudyState
       );
+      // 카테고리 아이디
+      const [CTid, setCTid] = useRecoilState<number>(categoryId);
+      console.log(CTid);
       // 전체 알고리즘 문제 데이터
       const [algorithmList, setAlgorithmList] =
         useRecoilState<AlgorithmListType[]>(algorithmLists);
       // 특정 카테고리 아이디 이름
       const [specificCategory] =
         useRecoilState<SpecificCategoryData>(specificCategoryData);
-      const { categoryId } = specificCategory;
       const { SubscribeStatus, algorithmId } = params.row;
 
       const addCategory = async () => {
+        console.log("CTid", CTid);
         try {
           const res = await axios.post(
             `${import.meta.env.VITE_LOCAL_API_ADDRESS}/subscribes`,
             {
-              categoryId,
+              categoryId: CTid,
               algorithmId,
             }
           );

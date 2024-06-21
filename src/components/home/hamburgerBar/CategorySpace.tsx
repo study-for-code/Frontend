@@ -22,6 +22,7 @@ import DeleteCategoryModal from "../../modal/DeleteCategoryModal";
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
   algorithmLists,
+  categoryId,
   categoryListState,
   pageDataState,
   pageState,
@@ -62,26 +63,27 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [specificCategory, setSpecificCategory] =
     useRecoilState<SpecificCategoryData>(specificCategoryData);
   // 특정 카테고리 리스트
-  const [categoryToggleList, setCategoryToggleList] = useState<
-    categoryToggleListType[]
-  >([
-    {
-      algorithm: {
-        algorithmId: 0,
-        algorithmTitle: "",
-      },
-      subscribeId: 0,
-    },
-  ]);
+  // const [categoryToggleList, setCategoryToggleList] = useState<
+  //   categoryToggleListType[]
+  // >([
+  //   {
+  //     algorithm: {
+  //       algorithmId: 0,
+  //       algorithmTitle: "",
+  //     },
+  //     subscribeId: 0,
+  //   },
+  // ]);
   // 전체 알고리즘 문제 데이터
   const [, setAlgorithmList] =
     useRecoilState<AlgorithmListType[]>(algorithmLists);
 
   // 카테고리 아이디
-  const [CTid, setCTid] = useState<number>(0);
+  const [CTid, setCTid] = useRecoilState<number>(categoryId);
 
   const [, setPage] = useRecoilState<PageKey>(pageState);
-  const [, setPageData] = useRecoilState<problemListType>(pageDataState);
+  const [pageData, setPageData] =
+    useRecoilState<problemListType>(pageDataState);
 
   const user = useRecoilValue(userState);
   const [categoryList, setCategoryList] =
@@ -105,8 +107,17 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
 
   // 특정 카테고리 데이터 데이터 가져오기
   const getCategory = (data: SpecificCategoryData) => {
+    const { categoryId, subscribes, title } = data;
     console.log("getCategory", data);
-    setSpecificCategory(data);
+    setSpecificCategory({
+      categoryId,
+      subscribes,
+      title,
+    });
+  };
+
+  const getCategoryId = (id: number) => {
+    setCTid(id);
   };
 
   const categoryRowRef = useRef<HTMLDivElement>(null);
@@ -172,12 +183,15 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    category: Category
+    category: SpecificCategoryData
   ) => {
-    setNewTitle((prev) => ({
-      ...prev,
-      [category.categoryId]: event.target.value,
-    }));
+    const object: useHandleInputChangeType = {
+      setNewTitle,
+      event,
+      category,
+    };
+    const execute = useHandleInputChange(object);
+    execute();
   };
 
   const handleEditTitle = (categoryId: number) => {
@@ -190,7 +204,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     });
     setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
   };
-  
+
   const onModify = async (title: string) => {
     try {
       const response = await axios.patch(
@@ -207,16 +221,24 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
 
   // 카테고리 삭제
   const handleDeleteModal = () => {
-    setShowInnerOptions(false);
-    setShowOuterOptions(false);
-    setIsDeleteModalOpen(false);
+    const object: useHandleDeleteModalType = {
+      setShowInnerOptions,
+      setShowOuterOptions,
+      setIsDeleteModalOpen,
+    };
+    const execute = useHandleDeleteModal(object);
+    execute();
   };
 
   const handleDeleteClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setShowOuterOptions(false);
-    setShowInnerOptions(false);
-    setIsDeleteModalOpen(true);
+    const object: useHandleDeleteClickType = {
+      event,
+      setShowOuterOptions,
+      setShowInnerOptions,
+      setIsDeleteModalOpen,
+    };
+    const execute = useHandleDeleteClick(object);
+    execute();
   };
   const onDelete = async () => {
     const object = {
@@ -267,70 +289,16 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     setPage(page);
   };
 
-  const handleCgTitleEdit = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setIsEditTitle((prev) => {
-      const newEditTitle = [...prev];
-      newEditTitle[selectedCgID] = true;
-      return newEditTitle;
-    });
-  };
-
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    category: SpecificCategoryData
-  ) => {
-    const object: useHandleInputChangeType = {
-      setNewTitle,
-      event,
-      category,
-    };
-    const execute = useHandleInputChange(object);
-    execute();
-  };
-
-  const handleDeleteModal = () => {
-    const object: useHandleDeleteModalType = {
-      setShowInnerOptions,
-      setShowOuterOptions,
-      setIsDeleteModalOpen,
-    };
-    const execute = useHandleDeleteModal(object);
-    execute();
-  };
-
-  const handleDeleteClick = (event: React.MouseEvent) => {
-    const object: useHandleDeleteClickType = {
-      event,
-      setShowOuterOptions,
-      setShowInnerOptions,
-      setIsDeleteModalOpen,
-    };
-    const execute = useHandleDeleteClick(object);
-    execute();
-  };
-
-  const handleEditTitle = (categoryId: number) => {
-    onModify(newTitle[categoryId]);
-
-    setIsEditTitle((prev) => {
-      const newEditTitle = [...prev];
-      newEditTitle[categoryId] = false;
-      return newEditTitle;
-    });
-    setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
-  };
-
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
 
   useEffect(() => {
     getCategoryData();
-    console.log("categoryList:", categoryList);
+    // console.log("categoryList:", categoryList);
     // console.log("specificCategory: ", specificCategory);
-    // console.log("CTid: ", CTid);
+    console.log("CTid: ", CTid);
   }, [selectedStudy, specificCategory, CTid]);
-  
+
   useEffect(() => {
     if (selectedStudy) {
       getCategoryData();
@@ -360,13 +328,11 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
         <div className="algorithmList">Task 목록</div>
         <div className="category">
           {categoryList.map((category) => {
-            console.log(category);
             return (
               <div
                 className="categoryRow"
                 key={category.categoryId}
                 onClick={() => {
-                  setCTid(category.categoryId);
                   getAlgorithmList();
                 }}
               >
@@ -392,6 +358,10 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                       onContextMenu={(event) =>
                         handleInnerContextMenu(event, category.categoryId)
                       }
+                      onClick={() => {
+                        console.log(category.categoryId);
+                        getCategoryId(category.categoryId);
+                      }}
                     >
                       <span style={{ marginRight: "0.5rem" }}>
                         {category.title}
@@ -433,7 +403,12 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                               <div key={index} className="algorithmProblems">
                                 <li
                                   style={{ padding: "0.3rem" }}
-                                  // onClick={() => handlePage(task)}
+                                  onClick={() =>
+                                    handlePage(
+                                      "algorithmDescription",
+                                      task.algorithm.algorithmId
+                                    )
+                                  }
                                 >
                                   {task.algorithm.algorithmTitle}
                                 </li>
