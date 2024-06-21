@@ -3,25 +3,30 @@ import axios from "axios";
 
 // styles
 import { Container } from "@/styles/home/DescriptionStyles";
+
+// atom
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { pageDataState, pageState, testDataState } from "@/atom/stats";
+import {
+  pageDataState,
+  pageState,
+  testDataState,
+  userSectionState,
+} from "@/atom/stats";
+
+// type
 import { problemListType, testCaseType } from "@/types/aboutAdmin";
 
-// algorithmId : 1
-// algorithmTitle : "1-가나다"
-// answer : 0
-// answerRate : 0
-// content : "문제입니다"
-// restrictions : (3) [' 11', '22', '']
-// submit : 0
-// timeLimit : 1
-
 const AlgorithmDescription = () => {
+  // 알고리즘 문제 정보, 테스트 케이스 정보, content 섹션 페이지 정보
   const setPage = useSetRecoilState(pageState);
   const [pageData, setPageData] =
     useRecoilState<problemListType>(pageDataState);
   const [testData, setTestData] = useRecoilState<testCaseType[]>(testDataState);
 
+  // 문제 풀기 버튼 이동용 UserSection 상태
+  const showUserSection = useRecoilValue(userSectionState);
+
+  // 스크롤
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleScroll = () => {
@@ -44,23 +49,11 @@ const AlgorithmDescription = () => {
     };
   }, []);
 
-  const getPageData = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/1`
-      );
-      const data = response.data;
-      console.log("data : ", data.results[0]);
-      setPageData(data.results[0]);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
+  // 문제 테스트 케이스 가져오기
   const getTestData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/1`
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/${pageData.algorithmId}`
       );
       const data = response.data;
       setTestData(data.results);
@@ -69,17 +62,17 @@ const AlgorithmDescription = () => {
     }
   };
 
+  // 문제 풀기 버튼 클릭 시 page 변경
   const handlePage = () => {
     setPage("codeIde");
   };
 
   useEffect(() => {
-    getPageData();
     getTestData();
   }, []);
 
   return (
-    <Container ref={containerRef}>
+    <Container ref={containerRef} showUserSection={showUserSection}>
       <nav className="title">{pageData.algorithmTitle}</nav>
       <div className="problem-details">
         <div className="infoTable">
@@ -103,12 +96,12 @@ const AlgorithmDescription = () => {
         </div>
         <div className="content">
           <h2 className="task">문제</h2>
-          <p className="description">{pageData.content}</p>
+          <p className="description">{pageData.explanation}</p>
           <div className="example">
             <pre>0 2 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 2</pre>
           </div>
         </div>
-        <div className="restriction">
+        <div className="content">
           <h2 className="task">제한 사항</h2>
           <ul>
             {pageData.restrictions.map((rest, index) => (
