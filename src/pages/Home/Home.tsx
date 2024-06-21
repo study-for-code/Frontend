@@ -13,7 +13,12 @@ import AlgorithmDescription from "@/components/AlgorithmDescription";
 import HamburgerBar from "@/components/home/HamburgerBar";
 
 // types
-import { ComponentMap, PageKey, useHandleToggleType } from "@/types/aboutHome";
+import {
+  ComponentMap,
+  PageKey,
+  SpecificCategoryData,
+  useHandleToggleType,
+} from "@/types/aboutHome";
 
 // atom
 import { useRecoilState, useSetRecoilState } from "recoil";
@@ -61,7 +66,7 @@ const Home = () => {
     fullCategoryListState
   );
   const [categoryList, setCategoryList] =
-    useRecoilState<Category[]>(categoryListState);
+    useRecoilState<SpecificCategoryData[]>(categoryListState);
 
   // 햄버거바 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
@@ -201,10 +206,9 @@ const Home = () => {
     }
   }, [selectedStudy]);
 
-  // useEffect(() => {
-  //   console.log("categoryList: ", categoryList);
-  //   console.log("isToggleSelected: ", isToggleSelected);
-  // }, [categoryList, isToggleSelected]);
+  useEffect(() => {
+    console.log("isToggleSelected: ", isToggleSelected);
+  }, [isToggleSelected]);
 
   return (
     <Container

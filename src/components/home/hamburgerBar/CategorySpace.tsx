@@ -7,12 +7,12 @@ import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
 
 // type
 import {
+  AlgorithmListType,
   PageKey,
   SpecificCategoryData,
   categoryToggleListType,
 } from "@/types/aboutHome";
 import { problemListType } from "@/types/aboutAdmin";
-import { Category } from "@/types/aboutStudy";
 
 // component
 import CreateCategoryModal from "../../modal/CreateCategoryModal";
@@ -21,12 +21,12 @@ import DeleteCategoryModal from "../../modal/DeleteCategoryModal";
 // atom
 import { useRecoilValue, useRecoilState } from "recoil";
 import {
+  algorithmLists,
   categoryListState,
   pageDataState,
   pageState,
   selectedStudyState,
   specificCategoryData,
-  taskListState,
   userState,
 } from "@/atom/stats";
 
@@ -35,7 +35,19 @@ import { OptionsContainer } from "@/styles/home/homeStyles";
 
 // libraries
 import axios from "axios";
-import { useCookies } from "react-cookie";
+
+// hooks
+import useHandleDeleteClick, {
+  useHandleDeleteClickType,
+} from "@/hooks/home/CategorySpace/useHandleDeleteClick";
+import useHandleDeleteModal, {
+  useHandleDeleteModalType,
+} from "@/hooks/home/CategorySpace/useHandleDeleteModal";
+import useHandleInputChange, {
+  useHandleInputChangeType,
+} from "@/hooks/home/CategorySpace/useHandleInputChange";
+import useOnDelete from "@/hooks/home/CategorySpace/useOnDelete";
+import useGetAlgorithmList from "@/hooks/admin/AlgorithmList/useGetAlgorithmList";
 
 interface CategorySpaceProps {
   isToggleSelected: boolean[];
@@ -49,7 +61,6 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   // 특정 카테고리 아이디 이름
   const [specificCategory, setSpecificCategory] =
     useRecoilState<SpecificCategoryData>(specificCategoryData);
-  const { categoryId } = specificCategory;
   // 특정 카테고리 리스트
   const [categoryToggleList, setCategoryToggleList] = useState<
     categoryToggleListType[]
@@ -62,15 +73,19 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
       subscribeId: 0,
     },
   ]);
+  // 전체 알고리즘 문제 데이터
+  const [, setAlgorithmList] =
+    useRecoilState<AlgorithmListType[]>(algorithmLists);
 
-  const [page, setPage] = useRecoilState<PageKey>(pageState);
-  const [pageData, setPageData] =
-    useRecoilState<problemListType>(pageDataState);
+  // 카테고리 아이디
+  const [CTid, setCTid] = useState<number>(0);
+
+  const [, setPage] = useRecoilState<PageKey>(pageState);
+  const [, setPageData] = useRecoilState<problemListType>(pageDataState);
 
   const user = useRecoilValue(userState);
-  const taskList = useRecoilValue(taskListState);
   const [categoryList, setCategoryList] =
-    useRecoilState<Category[]>(categoryListState);
+    useRecoilState<SpecificCategoryData[]>(categoryListState);
   const selectedStudy = useRecoilValue(selectedStudyState);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -84,18 +99,20 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [newTitle, setNewTitle] = useState<{ [key: number]: string }>({});
   const [selectedCgID, setSelectedCgID] = useState(0);
 
-  const [cookies] = useCookies(["accessToken"]);
-
-  const getHyphens = (length: number) => {
-    let num = 16 - length;
-    return "-".repeat(num);
-  };
-
   // 특정 카테고리 데이터 데이터 가져오기
   const getCategory = (data: SpecificCategoryData) => {
     console.log("getCategory", data);
     setSpecificCategory(data);
   };
+
+  const categoryRowRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (categoryRowRef.current) {
+      categoryRowRef.current.style.maxHeight = "200px"; // 원하는 최대 높이로 설정
+      categoryRowRef.current.style.overflowY = "auto"; // 세로 스크롤 추가
+    }
+  }, []);
 
   const getCategoryData = async () => {
     try {
@@ -109,26 +126,22 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     }
   };
 
-  // 단일 카테고리 조회
-  const getSingleCategoryData = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/subscribes/${categoryId}/category`
-      );
-      const data = response.data;
-      console.log("getSingleCategoryData: ", response);
-      const { results } = response.data;
-      setCategoryToggleList(results);
-    } catch (e) {
-      console.log(e);
-    }
-  };
-
   const handleCreateModal = () => {
     setShowOuterOptions(false);
     setIsCreateModalOpen(!isCreateModalOpen);
   };
 
+  // get data
+  const getAlgorithmList = async () => {
+    const object = {
+      setAlgorithmList,
+      selectedStudy,
+    };
+    const execute = useGetAlgorithmList(object);
+    execute();
+  };
+
+  // 카테고리 생성
   const onCreate = async (title: string) => {
     try {
       const response = await axios.post(
@@ -144,6 +157,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     }
   };
 
+  // 카테고리 수정
   const onModify = async (title: string) => {
     try {
       const response = await axios.patch(
@@ -158,18 +172,17 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     }
   };
 
+  // 카테고리 삭제
   const onDelete = async () => {
-    try {
-      const response = await axios.delete(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/categories/${selectedCgID}`
-      );
-      getCategoryData();
-      setSelectedCgID(0);
-      setShowInnerOptions(false);
-      setIsDeleteModalOpen(false);
-    } catch (e) {
-      console.error(e);
-    }
+    const object = {
+      getCategoryData,
+      setSelectedCgID,
+      setShowInnerOptions,
+      setIsDeleteModalOpen,
+      selectedCgID,
+    };
+    const execute = useOnDelete(object);
+    execute();
   };
 
   // 우클릭 시 버튼 생성
@@ -209,25 +222,36 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
 
   const handleInputChange = (
     event: React.ChangeEvent<HTMLInputElement>,
-    category: Category
+    category: SpecificCategoryData
   ) => {
-    setNewTitle((prev) => ({
-      ...prev,
-      [category.categoryId]: event.target.value,
-    }));
+    const object: useHandleInputChangeType = {
+      setNewTitle,
+      event,
+      category,
+    };
+    const execute = useHandleInputChange(object);
+    execute();
   };
 
   const handleDeleteModal = () => {
-    setShowInnerOptions(false);
-    setShowOuterOptions(false);
-    setIsDeleteModalOpen(false);
+    const object: useHandleDeleteModalType = {
+      setShowInnerOptions,
+      setShowOuterOptions,
+      setIsDeleteModalOpen,
+    };
+    const execute = useHandleDeleteModal(object);
+    execute();
   };
 
   const handleDeleteClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setShowOuterOptions(false);
-    setShowInnerOptions(false);
-    setIsDeleteModalOpen(true);
+    const object: useHandleDeleteClickType = {
+      event,
+      setShowOuterOptions,
+      setShowInnerOptions,
+      setIsDeleteModalOpen,
+    };
+    const execute = useHandleDeleteClick(object);
+    execute();
   };
 
   const handleEditTitle = (categoryId: number) => {
@@ -241,18 +265,15 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
   };
 
-  // const handleSubscribePage = () => {
-  //   setShowOuterOptions(false);
-  //   handleSubscribe();
-  // };
-
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
 
   useEffect(() => {
     getCategoryData();
-    console.log(categoryList);
-  }, [selectedStudy]);
+    console.log("categoryList:", categoryList);
+    // console.log("specificCategory: ", specificCategory);
+    // console.log("CTid: ", CTid);
+  }, [selectedStudy, specificCategory, CTid]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -275,68 +296,96 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     <div className="drawerContent" onContextMenu={handleOuterContextMenu}>
       <div className="categorySpace">
         <div className="algorithmList">Task 목록</div>
-        {categoryList.map((category) => {
-          // categoryId와 일치하는 task들을 필터링
-          // const filteredTasks = taskList.filter(
-          //   (task) => task.categoryId === category.categoryId
-          // );
-          return (
-            <div className="categoryRow" key={category.categoryId}>
-              {isEditTitle[category.categoryId] ? (
-                <>
-                  <input
-                    type="text"
-                    value={newTitle[category.categoryId] || category.title}
-                    onChange={(event) => handleInputChange(event, category)}
-                    maxLength={8}
-                  />
-                  <button onClick={() => handleEditTitle(category.categoryId)}>
-                    수정
-                  </button>
-                </>
-              ) : (
-                <div
-                  className="categoryTitle"
-                  onContextMenu={(event) =>
-                    handleInnerContextMenu(event, category.categoryId)
-                  }
-                  onClick={() => getCategory(category)}
-                >
-                  <span style={{ marginRight: "0.5rem" }}>
-                    {category.title}
-                  </span>
-
-                  <div className="hr-line"></div>
-
-                  <img
-                    style={{ marginLeft: "0.5rem" }}
-                    title={`${category.title}}`}
-                    src={
-                      isToggleSelected[category.categoryId]
-                        ? CategoryExpansion
-                        : CategoryExpansion2
-                    }
-                    onClick={() => {
-                      handleToggle(category.categoryId);
-                      getSingleCategoryData();
-                    }}
-                  />
-                </div>
-              )}
-              {categoryToggleList.length > 0 &&
-                categoryToggleList.map((task, index: number) => (
-                  <div key={index} className="algorithmProblems">
-                    <li
-                      style={{ padding: "0.3rem" }}
-                      // onClick={() => handlePage(task)}
+        <div className="category">
+          {categoryList.map((category) => {
+            console.log(category);
+            return (
+              <div
+                className="categoryRow"
+                key={category.categoryId}
+                onClick={() => {
+                  setCTid(category.categoryId);
+                  getAlgorithmList();
+                }}
+              >
+                {isEditTitle[category.categoryId] ? (
+                  <>
+                    <input
+                      type="text"
+                      value={newTitle[category.categoryId] || category.title}
+                      onChange={(event) => handleInputChange(event, category)}
+                      maxLength={8}
+                    />
+                    <button
+                      onClick={() => handleEditTitle(category.categoryId)}
                     >
-                      {task.algorithm.algorithmTitle}
-                    </li>
+                      수정
+                    </button>
+                  </>
+                ) : (
+                  <div style={{ width: "100%" }}>
+                    <div
+                      // 나중에 선택 가시성 수정하기
+                      className={`categoryTitle${isToggleSelected[category.categoryId] ? "selected" : ""}`}
+                      onContextMenu={(event) =>
+                        handleInnerContextMenu(event, category.categoryId)
+                      }
+                    >
+                      <span style={{ marginRight: "0.5rem" }}>
+                        {category.title}
+                      </span>
+
+                      <div className="hr-line"></div>
+
+                      <img
+                        style={{ marginLeft: "0.5rem" }}
+                        title={`${category.title}}`}
+                        src={
+                          isToggleSelected[category.categoryId]
+                            ? CategoryExpansion
+                            : CategoryExpansion2
+                        }
+                        onClick={() => {
+                          handleToggle(category.categoryId);
+                          if (!isToggleSelected[category.categoryId]) {
+                            getCategory(category);
+                          } else {
+                            // 수정해야함
+                            setSpecificCategory({
+                              categoryId: 0,
+                              subscribes: [],
+                              title: "",
+                            });
+                          }
+                        }}
+                      />
+                    </div>
+                    <div
+                      className="listColumn"
+                      style={{ maxHeight: "200px", overflowY: "auto" }}
+                    >
+                      {category.subscribes.length > 0 &&
+                        category.subscribes.map((task, index: number) => {
+                          if (CTid === category.categoryId) {
+                            return (
+                              <div key={index} className="algorithmProblems">
+                                <li
+                                  style={{ padding: "0.3rem" }}
+                                  // onClick={() => handlePage(task)}
+                                >
+                                  {task.algorithm.algorithmTitle}
+                                </li>
+                              </div>
+                            );
+                          }
+                        })}
+                    </div>
                   </div>
-                ))}
-            </div>
-          );
-        })}
+                )}
+              </div>
+            );
+          })}
+        </div>
       </div>
       <div style={{ width: "100%", height: "auto" }}></div>
       {showOuterOptions &&

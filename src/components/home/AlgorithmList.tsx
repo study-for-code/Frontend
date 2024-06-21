@@ -13,7 +13,7 @@ import {
 } from "@/atom/stats";
 
 // contants
-import { column } from "@/constants/AlgorithmListColumn";
+import { column } from "./AlgorithmList/AlgorithmListColumn";
 // theme
 import { theme } from "@/styles/common/ColorStyles";
 
@@ -22,7 +22,9 @@ import { AlgorithmListType, SpecificCategoryData } from "@/types/aboutHome";
 import { Study } from "@/types/aboutStudy";
 
 // hooks
-import useGetAlgorithmList from "@/hooks/admin/AlgorithmList/useGetAlgorithmList";
+import useGetAlgorithmList, {
+  useGetAlgorithmListType,
+} from "@/hooks/admin/AlgorithmList/useGetAlgorithmList";
 
 const AlgorithmList = () => {
   // 특정 카테고리 아이디 이름
@@ -43,7 +45,7 @@ const AlgorithmList = () => {
 
   // get data
   const getAlgorithmList = async () => {
-    const object = {
+    const object: useGetAlgorithmListType = {
       setAlgorithmList,
       selectedStudy,
     };

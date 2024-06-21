@@ -39,6 +39,7 @@ const useGetAlgorithmList = ({
           SubscribeStatus: result.SubscribeStatus,
         })
       );
+      console.log("newResults: ", newResults);
       setAlgorithmList(newResults);
     } catch (e) {
       console.log(e);

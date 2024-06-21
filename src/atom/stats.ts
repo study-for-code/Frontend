@@ -35,7 +35,7 @@ export const selectedStudyState = atom<Study | null>({
   },
 });
 
-export const categoryListState = atom<Category[]>({
+export const categoryListState = atom<SpecificCategoryData[]>({
   key: "categoryListState",
   default: [],
 });

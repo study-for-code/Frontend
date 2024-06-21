@@ -1,8 +1,9 @@
 import axios from "axios";
 import { Category, Study } from "@/types/aboutStudy";
+import { SpecificCategoryData } from "@/types/aboutHome";
 
 interface useGetCategoryDataType {
-  setCategoryList: React.Dispatch<React.SetStateAction<Category[]>>;
+  setCategoryList: React.Dispatch<React.SetStateAction<SpecificCategoryData[]>>;
   selectedStudy: Study;
 }
 

@@ -226,20 +226,24 @@ export const Container = styled.div<{
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 45px;
   }
+  .listColumn::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
+  }
+
   .categoryTitle {
-    width: 90%;
+    width: 100%;
     display: flex;
     align-items: center;
     height: 30px;
-    &:hover {
-      background-color: ${theme.selectedGray};
-      border-radius: 0.5rem;
-      padding: 0.2rem 0.4rem 0.2rem 0.4rem;
-    }
   }
 
+  .categoryTitle.selected,
+  .categoryTitle:hover {
+    background-color: ${theme.selectedGray};
+    border-radius: 0.5rem;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+  }
   .categoryRow .hr-line {
     flex: 1;
     background-color: ${theme.CategoryFontColor};
@@ -257,17 +261,26 @@ export const Container = styled.div<{
     transition: 0.75s width;
     width: ${(props) => (props.showhamburgerBar ? null : "40px")};
   }
+  .categorySpace ::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
+  }
 
+  .category {
+    overflow-y: auto;
+    max-height: 500px;
+  }
+  .category ::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
+  }
   .algorithmProblems {
+    height: auto;
     padding: 0.2rem;
     border-radius: 0.5rem;
-    &:hover {
-      &:hover {
-        transition: 0.3s transform;
-        background-color: ${theme.selectedGray};
-        transform: scale(1.05);
-      }
-    }
+  }
+
+  .algorithmProblems:hover {
+    background-color: ${theme.selectedGray};
+    transform: scale(1.05);
   }
 
   .contentSection {
