@@ -29,7 +29,7 @@ const useGetAlgorithmList = ({
         config
       );
       // console.log("algorithmList: ", response);
-      console.log("studyInfo: ", studyInfo.data.results);
+      // console.log("studyInfo: ", studyInfo.data.results);
       // const { results } = response.data;
       const newResults = studyInfo.data.results.map(
         (result: AlgorithmListType) => ({
@@ -39,7 +39,7 @@ const useGetAlgorithmList = ({
           SubscribeStatus: result.SubscribeStatus,
         })
       );
-      console.log("newResults: ", newResults);
+      // console.log("newResults: ", newResults);
       setAlgorithmList(newResults);
     } catch (e) {
       console.log(e);

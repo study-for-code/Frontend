@@ -100,3 +100,8 @@ export const algorithmLists = atom<AlgorithmListType[]>({
     },
   ],
 });
+
+export const categoryId = atom<number>({
+  key: "categoryId",
+  default: 0,
+});
