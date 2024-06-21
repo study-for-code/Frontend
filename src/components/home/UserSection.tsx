@@ -9,13 +9,14 @@ const UserSection = () => {
   const [showUserSection, setShowUserSection] =
     useRecoilState(userSectionState);
   const selectedStudy = useRecoilValue(selectedStudyState);
-  const page = useRecoilValue(pageState);
+  const [page, setPage] = useRecoilState(pageState);
   const [members, setMembers] = useState<User[]>([]);
 
-  console.log("selectedStudy : ", selectedStudy);
-
   const handleUserSection = () => {
-    if (selectedStudy) {
+    if (page === "codeIde") {
+      setPage("algorithmDescription");
+      setShowUserSection(!showUserSection);
+    } else if (selectedStudy) {
       setShowUserSection(!showUserSection);
     }
   };
@@ -25,7 +26,7 @@ const UserSection = () => {
       const response = await axios.get(
         `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies/${selectedStudy?.studyId}`
       );
-      console.log("get study : ", response.data.results[0].members);
+      console.log(response.data.results[0]);
       setMembers(response.data.results[0].members);
     } catch (e) {
       console.error(e);
@@ -33,7 +34,9 @@ const UserSection = () => {
   };
 
   useEffect(() => {
-    getMembers();
+    if (selectedStudy) {
+      getMembers();
+    }
   }, [selectedStudy]);
 
   return (
