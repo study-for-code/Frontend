@@ -8,7 +8,7 @@ import {
 import Plus from "@/assets/home/plus_white.png";
 import Check from "@/assets/home/check.png";
 import axios, { AxiosRequestConfig } from "axios";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import { AlgorithmListType, SpecificCategoryData } from "@/types/aboutHome";
 import {
   algorithmLists,
@@ -28,7 +28,7 @@ export const column: GridColDef[] = [
     field: "algorithmTitle",
     headerClassName: "super-app-theme--header",
     headerName: "문제 제목",
-    width: 300,
+    width: 312,
   },
   {
     field: "solvedMembers",

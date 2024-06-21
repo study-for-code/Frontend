@@ -57,7 +57,7 @@ export interface CategoryListMap {
 export interface useHandleToggleType {
   isToggleSelected: boolean[];
   setIsToggleSelected: React.Dispatch<SetStateAction<boolean[]>>;
-  categoryList: Category[];
+  categoryList: SpecificCategoryData[];
   category_id: number;
 }
 
@@ -82,8 +82,17 @@ export interface AlgorithmListType {
 }
 export interface SpecificCategoryData {
   categoryId: number;
-  subscribes: string[];
+  subscribes: subscribesType[];
   title: string;
+}
+interface subscribesType {
+  algorithm: algorithmType;
+  subscribeId: number;
+}
+
+interface algorithmType {
+  algorithmId: number;
+  algorithmTitle: string;
 }
 
 export interface categoryToggleListType {

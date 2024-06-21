@@ -1,5 +1,5 @@
 // types
-import { TaskListData, problemListType } from "@/types/aboutHome";
+import { problemListType } from "@/types/aboutHome";
 // styles
 import { Container } from "@/styles/home/CodeReviewStyles";
 
