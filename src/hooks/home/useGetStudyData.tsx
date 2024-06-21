@@ -15,9 +15,12 @@ const useGetStudyList = ({
       const headers = {
         Authorization: `Bearer ${accessToken}`,
       };
-      const response = await axios.get("http://localhost:8080/studies", {
-        headers: headers,
-      });
+      const response = await axios.get(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        {
+          headers: headers,
+        }
+      );
       console.log(response);
       const data = response.data;
       setStudies(data.results);

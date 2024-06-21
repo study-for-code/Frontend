@@ -26,7 +26,6 @@ import {
   pageState,
   selectedStudyState,
   specificCategoryData,
-  taskListState,
   userState,
 } from "@/atom/stats";
 
@@ -35,7 +34,6 @@ import { OptionsContainer } from "@/styles/home/homeStyles";
 
 // libraries
 import axios from "axios";
-import { useCookies } from "react-cookie";
 
 interface CategorySpaceProps {
   isToggleSelected: boolean[];
@@ -63,20 +61,24 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     },
   ]);
 
+  // content 섹션의 page정보
   const [page, setPage] = useRecoilState<PageKey>(pageState);
   const [pageData, setPageData] =
     useRecoilState<problemListType>(pageDataState);
 
   const user = useRecoilValue(userState);
-  const taskList = useRecoilValue(taskListState);
   const [categoryList, setCategoryList] =
     useRecoilState<Category[]>(categoryListState);
   const selectedStudy = useRecoilValue(selectedStudyState);
+
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [showOuterOptions, setShowOuterOptions] = useState(false);
   const [showInnerOptions, setShowInnerOptions] = useState(false);
+
+  // 우클릭 시 나타나는 버튼 위치
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
+
   const containerRef = useRef<HTMLDivElement>(null);
   const [isEditTitle, setIsEditTitle] = useState(
     new Array(categoryList.length).fill(false)
@@ -84,19 +86,13 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [newTitle, setNewTitle] = useState<{ [key: number]: string }>({});
   const [selectedCgID, setSelectedCgID] = useState(0);
 
-  const [cookies] = useCookies(["accessToken"]);
-
-  const getHyphens = (length: number) => {
-    let num = 16 - length;
-    return "-".repeat(num);
-  };
-
   // 특정 카테고리 데이터 데이터 가져오기
   const getCategory = (data: SpecificCategoryData) => {
     console.log("getCategory", data);
     setSpecificCategory(data);
   };
 
+  // 스터디에 해당하는 카테고리들 가져오기
   const getCategoryData = async () => {
     try {
       const response = await axios.get(
@@ -124,6 +120,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     }
   };
 
+  // 카테고리 생성 모달
   const handleCreateModal = () => {
     setShowOuterOptions(false);
     setIsCreateModalOpen(!isCreateModalOpen);
@@ -144,6 +141,37 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     }
   };
 
+  // 카테고리 이름 수정
+  const handleCgTitleEdit = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setIsEditTitle((prev) => {
+      const newEditTitle = [...prev];
+      newEditTitle[selectedCgID] = true;
+      return newEditTitle;
+    });
+  };
+
+  const handleInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    category: Category
+  ) => {
+    setNewTitle((prev) => ({
+      ...prev,
+      [category.categoryId]: event.target.value,
+    }));
+  };
+
+  const handleEditTitle = (categoryId: number) => {
+    onModify(newTitle[categoryId]);
+
+    setIsEditTitle((prev) => {
+      const newEditTitle = [...prev];
+      newEditTitle[categoryId] = false;
+      return newEditTitle;
+    });
+    setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
+  };
+
   const onModify = async (title: string) => {
     try {
       const response = await axios.patch(
@@ -156,6 +184,20 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     } catch (e) {
       console.error(e);
     }
+  };
+
+  // 카테고리 삭제
+  const handleDeleteModal = () => {
+    setShowInnerOptions(false);
+    setShowOuterOptions(false);
+    setIsDeleteModalOpen(false);
+  };
+
+  const handleDeleteClick = (event: React.MouseEvent) => {
+    event.stopPropagation();
+    setShowOuterOptions(false);
+    setShowInnerOptions(false);
+    setIsDeleteModalOpen(true);
   };
 
   const onDelete = async () => {
@@ -190,68 +232,32 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     setSelectedCgID(categoryId);
   };
 
-  const handlePage = (page: PageKey, task?: problemListType) => {
+  // 버튼 클릭시 content 섹션 page 변경
+  const handlePage = async (page: PageKey, algorithmID?: number) => {
     setShowOuterOptions(false);
-    if (task) {
-      setPageData(task);
+    if (algorithmID) {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/${algorithmID}`
+        );
+        const data = response.data;
+        if (pageData.algorithmId !== data.results[0].algorithmId) {
+          setPageData(data.results[0]);
+        }
+      } catch (e) {
+        console.log(e);
+      }
     }
     setPage(page);
   };
-
-  const handleCgTitleEdit = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setIsEditTitle((prev) => {
-      const newEditTitle = [...prev];
-      newEditTitle[selectedCgID] = true;
-      return newEditTitle;
-    });
-  };
-
-  const handleInputChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    category: Category
-  ) => {
-    setNewTitle((prev) => ({
-      ...prev,
-      [category.categoryId]: event.target.value,
-    }));
-  };
-
-  const handleDeleteModal = () => {
-    setShowInnerOptions(false);
-    setShowOuterOptions(false);
-    setIsDeleteModalOpen(false);
-  };
-
-  const handleDeleteClick = (event: React.MouseEvent) => {
-    event.stopPropagation();
-    setShowOuterOptions(false);
-    setShowInnerOptions(false);
-    setIsDeleteModalOpen(true);
-  };
-
-  const handleEditTitle = (categoryId: number) => {
-    onModify(newTitle[categoryId]);
-
-    setIsEditTitle((prev) => {
-      const newEditTitle = [...prev];
-      newEditTitle[categoryId] = false;
-      return newEditTitle;
-    });
-    setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
-  };
-
-  // const handleSubscribePage = () => {
-  //   setShowOuterOptions(false);
-  //   handleSubscribe();
-  // };
 
   const modalRoot = document.querySelector("#modal-container");
   if (!modalRoot) return null;
 
   useEffect(() => {
-    getCategoryData();
-    console.log(categoryList);
+    if (selectedStudy) {
+      getCategoryData();
+    }
   }, [selectedStudy]);
 
   useEffect(() => {
@@ -328,7 +334,12 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                   <div key={index} className="algorithmProblems">
                     <li
                       style={{ padding: "0.3rem" }}
-                      // onClick={() => handlePage(task)}
+                      onClick={() =>
+                        handlePage(
+                          "algorithmDescription",
+                          task.algorithm.algorithmId
+                        )
+                      }
                     >
                       {task.algorithm.algorithmTitle}
                     </li>

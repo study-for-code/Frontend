@@ -190,9 +190,9 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
     setIsModalOpen(false);
   };
 
-  useEffect(() => {
-    console.log("selected study", selectedStudy);
-  }, [selectedStudy]);
+  // useEffect(() => {
+  //   console.log("selected study", selectedStudy);
+  // }, [selectedStudy]);
 
   return (
     <div className="hamburgerBarContainer">
