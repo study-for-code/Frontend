@@ -9,18 +9,13 @@ import { Container } from "@/styles/home/CodeReviewStyles";
 import GoormThinking from "@/assets/home/goormThinking.jpg";
 
 // libraries
-import AceEditor from "react-ace";
-import "ace-builds/src-noconflict/mode-javascript";
-import "ace-builds/src-noconflict/theme-monokai";
-import "ace-builds/src-noconflict/ext-language_tools";
-import * as ace from "ace-builds";
-import { useRecoilState } from "recoil";
-import { testDataState } from "@/atom/stats";
 
 // type
-import { testCaseType } from "@/types/aboutAdmin";
-import axios from "axios";
-import { useEffect } from "react";
+import axios, { AxiosRequestConfig } from "axios";
+import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { codeDataType } from "@/types/aboutCodeReview";
+import ChatRoom from "./CodeReview/ChatRoom";
 
 interface CodeReviewType {
   pageData: problemListType;
@@ -28,19 +23,63 @@ interface CodeReviewType {
 }
 
 const CodeReview = ({ pageData, userData }: CodeReviewType) => {
+  // 쿠키
+  const [cookies] = useCookies(["accessToken"]);
+  const { accessToken } = cookies;
   const { algorithmId } = pageData;
-  const { nickname } = userData;
-  // 테스트 데이터
-  const [testData, setTestData] = useRecoilState<testCaseType[]>(testDataState);
-  console.log("pageData: ", pageData);
-  console.log("testData: ", testData);
+  const { nickname, memberId } = userData;
+  // 코드 데이터
+  const [codeData, setCodeData] = useState<codeDataType>({
+    codeId: 0,
+    detail: [],
+    language: "",
+    codeLine: 0,
+    reviewId: 0,
+  });
+  const { codeId, detail, language, codeLine } = codeData;
 
   const getData = async () => {
     try {
+      const config: AxiosRequestConfig = {
+        params: {
+          memberId,
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+      };
+
       const res = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/codes/${algorithmId}`
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/codes/${algorithmId}`,
+        config
       );
-      console.log("CodeReview: ", res);
+      // console.log("CodeReview: ", res);
+      const { language, detail, codeId } = res.data.results[0];
+      const codeLines = detail.split("\n");
+      setCodeData((prev) => ({
+        ...prev,
+        codeId: codeId,
+        detail: codeLines,
+        language: language,
+      }));
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  // 채팅방 생성
+  const openChattingRoom = async () => {
+    try {
+      const res = await axios.post(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/review/${codeId}?codeLine=${codeLine}`
+      );
+      console.log("openChattingRoom: ", res);
+      setCodeData((prev) => ({
+        ...prev,
+        codeLine: res.data.results[0].reviewId,
+        reviewId: res.data.results[0].codeLine,
+      }));
     } catch (e) {
       console.log(e);
     }
@@ -49,11 +88,11 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
   useEffect(() => {
     getData();
   }, []);
-  // 동적 로드를 가능하게 하기 위해 basePath 설정
-  ace.config.set(
-    "basePath",
-    "https://cdn.jsdelivr.net/npm/ace-builds@1.4.12/src-noconflict/"
-  );
+
+  // useEffect(() => {
+  //   // console.log("code: ", codeData);
+  // }, [codeData]);
+
   return (
     <Container>
       <nav className="contentHeader">
@@ -81,35 +120,35 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
           </div>
 
           <span>사용 언어: </span>
-          {/* <span className="data">{pageData.language}</span> */}
+          <span className="data">{language}</span>
         </div>
       </div>
-      {/* header */}
-      <div>
-        <AceEditor
-          mode="javascript"
-          theme="monokai"
-          width="70vw"
-          height="70vh"
-          fontSize="1.2rem"
-          value={`
-          /*** [section title] ***/
-          // console.log('This code will be folded');
-          // console.log('This code will also be folded');
-          /*** [next section title] ***/
-          // console.log('This code will not be folded');
-              `}
-          setOptions={{
-            enableBasicAutocompletion: false,
-            enableLiveAutocompletion: true,
-            enableSnippets: true,
-            showLineNumbers: true,
-            tabSize: 2,
-            blockComment: ["/*", "*/"],
-          }}
-        />
-      </div>
       {/* header 부분 끝*/}
+      {/* 본문 */}
+      <div className="codeContainer">
+        <pre>
+          {detail.map((code, i) => (
+            <div
+              className="codeLine"
+              key={i}
+              onClick={() =>
+                setCodeData((prev) => ({
+                  ...prev,
+                  codeLine: i + 1,
+                }))
+              }
+            >
+              <span className="line-number">{i + 1}</span>
+              <span>{code.replace("\n", "")}</span>
+            </div>
+          ))}
+        </pre>
+      </div>
+      <button onClick={openChattingRoom}>채팅방 생성</button>
+      {/* http://localhost:8008로 메세지 보내기 */}
+      <ChatRoom codeData={codeData} memberId={memberId} />
+
+      {/* 본문 */}
     </Container>
   );
 };

@@ -88,12 +88,18 @@ const UserSection = ({ setUserData }: UserSectionType) => {
       />
       {showUserSection &&
         selectedStudy &&
-        (page === "algorithmList" || page === "defaultPage" ? (
+        (page !== "codeIde" ? (
           <div className="userContent">
             <div className="title">스터디 멤버</div>
             <div className="members">
-              {members.map((member) => (
-                <div>
+              {members.map((member, i) => (
+                <div
+                  onClick={() => {
+                    setPage("codeReview");
+                    setUserData(member);
+                  }}
+                  key={i}
+                >
                   {member.memberId === selectedStudy.ownerId && (
                     <div className="small-text">Host</div>
                   )}
