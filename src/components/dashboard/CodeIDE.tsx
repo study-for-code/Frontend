@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useCookies } from "react-cookie";
 import axios from "axios";
 
@@ -7,7 +7,7 @@ import { Container } from "@/styles/home/IDEStyles";
 
 // atom
 import { useRecoilState } from "recoil";
-import { pageDataState, testDataState } from "@/atom/stats";
+import { pageDataState, testDataState, subscribeIdState } from "@/atom/stats";
 
 // type
 import { problemListType, testCaseType } from "@/types/aboutAdmin";
@@ -29,6 +29,8 @@ const CodeIDE = () => {
   // language 선택 토글 상태
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("java");
+
+  const [subscribeId] = useRecoilState(subscribeIdState);
 
   // 코드 채점 결과 별 class
   const getStatusClass = (status: string) => {
@@ -85,6 +87,7 @@ const CodeIDE = () => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       };
+      console.log("code", code);
       const response = await axios.put(
         `${import.meta.env.VITE_LOCAL_API_ADDRESS}/submit`,
         {
@@ -97,8 +100,7 @@ const CodeIDE = () => {
         }
       );
       setResult(response.data.results[0]);
-      // TestCase가 늦게 나타남 수정 필요
-      setTestResult(result?.results);
+      setTestResult(response.data.results[0].results);
     } catch (e) {
       console.error(e);
     }
@@ -136,7 +138,19 @@ const CodeIDE = () => {
         <div className="problem-details">
           <div className="content">
             <h2 className="task">문제</h2>
-            <p className="description">{pageData.explanation}</p>
+            <p className="description">
+              {pageData.explanation &&
+                (pageData.explanation.includes("\n") ? (
+                  pageData.explanation.split("\n").map((line, index) => (
+                    <React.Fragment key={index}>
+                      {line}
+                      <br />
+                    </React.Fragment>
+                  ))
+                ) : (
+                  <React.Fragment>{pageData.explanation}</React.Fragment>
+                ))}
+            </p>
             {/*
               문제 생성 시 예시 데이터 입력란이 없음
               <div className="example">

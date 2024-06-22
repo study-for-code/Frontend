@@ -2,7 +2,7 @@ export interface Study {
   studyId: number;
   title: string;
   ownerId: number;
-  createAt: Date;
+  createAt: number[];
   joinCode: string;
   // image: File | null;
   // host: User | null;

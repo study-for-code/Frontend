@@ -1,16 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-// image
-import CategoryExpansion from "@/assets/home/category_expansion.png";
-import CategoryExpansion2 from "@/assets/home/category_expansion2.png";
-
 // type
 import {
   AlgorithmListType,
   PageKey,
   SpecificCategoryData,
-  categoryToggleListType,
 } from "@/types/aboutHome";
 import { problemListType } from "@/types/aboutAdmin";
 
@@ -28,6 +23,7 @@ import {
   pageState,
   selectedStudyState,
   specificCategoryData,
+  subscribeIdState,
   userState,
 } from "@/atom/stats";
 
@@ -71,6 +67,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
 
   // 카테고리 아이디
   const [CTid, setCTid] = useRecoilState<number>(categoryId);
+  const [, setSubscribeId] = useRecoilState(subscribeIdState);
 
   // 페이지
   const [, setPage] = useRecoilState<PageKey>(pageState);
@@ -129,6 +126,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
         );
         const data = response.data;
         setCategoryList(data.results);
+        console.log("category List : ", data.results);
       } catch (e) {
         console.log(e);
       }
@@ -192,7 +190,12 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   };
 
   const handleEditTitle = (categoryId: number) => {
-    if (newTitle[categoryId] !== "" || newTitle[categoryId].trim() !== "") {
+    console.log(newTitle[categoryId]);
+    if (
+      newTitle[categoryId] !== undefined &&
+      newTitle[categoryId] !== "" &&
+      newTitle[categoryId].trim() !== ""
+    ) {
       onModify(newTitle[categoryId]);
 
       setIsEditTitle((prev) => {
@@ -279,15 +282,23 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   };
 
   // 버튼 클릭시 content 섹션 page 변경
-  const handlePage = async (page: PageKey, algorithmID?: number) => {
+  const handlePage = async (
+    page: PageKey,
+    algorithmID?: number,
+    subscribeID?: number
+  ) => {
     setShowOuterOptions(false);
     if (algorithmID) {
+      if (subscribeID) {
+        setSubscribeId(subscribeID);
+      }
       try {
         const response = await axios.get(
           `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/${algorithmID}`
         );
         const data = response.data;
         if (pageData.algorithmId !== data.results[0].algorithmId) {
+          console.log("page Data : ", data.results[0]);
           setPageData(data.results[0]);
         }
       } catch (e) {

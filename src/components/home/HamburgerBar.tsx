@@ -63,14 +63,15 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   let formattedDate = "Invalid Date";
   if (selectedStudy) {
     try {
-      let createAtDate = new Date(selectedStudy.createAt);
-      if (!isNaN(createAtDate.getTime())) {
-        formattedDate = createAtDate.toLocaleDateString("ko-KR", {
-          year: "numeric",
-          month: "2-digit",
-          day: "2-digit",
-        });
-      }
+      let createAtDate: number[] = selectedStudy.createAt;
+      formattedDate = `${createAtDate[0]}년 ${createAtDate[1]}월 ${createAtDate[2]}일`;
+      // if (!isNaN(createAtDate.getTime())) {
+      //   formattedDate = createAtDate.toLocaleDateString("ko-KR", {
+      //     year: "numeric",
+      //     month: "2-digit",
+      //     day: "2-digit",
+      //   });
+      // }
     } catch (error) {
       console.error("Invalid date format:", error);
     }
@@ -233,17 +234,19 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
                 />
               )} */}
               {isEditing ? (
-                <>
+                <div className="editAreaStudy">
                   <input
                     type="text"
-                    value={newTitle}
+                    className="editInputStudy"
+                    defaultValue={newTitle}
                     onChange={handleTitleChange}
                     onClick={(e) => e.stopPropagation()}
-                    style={{ width: "50px" }}
                     maxLength={8}
                   />
-                  <button onClick={handleTitleSave}>Save</button>
-                </>
+                  <button className="editBtnStudy" onClick={handleTitleSave}>
+                    Save
+                  </button>
+                </div>
               ) : (
                 <>
                   <span

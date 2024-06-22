@@ -44,9 +44,14 @@ const Login = () => {
   const { email, password, code } = userData;
 
   const inputData = (sort: string, value: string) => {
+    const code = 0;
+    if (value === "") {
+      setMentState(false);
+    }
     setUserData((prev) => ({
       ...prev,
       [sort]: value,
+      code,
     }));
   };
 
@@ -86,8 +91,9 @@ const Login = () => {
   const changeMentState = () => {
     setMentState(!mentState);
   };
+
   useEffect(() => {
-    console.log("mentState: ", mentState);
+    // console.log("mentState: ", mentState);
   }, [mentState]);
 
   return (
@@ -97,7 +103,7 @@ const Login = () => {
           <span className="loader"></span>
         </LoginLoaderContainer>
       ) : (
-        <LoginContainer mentstate={mentState}>
+        <LoginContainer $mentstate={mentState}>
           <UserDataContext.Provider value={userData}>
             <TitleContainer />
             <InputSection

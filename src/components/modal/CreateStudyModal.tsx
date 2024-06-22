@@ -7,10 +7,7 @@ import { ModalContainer } from "@/styles/modal/modalStyles";
 interface CreateStudyProps {
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: (study: {
-    title: string;
-    // image: File | null;
-  }) => void;
+  onSubmit: (study: { title: string; image: File | null }) => void;
 }
 
 const CreateStudyModal = React.memo(function CreateStudyModal({
@@ -18,16 +15,14 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
   onClose,
   onSubmit,
 }: CreateStudyProps) {
-  // 스터디 이름
   const [title, setTitle] = useState("");
   const [image, setImage] = useState<File | null>(null);
-  // null 말고 "" 이렇게 기본값 넣어주시면 됩니다.
   const [selectedImage, setSelectedImage] = useState<string>("");
 
   const handleSubmit = useCallback(
     async (e: React.FormEvent) => {
       e.preventDefault();
-      const newStudy = { title };
+      const newStudy = { title, image };
       onSubmit(newStudy);
       setTitle("");
       setImage(null);
@@ -44,6 +39,7 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
     []
   );
 
+  // base64
   const handleimageChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       setImage(e.target.files ? e.target.files[0] : null);
@@ -118,9 +114,6 @@ const CreateStudyModal = React.memo(function CreateStudyModal({
               <button type="submit" className="positiveBtn">
                 생성
               </button>
-              {/* <button onClick={createStudy} className="positiveBtn">
-                생성
-              </button> */}
               <button
                 type="button"
                 onClick={handleClose}

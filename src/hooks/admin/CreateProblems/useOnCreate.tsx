@@ -29,7 +29,7 @@ const useOnCreate = ({
           restrictions,
         }
       );
-      console.log(response);
+      console.log("create problem : ", response);
       const { algorithmId } = response.data.results[0];
 
       const response2 = testCase.map((testCase) =>

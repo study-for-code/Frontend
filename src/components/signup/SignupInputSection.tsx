@@ -8,6 +8,7 @@ import { signupDataType } from "@/types/aboutSignup";
 
 // libraries
 import axios from "axios";
+import { useState } from "react";
 
 interface SignupInputSectionType {
   pwdState: boolean;
@@ -28,9 +29,11 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
   const handlePassword = () => {
     setPwdState(!pwdState);
   };
+  const [conflictEmail, setConflictEmail] = useState<boolean>(false);
 
   // 데이터 입력
   const handleInputData = (type: string, value: string) => {
+    setConflictEmail(false);
     setSignupData((prev) => ({
       ...prev,
       [type]: value,
@@ -49,7 +52,10 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
           confirmPassword,
         }
       );
-      // console.log(response);
+      console.log(response);
+      if (response.data.code === 409) {
+        setConflictEmail(true);
+      }
       setSignupData((prev) => ({
         ...prev,
         status: response.data.code,
@@ -88,7 +94,9 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
               name="email"
               onChange={(e) => handleInputData(e.target.name, e.target.value)}
             />
-            <span className="wrongMent">중복된 이메일이 존재합니다 ❌</span>
+            {conflictEmail && (
+              <span className="wrongMent">중복된 이메일이 존재합니다 ❌</span>
+            )}
           </div>
           <div className="inputContainer">
             <span>닉네임</span>

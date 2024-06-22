@@ -1,10 +1,24 @@
-import Expansion from "@/assets/home/expansion.png";
-import { pageState, selectedStudyState, userSectionState } from "@/atom/stats";
-import { SetterOrUpdater, useRecoilState, useRecoilValue } from "recoil";
-import axios from "axios";
+import axios, { AxiosRequestConfig } from "axios";
 import { useEffect, useState } from "react";
+
+// image
+import Expansion from "@/assets/home/expansion.png";
+
+// atom
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from "recoil";
+import {
+  pageState,
+  selectedStudyState,
+  userSectionState,
+  subscribeIdState,
+} from "@/atom/stats";
+
+// type
 import { User } from "@/types/User";
 import { ComponentMap, reviewSelectedUserType } from "@/types/aboutHome";
+import useGetSolvedMembers, {
+  useGetSolvedMembersType,
+} from "@/hooks/code/useGetSolvedMember";
 
 export interface UserSectionType {
   setUserData: SetterOrUpdater<reviewSelectedUserType>;
@@ -17,6 +31,9 @@ const UserSection = ({ setUserData }: UserSectionType) => {
   const selectedStudy = useRecoilValue(selectedStudyState);
   const [page, setPage] = useRecoilState(pageState);
   const [members, setMembers] = useState<User[]>([]);
+  const [solvedMembers, setSolvedMembers] = useState<number[]>([]);
+
+  const [subscribeId] = useRecoilState(subscribeIdState);
 
   const handleUserSection = () => {
     if (page === "codeIde") {
@@ -39,8 +56,25 @@ const UserSection = ({ setUserData }: UserSectionType) => {
     }
   };
 
+  const getSolvedMembers = async () => {
+    const object: useGetSolvedMembersType = {
+      setSolvedMembers,
+      subscribeId,
+      selectedStudy,
+    };
+
+    const execute = useGetSolvedMembers(object);
+    execute();
+  };
+
   useEffect(() => {
-    if (selectedStudy) {
+    if (subscribeId > 0 && showUserSection) {
+      getSolvedMembers();
+    }
+  }, [subscribeId, showUserSection]);
+
+  useEffect(() => {
+    if (selectedStudy && selectedStudy.studyId > 0) {
       getMembers();
     }
   }, [selectedStudy]);
@@ -54,19 +88,12 @@ const UserSection = ({ setUserData }: UserSectionType) => {
       />
       {showUserSection &&
         selectedStudy &&
-        (page === "algorithmList" ||
-        page === "defaultPage" ||
-        page === "algorithmDescription" ? (
+        (page === "algorithmList" || page === "defaultPage" ? (
           <div className="userContent">
             <div className="title">스터디 멤버</div>
             <div className="members">
               {members.map((member) => (
-                <div
-                  onClick={() => {
-                    setPage("codeReview");
-                    setUserData(member);
-                  }}
-                >
+                <div>
                   {member.memberId === selectedStudy.ownerId && (
                     <div className="small-text">Host</div>
                   )}
@@ -80,15 +107,28 @@ const UserSection = ({ setUserData }: UserSectionType) => {
             <div className="title">코드 리뷰</div>
             <div className="mini-title">summitted</div>
             <div className="members">
-              <div>member1</div>
-              <div>member2</div>
-              <div>member3</div>
+              {members
+                .filter((member) => solvedMembers.includes(member.memberId))
+                .map((member, index) => (
+                  <div
+                    key={index}
+                    className="solvedMember"
+                    onClick={() => {
+                      setPage("codeReview");
+                      setUserData(member);
+                    }}
+                  >
+                    - {member.nickname}
+                  </div>
+                ))}
             </div>
             <div className="mini-title">not summitted</div>
             <div className="members">
-              <div>member1</div>
-              <div>member2</div>
-              <div>member3</div>
+              {members
+                .filter((member) => !solvedMembers.includes(member.memberId))
+                .map((member, index) => (
+                  <div key={index}>- {member.nickname}</div>
+                ))}
             </div>
           </div>
         ))}

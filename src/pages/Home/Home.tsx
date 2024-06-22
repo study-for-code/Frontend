@@ -9,7 +9,7 @@ import { Container } from "@/styles/home/homeStyles";
 import CodeReview from "@/components/home/CodeReview";
 import StudyList from "@/components/home/StudyList";
 import AlgorithmList from "@/components/home/AlgorithmList";
-import AlgorithmDescription from "@/components/AlgorithmDescription";
+import AlgorithmDescription from "@/components/dashboard/AlgorithmDescription";
 import HamburgerBar from "@/components/home/HamburgerBar";
 
 // types
@@ -44,12 +44,17 @@ import { User } from "@/types/User";
 import useGetCategoryData from "@/hooks/home/useGetCategoryData";
 import { Study } from "@/types/aboutStudy";
 import { problemListType } from "@/types/aboutAdmin";
-import CodeIDE from "@/components/CodeIDE";
+import CodeIDE from "@/components/dashboard/CodeIDE";
 import UserSection from "@/components/home/UserSection";
 
 const Home = () => {
   const navigate = useNavigate();
-  const [cookies] = useCookies<string>(["accessToken"]);
+  const [cookies, , removeCookie] = useCookies<string>([
+    "accessToken",
+    "email",
+    "memberId",
+    "nickname",
+  ]);
   const { accessToken } = cookies;
 
   const [user, setUser] = useRecoilState<User>(userState);
@@ -80,11 +85,12 @@ const Home = () => {
 
   const getUserData = async () => {
     const memberId = cookies.memberId;
-    if (memberId === undefined) {
+    if (memberId > 0) {
+      const execute = useGetUserData({ setUser, memberId });
+      await execute();
+    } else {
       goToLoginPage();
     }
-    const execute = useGetUserData({ setUser, memberId });
-    await execute();
   };
 
   const getStudyList = async () => {
@@ -136,7 +142,13 @@ const Home = () => {
     }
   };
 
-  const goToLoginPage = () => navigate("/Login");
+  const goToLoginPage = () => {
+    removeCookie("accessToken", { path: "../" });
+    removeCookie("email", { path: "../" });
+    removeCookie("memberId", { path: "../" });
+    removeCookie("nickname", { path: "../" });
+    navigate("/Login");
+  };
 
   const componentMap: ComponentMap = {
     codeReview: <CodeReview pageData={pageData} userData={userData} />,
@@ -155,13 +167,19 @@ const Home = () => {
   }, [studies]);
 
   useEffect(() => {
-    getStudyList();
-    getCategoryList();
-    setPage("defaultPage");
+    if (user.memberId > 0) {
+      getStudyList();
+      getCategoryList();
+      setPage("defaultPage");
+    }
   }, [user]);
 
   useEffect(() => {
-    getUserData();
+    if (cookies.memberId > 0) {
+      getUserData();
+    } else {
+      goToLoginPage();
+    }
   }, []);
 
   let componentToShow = componentMap[page];

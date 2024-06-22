@@ -111,6 +111,7 @@ export const Container = styled.div<HomeStyleProps>`
   .hamburgerbutton {
     display: flex;
     justify-content: space-between;
+    align-items: center;
     width: 100%;
   }
 
@@ -127,6 +128,47 @@ export const Container = styled.div<HomeStyleProps>`
     padding: 0.3rem;
     display: flex;
     align-items: center;
+  }
+
+  .editAreaStudy {
+    flex: 1;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  .editInputStudy {
+    width: 6rem;
+    height: 1.5rem;
+    font-family: "GmarketSansMedium";
+    font-size: 1rem;
+    background-color: none;
+    border: none;
+    color: ${theme.white};
+    background-color: ${theme.black};
+    border: none;
+    border-bottom: 2px solid ${theme.lightGray};
+  }
+
+  .editInputStudy:focus {
+    outline: none;
+  }
+
+  .editBtnStudy {
+    cursor: pointer;
+    font-family: "GmarketSansMedium";
+    height: 1.4rem;
+    border: none;
+    color: ${theme.white};
+    background-color: ${theme.lightGray};
+    border-radius: 5px;
+    /* padding: 0.5rem; */
+
+    &:hover {
+      background-color: ${theme.white};
+      color: ${theme.lightGray};
+    }
   }
 
   .updateStudyName {
@@ -267,6 +309,47 @@ export const Container = styled.div<HomeStyleProps>`
     width: 100%;
   }
 
+  .editAreaCG {
+    height: 1.875rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+  }
+
+  .editInputCG {
+    width: 7rem;
+    height: 1.2rem;
+    font-family: "GmarketSansMedium";
+    font-size: 1rem;
+    background-color: none;
+    border: none;
+    color: ${theme.white};
+    background-color: ${theme.gray};
+    border: none;
+    border-bottom: 2px solid ${theme.lightBlack};
+  }
+
+  .editInputCG:focus {
+    outline: none;
+  }
+
+  .editBtnCG {
+    cursor: pointer;
+    font-family: "GmarketSansMedium";
+    height: 1.4rem;
+    border: none;
+    color: ${theme.white};
+    background-color: ${theme.black};
+    border-radius: 5px;
+    /* padding: 0.5rem; */
+
+    &:hover {
+      background-color: ${theme.white};
+      color: ${theme.lightGray};
+    }
+  }
+
   .categoryTitle {
     /* width: 100%; */
     display: flex;
@@ -305,17 +388,10 @@ export const Container = styled.div<HomeStyleProps>`
     border-radius: 0.5rem;
   }
 
-  .editArea {
-    display: flex;
-    align-items: center;
-    height: 30px;
-    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
-  }
-
-  .editInput {
-    background-color: none;
-    border: none;
-    border-bottom: 1px solid white;
+  .algorithmProblems > li {
+    word-wrap: break-word; /* 긴 단어가 자동으로 줄바꿈되도록 설정 */
+    word-break: break-all; /* 단어가 잘려서라도 줄바꿈되도록 설정 */
+    overflow-wrap: break-word;
   }
 
   .contentSection {
@@ -355,17 +431,28 @@ export const Container = styled.div<HomeStyleProps>`
   .mini-title {
     color: ${theme.CategoryFontColor};
     margin-top: 1.5rem;
+    margin-bottom: 0.5rem;
     font-size: 0.8rem;
   }
 
   .members > div {
-    padding: 0.5rem 0 0.5rem;
+    padding: 0.5rem;
+    margin-right: 0.5rem;
   }
 
   .small-text {
     font-size: 0.7rem;
     padding-left: 0.5rem;
     color: ${theme.CategoryFontColor};
+  }
+
+  .solvedMember {
+    cursor: pointer;
+    border-radius: 10px;
+
+    &:hover {
+      background-color: ${theme.black};
+    }
   }
 `;
 

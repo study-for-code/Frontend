@@ -110,7 +110,7 @@ export const Container = styled.div<DescriptionStyleProps>`
   }
 
   .description {
-    margin-bottom: 1rem;
+    margin: 0;
     word-wrap: break-word; /* 긴 단어가 자동으로 줄바꿈되도록 설정 */
     word-break: break-all; /* 단어가 잘려서라도 줄바꿈되도록 설정 */
     overflow-wrap: break-word;

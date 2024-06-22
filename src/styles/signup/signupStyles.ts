@@ -1,7 +1,11 @@
 import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 
-export const SignupContainer = styled.div<{ message: string | null }>`
+interface SignupStyleProps {
+  $message: string | null;
+}
+
+export const SignupContainer = styled.div<SignupStyleProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -69,7 +73,6 @@ export const SignupContainer = styled.div<{ message: string | null }>`
     font-family: "GmarketSansLight";
     outline: none;
     border-radius: 0.3rem;
-    /* margin-bottom: ${(props) => (props.message === "" ? "1.5rem" : null)}; */
 
     &:focus {
       border: 2px solid ${theme.mainColor};

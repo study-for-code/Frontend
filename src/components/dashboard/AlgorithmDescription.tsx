@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import React, { useEffect, useRef } from "react";
 import axios from "axios";
 
 // styles
@@ -79,36 +79,46 @@ const AlgorithmDescription = () => {
             <div className="info-header">시간 제한</div>
             <div className="info-header">메모리 제한</div>
             <div className="info-header">제출</div>
-            <div className="info-header">정답</div>
             <div className="info-header">맞힌 사람</div>
             <div className="info-header">정답 비율</div>
           </div>
           <hr className="divider" />
           <div className="information">
-            <div className="info-value">{pageData.timeLimit}초</div>
-            <div className="info-value">MB</div>
+            <div className="info-value">{pageData.timeLimit}ms</div>
+            <div className="info-value">{pageData.memorySize}KB</div>
             <div className="info-value">{pageData.submit}</div>
-            <div className="info-value"></div>
             <div className="info-value">{pageData.answer}</div>
             <div className="info-value">{pageData.answerRate}%</div>
           </div>
         </div>
         <div className="content">
           <h2 className="task">문제</h2>
-          <p className="description">{pageData.explanation}</p>
-          <div className="example">
+          <p className="description">
+            {pageData.explanation &&
+              (pageData.explanation.includes("\n") ? (
+                pageData.explanation.split("\n").map((line, index) => (
+                  <React.Fragment key={index}>
+                    {line}
+                    <br />
+                  </React.Fragment>
+                ))
+              ) : (
+                <React.Fragment>{pageData.explanation}</React.Fragment>
+              ))}
+          </p>
+          {/* <div className="example">
             <pre>0 2 0 1 0 1 0 0 0 0 0 0 0 0 0 0 0 1 1 0 0 0 0 1 2</pre>
-          </div>
+          </div> */}
         </div>
         <div className="content">
           <h2 className="task">제한 사항</h2>
           <ul>
-            {pageData.restrictions.map((rest, index) => (
+            {pageData.restrictions?.map((rest, index) => (
               <li key={index}>{rest}</li>
             ))}
           </ul>
         </div>
-        {testData.map((test, index) => (
+        {testData?.map((test, index) => (
           <div className="testcase" key={index}>
             <div className="content">
               <h2 className="task">입력</h2>
