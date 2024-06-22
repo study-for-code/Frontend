@@ -9,7 +9,12 @@ import EnterStudyModal from "../modal/EnterStudyModal";
 
 //atom
 import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { selectedStudyState, studiesState, userState } from "@/atom/stats";
+import {
+  selectedStudyIndex,
+  selectedStudyState,
+  studiesState,
+  userState,
+} from "@/atom/stats";
 
 // type
 import { Study } from "@/types/aboutStudy";
@@ -33,6 +38,8 @@ const StudyList = () => {
   // 아래와 같이 하나로 줄일 수 있습니다!
   const [studies, setStudies] = useRecoilState(studiesState);
   const setSelectedStudy = useSetRecoilState(selectedStudyState);
+  // 선택된 스터디의 index -> 스터디 이름 수정 후 refresh 시 필요
+  const setSelectedStudyIndex = useSetRecoilState(selectedStudyIndex);
   const [showOptions, setShowOptions] = useState(false);
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
@@ -76,7 +83,8 @@ const StudyList = () => {
     }
   };
 
-  const handleSelectStudy = (study: Study) => {
+  const handleSelectStudy = (study: Study, index: number) => {
+    setSelectedStudyIndex(index);
     setSelectedStudy(study);
   };
 
@@ -129,7 +137,7 @@ const StudyList = () => {
         {Array.isArray(studies) &&
           studies.length > 0 &&
           studies.map((study, index) => (
-            <div key={index} onClick={() => handleSelectStudy(study)}>
+            <div key={index} onClick={() => handleSelectStudy(study, index)}>
               <img
                 src={
                   // 이미지 데이터 생기면 주석 해제 -> 현재는 디폴트 이미지로 설정
