@@ -1,12 +1,14 @@
 import styled, { css } from "styled-components";
 import { theme } from "@/styles/common/ColorStyles";
 
-import { backSideBar, moveSideBar, showDrawer, hideDrawer } from "../keyframes";
+import { showDrawer, hideDrawer } from "../keyframes";
 
-export const Container = styled.div<{
-  showhamburgerBar: boolean;
-  showUserSection: boolean;
-}>`
+interface HomeStyleProps {
+  $showhamburgerBar?: boolean;
+  $showUserSection?: boolean;
+}
+
+export const Container = styled.div<HomeStyleProps>`
   height: 96vh;
   min-width: 73rem;
   background-color: ${theme.lightGray};
@@ -77,7 +79,7 @@ export const Container = styled.div<{
   .hamburgerBarContainer {
     position: relative;
     transition: 0.75s width;
-    width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
+    width: ${({ $showhamburgerBar }) => ($showhamburgerBar ? "240px" : "40px")};
     height: 100%;
     display: flex;
     flex-direction: column;
@@ -89,18 +91,21 @@ export const Container = styled.div<{
 
   .drawerSection {
     position: relative;
-    width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
-    height: ${(props) => (props.showhamburgerBar ? "120px" : "40px")};
+    width: ${({ $showhamburgerBar }) => ($showhamburgerBar ? "240px" : "40px")};
+    height: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "120px" : "40px"};
     display: flex;
     flex-direction: column;
-    align-items: ${(props) =>
-      props.showhamburgerBar ? "flex-start" : "center"};
+    align-items: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "flex-start" : "center"};
     justify-content: center;
     transition: 0.75s width;
     font-family: "GmarketSansMedium";
-    padding-top: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
+    padding-top: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "1rem" : null};
     background-color: ${theme.black};
-    padding-left: ${(props) => (props.showhamburgerBar ? "0" : null)};
+    padding-left: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "0" : null};
   }
 
   .hamburgerbutton {
@@ -112,8 +117,10 @@ export const Container = styled.div<{
   .hamburgerImage {
     width: 20px;
     height: 20px;
-    margin-right: ${(props) => (props.showhamburgerBar ? "1rem" : null)};
-    margin-left: ${(props) => (props.showhamburgerBar ? null : "0.5rem")};
+    margin-right: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "1rem" : null};
+    margin-left: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? null : "0.5rem"};
   }
 
   .studyName {
@@ -133,8 +140,8 @@ export const Container = styled.div<{
     font-size: 0.8rem;
     color: ${theme.fontWhiteColor};
 
-    animation: ${(props) =>
-      props.showhamburgerBar
+    animation: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar
         ? css`0.5s ${showDrawer}
       ease-in-out`
         : css`0.2s ${hideDrawer}
@@ -143,14 +150,16 @@ export const Container = styled.div<{
 
   .drawerButton {
     transition: 0.75s width;
-    width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
-    height: ${(props) => (props.showhamburgerBar ? "60px" : "40px")};
+    width: ${({ $showhamburgerBar }) => ($showhamburgerBar ? "240px" : "40px")};
+    height: ${({ $showhamburgerBar }) => ($showhamburgerBar ? "60px" : "40px")};
     display: flex;
-    align-items: ${(props) => (props.showhamburgerBar ? "center" : "center")};
-    justify-content: ${(props) =>
-      props.showhamburgerBar ? "space-between" : "center"};
-    padding-right: ${(props) => (props.showhamburgerBar ? "0" : null)};
-    padding-top: ${(props) => (props.showhamburgerBar ? "0" : null)};
+    align-items: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "center" : "center"};
+    justify-content: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "space-between" : "center"};
+    padding-right: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "0" : null};
+    padding-top: ${({ $showhamburgerBar }) => ($showhamburgerBar ? "0" : null)};
     background-color: ${theme.black};
     font-family: "GmarketSansMedium";
     color: white;
@@ -160,8 +169,8 @@ export const Container = styled.div<{
     width: 100%;
     display: flex;
     flex-direction: row;
-    justify-content: ${({ showhamburgerBar }) =>
-      showhamburgerBar ? "space-between" : "center"};
+    justify-content: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "space-between" : "center"};
     align-items: center;
   }
   .profileContainer {
@@ -170,8 +179,8 @@ export const Container = styled.div<{
     justify-content: space-between;
     align-items: center;
     margin-left: 0.5rem;
-    animation: ${({ showhamburgerBar }) =>
-      showhamburgerBar ? css`0.3s ${showDrawer}` : css`0.3s ${hideDrawer}`};
+    animation: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? css`0.3s ${showDrawer}` : css`0.3s ${hideDrawer}`};
   }
   .logOut {
     width: 20px;
@@ -180,16 +189,16 @@ export const Container = styled.div<{
   }
   .drawerContent {
     transition: 0.75s width;
-    width: ${(props) => (props.showhamburgerBar ? "240px" : "40px")};
+    width: ${({ $showhamburgerBar }) => ($showhamburgerBar ? "240px" : "40px")};
     flex: 1;
-    opacity: ${(props) => (props.showhamburgerBar ? 1 : 0)};
+    opacity: ${({ $showhamburgerBar }) => ($showhamburgerBar ? 1 : 0)};
     background-color: ${theme.gray};
-    color: ${(props) =>
-      props.showhamburgerBar ? theme.CategoryFontColor : theme.gray};
+    color: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? theme.CategoryFontColor : theme.gray};
     position: relative;
     /* padding-left: 1rem; */
-    animation: ${(props) =>
-      props.showhamburgerBar
+    animation: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar
         ? css`0.5s ${showDrawer}
       ease-in-out`
         : css`0s ${hideDrawer}
@@ -221,36 +230,6 @@ export const Container = styled.div<{
     }
   }
 
-  .categoryRow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-  .listColumn::-webkit-scrollbar {
-    display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
-  }
-
-  .categoryTitle {
-    width: 100%;
-    display: flex;
-    align-items: center;
-    height: 30px;
-  }
-
-  .categoryTitle.selected,
-  .categoryTitle:hover {
-    background-color: ${theme.selectedGray};
-    border-radius: 0.5rem;
-    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
-  }
-  .categoryRow .hr-line {
-    flex: 1;
-    background-color: ${theme.CategoryFontColor};
-    border: none;
-    height: 1px;
-    margin: 9px 0px;
-  }
   .categorySpace {
     display: flex;
     flex-direction: column;
@@ -259,8 +238,9 @@ export const Container = styled.div<{
     font-family: "GmarketSansMedium";
     position: relative;
     transition: 0.75s width;
-    width: ${(props) => (props.showhamburgerBar ? null : "40px")};
+    width: ${({ $showhamburgerBar }) => ($showhamburgerBar ? null : "40px")};
   }
+
   .categorySpace ::-webkit-scrollbar {
     display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
   }
@@ -269,9 +249,50 @@ export const Container = styled.div<{
     overflow-y: auto;
     max-height: 500px;
   }
+
   .category ::-webkit-scrollbar {
     display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
   }
+
+  .categoryRow {
+    /* width: 100%; */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    /* padding: 0.2rem 0.4rem 0.2rem 0.4rem; */
+  }
+
+  .categoryRow > div {
+    width: 100%;
+  }
+
+  .categoryTitle {
+    /* width: 100%; */
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+  }
+
+  .categoryTitle:hover {
+    background-color: ${theme.selectedGray};
+    border-radius: 0.5rem;
+    /* transform: scale(1.05); */
+  }
+
+  .hr-line {
+    flex: 1;
+    background-color: ${theme.CategoryFontColor};
+    border: none;
+    height: 1px;
+    margin: 9px 0px;
+  }
+
+  .listColumn::-webkit-scrollbar {
+    display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
+  }
+
   .algorithmProblems {
     height: auto;
     padding: 0.2rem;
@@ -280,13 +301,28 @@ export const Container = styled.div<{
 
   .algorithmProblems:hover {
     background-color: ${theme.selectedGray};
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
+    border-radius: 0.5rem;
+  }
+
+  .editArea {
+    display: flex;
+    align-items: center;
+    height: 30px;
+    padding: 0.2rem 0.4rem 0.2rem 0.4rem;
+  }
+
+  .editInput {
+    background-color: none;
+    border: none;
+    border-bottom: 1px solid white;
   }
 
   .contentSection {
     transition: 0.5s width ease-in-out;
     flex: 1;
-    padding-left: ${(props) => (props.showhamburgerBar ? "0.5rem" : null)};
+    padding-left: ${({ $showhamburgerBar }) =>
+      $showhamburgerBar ? "0.5rem" : null};
     background-color: ${theme.lightGray};
     animation-fill-mode: forwards;
   }
@@ -295,15 +331,15 @@ export const Container = styled.div<{
     height: 96vh;
     background-color: ${theme.gray};
     transition: 0.75s width;
-    width: ${(props) => (props.showUserSection ? "15rem" : "2.5rem")};
+    width: ${({ $showUserSection }) => ($showUserSection ? "15rem" : "2.5rem")};
     font-family: "GmarketSansMedium";
     color: ${theme.white};
   }
 
   .expansionButton {
     padding: 0.5rem;
-    transform: ${(props) =>
-      props.showUserSection ? "rotate(180deg)" : "none"};
+    transform: ${({ $showUserSection }) =>
+      $showUserSection ? "rotate(180deg)" : "none"};
     transition: transform 0.75s ease;
   }
 
