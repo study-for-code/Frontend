@@ -8,7 +8,6 @@ interface WrongMentContainerType {
 
 const WrongMentContainer = ({}: WrongMentContainerType) => {
   const userDataContext = useContext<LoginType | null>(UserDataContext);
-  console.log("userDataContext: ", userDataContext);
 
   const showComponents = () => {
     switch (userDataContext?.code) {
@@ -32,7 +31,7 @@ const WrongMentContainer = ({}: WrongMentContainerType) => {
   };
   return (
     <div
-      className="wronMentContainer"
+      className="wrongMentContainer"
       style={{
         width: "28vw",
         marginBottom: "1rem",

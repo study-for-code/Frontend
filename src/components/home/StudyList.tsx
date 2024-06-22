@@ -88,7 +88,7 @@ const StudyList = () => {
     setSelectedStudy(study);
   };
 
-  const onCreate = async (newStudy: { title: string }) => {
+  const onCreate = async (newStudy: { title: string; image: File | null }) => {
     try {
       const { title } = newStudy;
       const headers = {
@@ -103,6 +103,35 @@ const StudyList = () => {
           headers: headers,
         }
       );
+      console.log("create study", response);
+      if (newStudy.image) {
+        const studyId = response.data.results[0].studyId;
+        setStudyImage(newStudy.image, studyId, title);
+      } else {
+        refreshStudylist(response);
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const setStudyImage = async (image: File, studyId: number, title: string) => {
+    const formData = new FormData();
+    formData.append("file", image);
+    formData.append("studyId", studyId.toString());
+    formData.append("title", title);
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/images`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("create image", response);
       refreshStudylist(response);
     } catch (e) {
       console.error(e);

@@ -31,7 +31,7 @@ export const selectedStudyState = atom<Study | null>({
     studyId: 0,
     title: "",
     ownerId: 0,
-    createAt: new Date(),
+    createAt: [],
     joinCode: "",
   },
 });
@@ -119,4 +119,9 @@ export const reviewSelected = atom<reviewSelectedUserType>({
     memberId: 0,
     nickname: "",
   },
+});
+
+export const subscribeIdState = atom<number>({
+  key: "subscribeIdState",
+  default: 0,
 });

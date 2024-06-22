@@ -4,7 +4,11 @@ import { showWrongMent, showWrongMent2 } from "../keyframes";
 import { LoginType } from "@/types/aboutLogin";
 import { css } from "styled-components";
 
-export const LoginContainer = styled.div<{ mentstate: boolean }>`
+interface LoginStyleProps {
+  $mentstate?: boolean;
+}
+
+export const LoginContainer = styled.div<LoginStyleProps>`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -90,11 +94,8 @@ export const LoginContainer = styled.div<{ mentstate: boolean }>`
     color: ${theme.wrongMent};
     font-family: "GmarketSansLight";
     margin-bottom: 1rem;
-    animation: ${({ mentstate }) => {
-      console.log("mentstate: ", mentstate);
-      console.log("showWrongMent: ", showWrongMent);
-      console.log("showWrongMent2: ", showWrongMent2);
-      return mentstate
+    animation: ${({ $mentstate }) => {
+      return $mentstate
         ? css`
             ${showWrongMent} 0.5s linear
           `
@@ -161,9 +162,10 @@ export const LoginContainer = styled.div<{ mentstate: boolean }>`
   }
 
   .signupSection {
-    width: 15vw;
+    width: 30vw;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    gap: 1vw;
   }
   .ment1 {
     font-family: "GmarketSansLight";

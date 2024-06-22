@@ -12,18 +12,21 @@ const ProblemDetailSection = ({ inputData }: problemDetailSectionType) => {
         placeholder="문제 이름"
         name="title"
         onChange={(e) => inputData(e.target.name, e.target.value)}
+        required
       />
       <ProblemDetailInput
         className="problemDetailInput"
         placeholder="시간 제한"
         name="timeLimit"
         onChange={(e) => inputData(e.target.name, e.target.value)}
+        required
       />
       <ProblemDetailInput
         className="problemDetailInput"
         placeholder="메모리 제한"
         name="memorySize"
         onChange={(e) => inputData(e.target.name, e.target.value)}
+        required
       />
     </div>
   );

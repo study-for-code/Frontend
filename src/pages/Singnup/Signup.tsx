@@ -28,7 +28,7 @@ const Signup = () => {
   }, [signupData]);
 
   return (
-    <SignupContainer message={signupData.message}>
+    <SignupContainer $message={signupData.message}>
       <ContextData.Provider value={signupData}>
         <TitleContainer />
         <SignupInputSection

@@ -39,6 +39,7 @@ export const AlgorithmListContainer = styled.div`
   }
 
   .week_header {
+    width: 100%;
     display: flex;
     flex-direction: row;
     justify-content: space-between;
@@ -51,7 +52,7 @@ export const AlgorithmListContainer = styled.div`
     margin-bottom: 10px;
   }
   .remoteProblemHeader {
-    width: 20%;
+    /* width: 20%; */
     display: flex;
     justify-content: space-between;
     font-family: "GmarketSansMedium";
