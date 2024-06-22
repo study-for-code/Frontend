@@ -1,10 +1,9 @@
 // types
-import { problemListType } from "@/types/aboutHome";
+import { problemListType, reviewSelectedUserType } from "@/types/aboutHome";
 // styles
 import { Container } from "@/styles/home/CodeReviewStyles";
 
 // theme
-import { theme } from "@/styles/common/ColorStyles";
 
 // img
 import GoormThinking from "@/assets/home/goormThinking.jpg";
@@ -15,12 +14,41 @@ import "ace-builds/src-noconflict/mode-javascript";
 import "ace-builds/src-noconflict/theme-monokai";
 import "ace-builds/src-noconflict/ext-language_tools";
 import * as ace from "ace-builds";
+import { useRecoilState } from "recoil";
+import { testDataState } from "@/atom/stats";
+
+// type
+import { testCaseType } from "@/types/aboutAdmin";
+import axios from "axios";
+import { useEffect } from "react";
 
 interface CodeReviewType {
   pageData: problemListType;
+  userData: reviewSelectedUserType;
 }
 
-const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
+const CodeReview = ({ pageData, userData }: CodeReviewType) => {
+  const { algorithmId } = pageData;
+  const { nickname } = userData;
+  // 테스트 데이터
+  const [testData, setTestData] = useRecoilState<testCaseType[]>(testDataState);
+  console.log("pageData: ", pageData);
+  console.log("testData: ", testData);
+
+  const getData = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/codes/${algorithmId}`
+      );
+      console.log("CodeReview: ", res);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
   // 동적 로드를 가능하게 하기 위해 basePath 설정
   ace.config.set(
     "basePath",
@@ -29,35 +57,26 @@ const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
   return (
     <Container>
       <nav className="contentHeader">
-        <div className="problemTitle">15888 치킨 배달</div>
+        <div className="problemTitle">{pageData.algorithmTitle}</div>
       </nav>
+      {/* header */}
       <div className="header">
         <div className="userRow">
           <img src={GoormThinking} className="profile" />
           <div className="userColumn">
-            <span>유저 이름</span>
-            <span
-              style={{
-                fontSize: "0.7rem",
-                color: `${theme.CategoryFontColor}`,
-              }}
-            >
-              {/* {pageData.language} */}
-            </span>
+            <span>{nickname}</span>
           </div>
         </div>
         <div className="problemRow">
-          <span>풀이 시간: </span>
-          {/* <span className="data">{pageData.solveTime}</span> */}
           <span>메모리: </span>
           <div>
-            {/* <span className="data">{pageData.memorySize}</span> */}
+            <span className="data">{pageData.memorySize}</span>
             <span className="unit">MB</span>
           </div>
 
-          <span>실행시간: </span>
+          <span>시간 제한: </span>
           <div>
-            {/* <span className="data">{pageData.timeLimit}</span> */}
+            <span className="data">{pageData.timeLimit}</span>
             <span className="unit">ms</span>
           </div>
 
@@ -65,6 +84,7 @@ const CodeReview: React.FC<CodeReviewType> = ({ pageData }) => {
           {/* <span className="data">{pageData.language}</span> */}
         </div>
       </div>
+      {/* header */}
       <div>
         <AceEditor
           mode="javascript"

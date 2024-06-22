@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import axios from "axios";
 
 // styles
@@ -19,8 +19,7 @@ import { problemListType, testCaseType } from "@/types/aboutAdmin";
 const AlgorithmDescription = () => {
   // 알고리즘 문제 정보, 테스트 케이스 정보, content 섹션 페이지 정보
   const setPage = useSetRecoilState(pageState);
-  const [pageData, setPageData] =
-    useRecoilState<problemListType>(pageDataState);
+  const [pageData] = useRecoilState<problemListType>(pageDataState);
   const [testData, setTestData] = useRecoilState<testCaseType[]>(testDataState);
 
   // 문제 풀기 버튼 이동용 UserSection 상태

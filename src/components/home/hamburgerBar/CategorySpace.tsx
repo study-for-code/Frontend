@@ -49,6 +49,7 @@ import useHandleInputChange, {
 } from "@/hooks/home/CategorySpace/useHandleInputChange";
 import useOnDelete from "@/hooks/home/CategorySpace/useOnDelete";
 import useGetAlgorithmList from "@/hooks/admin/AlgorithmList/useGetAlgorithmList";
+import CategoryList from "./CategorySpace/CategoryList";
 
 interface CategorySpaceProps {
   isToggleSelected: boolean[];
@@ -63,17 +64,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [specificCategory, setSpecificCategory] =
     useRecoilState<SpecificCategoryData>(specificCategoryData);
   // 특정 카테고리 리스트
-  // const [categoryToggleList, setCategoryToggleList] = useState<
-  //   categoryToggleListType[]
-  // >([
-  //   {
-  //     algorithm: {
-  //       algorithmId: 0,
-  //       algorithmTitle: "",
-  //     },
-  //     subscribeId: 0,
-  //   },
-  // ]);
+
   // 전체 알고리즘 문제 데이터
   const [, setAlgorithmList] =
     useRecoilState<AlgorithmListType[]>(algorithmLists);
@@ -81,6 +72,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   // 카테고리 아이디
   const [CTid, setCTid] = useRecoilState<number>(categoryId);
 
+  // 페이지
   const [, setPage] = useRecoilState<PageKey>(pageState);
   const [pageData, setPageData] =
     useRecoilState<problemListType>(pageDataState);
@@ -90,20 +82,20 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     useRecoilState<SpecificCategoryData[]>(categoryListState);
   const selectedStudy = useRecoilValue(selectedStudyState);
 
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [showOuterOptions, setShowOuterOptions] = useState(false);
-  const [showInnerOptions, setShowInnerOptions] = useState(false);
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState<boolean>(false);
+  const [showOuterOptions, setShowOuterOptions] = useState<boolean>(false);
+  const [showInnerOptions, setShowInnerOptions] = useState<boolean>(false);
 
   // 우클릭 시 나타나는 버튼 위치
   const [menuPosition, setMenuPosition] = useState({ x: 0, y: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
-  const [isEditTitle, setIsEditTitle] = useState(
+  const [isEditTitle, setIsEditTitle] = useState<boolean[]>(
     new Array(categoryList.length).fill(false)
   );
   const [newTitle, setNewTitle] = useState<{ [key: number]: string }>({});
-  const [selectedCgID, setSelectedCgID] = useState(0);
+  const [selectedCgID, setSelectedCgID] = useState<number>(0);
 
   // 특정 카테고리 데이터 데이터 가져오기
   const getCategory = (data: SpecificCategoryData) => {
@@ -339,104 +331,22 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     <div className="drawerContent" onContextMenu={handleOuterContextMenu}>
       <div className="categorySpace">
         <div className="algorithmList">Task 목록</div>
-        <div className="category">
-          {categoryList.map((category) => {
-            return (
-              <div
-                className="categoryRow"
-                key={category.categoryId}
-                onClick={() => {
-                  getAlgorithmList();
-                }}
-              >
-                <div>
-                  {isEditTitle[category.categoryId] ? (
-                    <div className="editArea">
-                      <input
-                        className="editInput"
-                        type="text"
-                        value={newTitle[category.categoryId] || category.title}
-                        onChange={(event) => handleInputChange(event, category)}
-                        maxLength={8}
-                      />
-                      <button
-                        className="editBtn"
-                        onClick={() => handleEditTitle(category.categoryId)}
-                      >
-                        수정
-                      </button>
-                    </div>
-                  ) : (
-                    <div
-                      // 나중에 선택 가시성 수정하기
-                      className={`categoryTitle${isToggleSelected[category.categoryId] ? " selected" : ""}`}
-                      onContextMenu={(event) =>
-                        handleInnerContextMenu(event, category.categoryId)
-                      }
-                      onClick={() => {
-                        console.log("category Id: ", category.categoryId);
-                        getCategoryId(category.categoryId);
-
-                        handleToggle(category.categoryId);
-                        if (!isToggleSelected[category.categoryId]) {
-                          getCategory(category);
-                        } else {
-                          // 수정해야함
-                          setSpecificCategory({
-                            categoryId: 0,
-                            subscribes: [],
-                            title: "",
-                          });
-                        }
-                      }}
-                    >
-                      <span style={{ marginRight: "0.5rem" }}>
-                        {category.title}
-                      </span>
-
-                      <div className="hr-line"></div>
-
-                      <img
-                        style={{ marginLeft: "0.5rem" }}
-                        title={`${category.title}}`}
-                        src={
-                          isToggleSelected[category.categoryId]
-                            ? CategoryExpansion
-                            : CategoryExpansion2
-                        }
-                      />
-                    </div>
-                  )}
-                  <div
-                    className="listColumn"
-                    style={{ maxHeight: "200px", overflowY: "auto" }}
-                  >
-                    {category.subscribes.length > 0 &&
-                      isToggleSelected[category.categoryId] &&
-                      category.subscribes.map((task, index: number) => {
-                        // if (CTid === category.categoryId) {
-                        return (
-                          <div key={index} className="algorithmProblems">
-                            <li
-                              style={{ padding: "0.3rem" }}
-                              onClick={() =>
-                                handlePage(
-                                  "algorithmDescription",
-                                  task.algorithm.algorithmId
-                                )
-                              }
-                            >
-                              {task.algorithm.algorithmTitle}
-                            </li>
-                          </div>
-                        );
-                      })}
-                  </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <CategoryList
+          categoryList={categoryList}
+          isEditTitle={isEditTitle}
+          newTitle={newTitle}
+          getAlgorithmList={getAlgorithmList}
+          handleInputChange={handleInputChange}
+          handleEditTitle={handleEditTitle}
+          handleInnerContextMenu={handleInnerContextMenu}
+          getCategoryId={getCategoryId}
+          isToggleSelected={isToggleSelected}
+          handleToggle={handleToggle}
+          getCategory={getCategory}
+          setSpecificCategory={setSpecificCategory}
+          CTid={CTid}
+          handlePage={handlePage}
+        />
       </div>
       <div style={{ width: "100%", height: "auto" }}></div>
       {showOuterOptions &&

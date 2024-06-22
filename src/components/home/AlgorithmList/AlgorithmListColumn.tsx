@@ -41,7 +41,7 @@ export const column: GridColDef[] = [
     field: "SubscribeStatus",
     headerClassName: "super-app-theme--header",
     headerName: "상태",
-    width: 405,
+    flex: 1,
     renderCell: (
       params: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>
     ) => {

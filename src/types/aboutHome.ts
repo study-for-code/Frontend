@@ -102,3 +102,9 @@ export interface categoryToggleListType {
   };
   subscribeId: number;
 }
+
+export interface reviewSelectedUserType {
+  email: string;
+  memberId: number;
+  nickname: string;
+}

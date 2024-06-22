@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 
 export const Container = styled.div`
-  /* padding: 1rem; */
+  flex: 1;
 
   .contentHeader {
     padding: 0.5rem;

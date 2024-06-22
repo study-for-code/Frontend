@@ -5,6 +5,7 @@ import {
   PageKey,
   SpecificCategoryData,
   TaskListData,
+  reviewSelectedUserType,
 } from "@/types/aboutHome";
 import { Category, Study } from "@/types/aboutStudy";
 import { atom } from "recoil";
@@ -109,4 +110,13 @@ export const algorithmLists = atom<AlgorithmListType[]>({
 export const categoryId = atom<number>({
   key: "categoryId",
   default: 0,
+});
+
+export const reviewSelected = atom<reviewSelectedUserType>({
+  key: "reviewSelected",
+  default: {
+    email: "",
+    memberId: 0,
+    nickname: "",
+  },
 });
