@@ -128,15 +128,18 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
       categoryRowRef.current.style.overflowY = "auto"; // 세로 스크롤 추가
     }
   }, []);
+
   const getCategoryData = async () => {
-    try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/categories/${selectedStudy?.studyId}/study`
-      );
-      const data = response.data;
-      setCategoryList(data.results);
-    } catch (e) {
-      console.log(e);
+    if (selectedStudy) {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/categories/${selectedStudy?.studyId}/study`
+        );
+        const data = response.data;
+        setCategoryList(data.results);
+      } catch (e) {
+        console.log(e);
+      }
     }
   };
 
@@ -174,6 +177,8 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   // 카테고리 이름 수정
   const handleCgTitleEdit = (event: React.MouseEvent) => {
     event.stopPropagation();
+    setShowOuterOptions(false);
+    setShowInnerOptions(false);
     setIsEditTitle((prev) => {
       const newEditTitle = [...prev];
       newEditTitle[selectedCgID] = true;
@@ -195,14 +200,24 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   };
 
   const handleEditTitle = (categoryId: number) => {
-    onModify(newTitle[categoryId]);
+    if (newTitle[categoryId] !== "" || newTitle[categoryId].trim() !== "") {
+      onModify(newTitle[categoryId]);
 
-    setIsEditTitle((prev) => {
-      const newEditTitle = [...prev];
-      newEditTitle[categoryId] = false;
-      return newEditTitle;
-    });
-    setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
+      setIsEditTitle((prev) => {
+        const newEditTitle = [...prev];
+        newEditTitle[categoryId] = false;
+        return newEditTitle;
+      });
+
+      setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
+    } else {
+      setIsEditTitle((prev) => {
+        const newEditTitle = [...prev];
+        newEditTitle[categoryId] = false;
+        return newEditTitle;
+      });
+      setNewTitle((prev) => ({ ...prev, [categoryId]: "" }));
+    }
   };
 
   const onModify = async (title: string) => {
@@ -240,6 +255,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     const execute = useHandleDeleteClick(object);
     execute();
   };
+
   const onDelete = async () => {
     const object = {
       getCategoryData,
@@ -294,9 +310,6 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
 
   useEffect(() => {
     getCategoryData();
-    // console.log("categoryList:", categoryList);
-    // console.log("specificCategory: ", specificCategory);
-    console.log("CTid: ", CTid);
   }, [selectedStudy, specificCategory, CTid]);
 
   useEffect(() => {
@@ -336,31 +349,45 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                   getAlgorithmList();
                 }}
               >
-                {isEditTitle[category.categoryId] ? (
-                  <>
-                    <input
-                      type="text"
-                      value={newTitle[category.categoryId] || category.title}
-                      onChange={(event) => handleInputChange(event, category)}
-                      maxLength={8}
-                    />
-                    <button
-                      onClick={() => handleEditTitle(category.categoryId)}
-                    >
-                      수정
-                    </button>
-                  </>
-                ) : (
-                  <div style={{ width: "100%" }}>
+                <div>
+                  {isEditTitle[category.categoryId] ? (
+                    <div className="editArea">
+                      <input
+                        className="editInput"
+                        type="text"
+                        value={newTitle[category.categoryId] || category.title}
+                        onChange={(event) => handleInputChange(event, category)}
+                        maxLength={8}
+                      />
+                      <button
+                        className="editBtn"
+                        onClick={() => handleEditTitle(category.categoryId)}
+                      >
+                        수정
+                      </button>
+                    </div>
+                  ) : (
                     <div
                       // 나중에 선택 가시성 수정하기
-                      className={`categoryTitle${isToggleSelected[category.categoryId] ? "selected" : ""}`}
+                      className={`categoryTitle${isToggleSelected[category.categoryId] ? " selected" : ""}`}
                       onContextMenu={(event) =>
                         handleInnerContextMenu(event, category.categoryId)
                       }
                       onClick={() => {
-                        console.log(category.categoryId);
+                        console.log("category Id: ", category.categoryId);
                         getCategoryId(category.categoryId);
+
+                        handleToggle(category.categoryId);
+                        if (!isToggleSelected[category.categoryId]) {
+                          getCategory(category);
+                        } else {
+                          // 수정해야함
+                          setSpecificCategory({
+                            categoryId: 0,
+                            subscribes: [],
+                            title: "",
+                          });
+                        }
                       }}
                     >
                       <span style={{ marginRight: "0.5rem" }}>
@@ -377,48 +404,35 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
                             ? CategoryExpansion
                             : CategoryExpansion2
                         }
-                        onClick={() => {
-                          handleToggle(category.categoryId);
-                          if (!isToggleSelected[category.categoryId]) {
-                            getCategory(category);
-                          } else {
-                            // 수정해야함
-                            setSpecificCategory({
-                              categoryId: 0,
-                              subscribes: [],
-                              title: "",
-                            });
-                          }
-                        }}
                       />
                     </div>
-                    <div
-                      className="listColumn"
-                      style={{ maxHeight: "200px", overflowY: "auto" }}
-                    >
-                      {category.subscribes.length > 0 &&
-                        category.subscribes.map((task, index: number) => {
-                          if (CTid === category.categoryId) {
-                            return (
-                              <div key={index} className="algorithmProblems">
-                                <li
-                                  style={{ padding: "0.3rem" }}
-                                  onClick={() =>
-                                    handlePage(
-                                      "algorithmDescription",
-                                      task.algorithm.algorithmId
-                                    )
-                                  }
-                                >
-                                  {task.algorithm.algorithmTitle}
-                                </li>
-                              </div>
-                            );
-                          }
-                        })}
-                    </div>
+                  )}
+                  <div
+                    className="listColumn"
+                    style={{ maxHeight: "200px", overflowY: "auto" }}
+                  >
+                    {category.subscribes.length > 0 &&
+                      isToggleSelected[category.categoryId] &&
+                      category.subscribes.map((task, index: number) => {
+                        // if (CTid === category.categoryId) {
+                        return (
+                          <div key={index} className="algorithmProblems">
+                            <li
+                              style={{ padding: "0.3rem" }}
+                              onClick={() =>
+                                handlePage(
+                                  "algorithmDescription",
+                                  task.algorithm.algorithmId
+                                )
+                              }
+                            >
+                              {task.algorithm.algorithmTitle}
+                            </li>
+                          </div>
+                        );
+                      })}
                   </div>
-                )}
+                </div>
               </div>
             );
           })}
