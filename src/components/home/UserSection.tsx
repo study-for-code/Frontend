@@ -1,11 +1,17 @@
 import Expansion from "@/assets/home/expansion.png";
 import { pageState, selectedStudyState, userSectionState } from "@/atom/stats";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { SetterOrUpdater, useRecoilState, useRecoilValue } from "recoil";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { User } from "@/types/User";
+import { ComponentMap, reviewSelectedUserType } from "@/types/aboutHome";
 
-const UserSection = () => {
+export interface UserSectionType {
+  setUserData: SetterOrUpdater<reviewSelectedUserType>;
+  setPage: SetterOrUpdater<keyof ComponentMap>;
+}
+
+const UserSection = ({ setUserData }: UserSectionType) => {
   const [showUserSection, setShowUserSection] =
     useRecoilState(userSectionState);
   const selectedStudy = useRecoilValue(selectedStudyState);
@@ -48,12 +54,19 @@ const UserSection = () => {
       />
       {showUserSection &&
         selectedStudy &&
-        (page === "algorithmList" || page === "defaultPage" ? (
+        (page === "algorithmList" ||
+        page === "defaultPage" ||
+        page === "algorithmDescription" ? (
           <div className="userContent">
             <div className="title">스터디 멤버</div>
             <div className="members">
-              {members.map((member, index) => (
-                <div>
+              {members.map((member) => (
+                <div
+                  onClick={() => {
+                    setPage("codeReview");
+                    setUserData(member);
+                  }}
+                >
                   {member.memberId === selectedStudy.ownerId && (
                     <div className="small-text">Host</div>
                   )}

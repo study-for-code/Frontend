@@ -17,15 +17,17 @@ import {
   ComponentMap,
   PageKey,
   SpecificCategoryData,
+  reviewSelectedUserType,
   useHandleToggleType,
 } from "@/types/aboutHome";
 
 // atom
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   categoryListState,
   pageDataState,
   pageState,
+  reviewSelected,
   selectedStudyState,
   studiesState,
   userSectionState,
@@ -35,13 +37,12 @@ import {
 // hooks
 import useHandleToggle from "@/hooks/home/useHandleToggle";
 import useGetUserData from "@/hooks/home/useGetUserData";
-import useGetTaskList from "@/hooks/home/useGetTaskData";
 
 // libraries
 import { useCookies } from "react-cookie";
 import { User } from "@/types/User";
 import useGetCategoryData from "@/hooks/home/useGetCategoryData";
-import { Category, Study } from "@/types/aboutStudy";
+import { Study } from "@/types/aboutStudy";
 import { problemListType } from "@/types/aboutAdmin";
 import CodeIDE from "@/components/CodeIDE";
 import UserSection from "@/components/home/UserSection";
@@ -51,13 +52,13 @@ const Home = () => {
   const [cookies] = useCookies<string>(["accessToken"]);
   const { accessToken } = cookies;
 
-  // console.log("cookies: ", cookies);
-
   const [user, setUser] = useRecoilState<User>(userState);
   const [studies, setStudies] = useRecoilState(studiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState<Study | null>(
     selectedStudyState
   );
+  const [userData, setUserData] =
+    useRecoilState<reviewSelectedUserType>(reviewSelected);
 
   const [categoryList, setCategoryList] =
     useRecoilState<SpecificCategoryData[]>(categoryListState);
@@ -75,8 +76,7 @@ const Home = () => {
   const [isToggleSelected, setIsToggleSelected] = useState<boolean[]>([]);
 
   // 페이지
-  const [pageData, setPageData] =
-    useRecoilState<problemListType>(pageDataState);
+  const [pageData] = useRecoilState<problemListType>(pageDataState);
 
   const getUserData = async () => {
     const memberId = cookies.memberId;
@@ -139,7 +139,7 @@ const Home = () => {
   const goToLoginPage = () => navigate("/Login");
 
   const componentMap: ComponentMap = {
-    codeReview: <CodeReview pageData={pageData} />,
+    codeReview: <CodeReview pageData={pageData} userData={userData} />,
     algorithmList: <AlgorithmList />,
     algorithmDescription: <AlgorithmDescription />,
     codeIde: <CodeIDE />,
@@ -185,7 +185,8 @@ const Home = () => {
 
   useEffect(() => {
     console.log("isToggleSelected: ", isToggleSelected);
-  }, [isToggleSelected]);
+    console.log("userData: ", userData);
+  }, [isToggleSelected, userData]);
 
   return (
     <Container
@@ -209,8 +210,7 @@ const Home = () => {
         ) : (
           <div className="contentSection"></div>
         )}
-
-        <UserSection />
+        <UserSection setUserData={setUserData} setPage={setPage} />
       </main>
     </Container>
   );
