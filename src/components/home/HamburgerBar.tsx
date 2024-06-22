@@ -18,7 +18,12 @@ import CategorySpace from "./hamburgerBar/CategorySpace";
 
 // atom
 import { useRecoilState, useRecoilValue } from "recoil";
-import { selectedStudyState, studiesState, userState } from "@/atom/stats";
+import {
+  selectedStudyState,
+  studiesState,
+  userState,
+  selectedStudyIndex,
+} from "@/atom/stats";
 
 // types
 import { TaskListData } from "@/types/aboutHome";
@@ -42,6 +47,10 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   const user = useRecoilValue(userState);
   const [studies, setStudies] = useRecoilState(studiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
+  // 선택된 스터디의 index -> 스터디 이름 수정 후 refresh 시 필요
+  const [selectedIndex, setSelectedStudyIndex] =
+    useRecoilState(selectedStudyIndex);
+
   const [isEditing, setIsEditing] = useState(false); // 제목 수정 모드 상태
   const [newTitle, setNewTitle] = useState<string>("");
   const [isModalOpen, setIsModalOpen] = useState(false); // 스터디 삭제 모달 상태
@@ -117,7 +126,15 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
         );
         const data = response.data;
         setStudies(data.results);
-        setSelectedStudy(data.results[0]);
+        if (selectedIndex > data.results.length) {
+          console.log("selected study", data.results[0]);
+          setSelectedStudy(data.results[0]);
+          setSelectedStudyIndex(0);
+        } else {
+          console.log("selected study", data.results[selectedIndex]);
+          setSelectedStudy(data.results[selectedIndex]);
+          setSelectedStudyIndex(selectedIndex);
+        }
       } catch (e) {
         console.log(e);
       }

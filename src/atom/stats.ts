@@ -35,6 +35,11 @@ export const selectedStudyState = atom<Study | null>({
   },
 });
 
+export const selectedStudyIndex = atom<number>({
+  key: "selectedStudyIndex",
+  default: 0,
+});
+
 export const categoryListState = atom<SpecificCategoryData[]>({
   key: "categoryListState",
   default: [],

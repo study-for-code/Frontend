@@ -156,13 +156,12 @@ const Home = () => {
 
   useEffect(() => {
     getStudyList();
-    setSelectedStudy(null);
+    getCategoryList();
     setPage("defaultPage");
   }, [user]);
 
   useEffect(() => {
     getUserData();
-    getCategoryList();
   }, []);
 
   let componentToShow = componentMap[page];
@@ -178,6 +177,7 @@ const Home = () => {
   useEffect(() => {
     if (selectedStudy && selectedStudy.studyId > 0) {
       setShowHamburgerBar(true);
+      setPage("defaultPage");
     } else {
       setShowHamburgerBar(false);
     }
@@ -189,8 +189,8 @@ const Home = () => {
 
   return (
     <Container
-      showhamburgerBar={showHamburgerBar}
-      showUserSection={showUserSection}
+      $showhamburgerBar={showHamburgerBar}
+      $showUserSection={showUserSection}
     >
       <nav>
         <div className="header">구름적사고</div>

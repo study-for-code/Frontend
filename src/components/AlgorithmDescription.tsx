@@ -69,10 +69,10 @@ const AlgorithmDescription = () => {
 
   useEffect(() => {
     getTestData();
-  }, []);
+  }, [pageData]);
 
   return (
-    <Container ref={containerRef} showUserSection={showUserSection}>
+    <Container ref={containerRef} $showUserSection={showUserSection}>
       <nav className="title">{pageData.algorithmTitle}</nav>
       <div className="problem-details">
         <div className="infoTable">

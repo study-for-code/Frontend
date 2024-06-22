@@ -1,9 +1,11 @@
 import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 
-export const Container = styled.div<{
-  showUserSection: boolean;
-}>`
+interface DescriptionStyleProps {
+  $showUserSection?: boolean;
+}
+
+export const Container = styled.div<DescriptionStyleProps>`
   height: 96vh;
   overflow: hidden;
   font-family: "GmarketSansMedium";
@@ -134,7 +136,7 @@ export const Container = styled.div<{
     cursor: pointer;
     position: absolute;
     bottom: 3rem;
-    right: ${(props) => (props.showUserSection ? "20rem" : "5rem")};
+    right: ${({ $showUserSection }) => ($showUserSection ? "20rem" : "5rem")};
     transition: 0.75s right;
 
     width: 10rem;
