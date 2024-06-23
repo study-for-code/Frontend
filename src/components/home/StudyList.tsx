@@ -75,6 +75,7 @@ const StudyList = () => {
           }
         );
         const data = response.data;
+        console.log(response.data);
         setStudies(data.results);
         setSelectedStudy(data.results[0]);
       } catch (e) {
@@ -90,48 +91,33 @@ const StudyList = () => {
 
   const onCreate = async (newStudy: { title: string; image: File | null }) => {
     try {
-      const { title } = newStudy;
+      const { title, image } = newStudy;
       const headers = {
         Authorization: `Bearer ${accessToken}`,
       };
+
+      const formData = new FormData();
+      const studyRequestDto = {
+        title: title,
+      };
+      formData.append(
+        "studyRequestDto",
+        new Blob([JSON.stringify(studyRequestDto)], {
+          type: "application/json",
+        })
+      );
+
+      if (image) {
+        formData.append("multipartFile", image);
+      }
+
       const response = await axios.post(
         `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
-        {
-          title: title,
-        },
+        formData,
         {
           headers: headers,
         }
       );
-      console.log("create study", response);
-      if (newStudy.image) {
-        const studyId = response.data.results[0].studyId;
-        setStudyImage(newStudy.image, studyId, title);
-      } else {
-        refreshStudylist(response);
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const setStudyImage = async (image: File, studyId: number, title: string) => {
-    const formData = new FormData();
-    formData.append("file", image);
-    formData.append("studyId", studyId.toString());
-    formData.append("title", title);
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/images`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
-      console.log("create image", response);
       refreshStudylist(response);
     } catch (e) {
       console.error(e);
@@ -167,15 +153,19 @@ const StudyList = () => {
           studies.length > 0 &&
           studies.map((study, index) => (
             <div key={index} onClick={() => handleSelectStudy(study, index)}>
-              <img
-                src={
-                  // 이미지 데이터 생기면 주석 해제 -> 현재는 디폴트 이미지로 설정
-                  // study.image ? URL.createObjectURL(study.image) :
-                  GoormThinking
-                }
-                width="100"
-                className="element1"
-              />
+              {study.image ? (
+                <img
+                  src={
+                    study.image
+                      ? `${import.meta.env.VITE_LOCAL_API_ADDRESS}/${study.image.imageFileUrl}`
+                      : GoormThinking
+                  }
+                  width="100"
+                  className="element1"
+                />
+              ) : (
+                <div className="imageInstead">{study.title}</div>
+              )}
             </div>
           ))}
       </div>

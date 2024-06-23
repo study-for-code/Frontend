@@ -1,10 +1,15 @@
+export interface ImageData {
+  imageFileUrl: string;
+  imageId: number;
+}
+
 export interface Study {
   studyId: number;
   title: string;
   ownerId: number;
-  createAt: number[];
+  createAt: Date;
   joinCode: string;
-  // image: File | null;
+  image: ImageData | null;
   // host: User | null;
   // code: string;
 }

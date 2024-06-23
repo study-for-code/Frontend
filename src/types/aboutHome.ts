@@ -74,10 +74,16 @@ export interface ContentSectionType {
   > | null;
 }
 
+export interface Member {
+  email: string;
+  memberId: number;
+  nickname: string;
+}
+
 export interface AlgorithmListType {
   algorithmId: number;
   algorithmTitle: string;
-  solvedMembers: string[];
+  solvedMembers: Member[];
   SubscribeStatus: boolean;
 }
 export interface SpecificCategoryData {
