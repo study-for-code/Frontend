@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import axios from "axios";
+
 // styles
 import { AlgorithmListContainer } from "@/styles/home/algorithmStyles";
 
@@ -14,7 +16,7 @@ import {
   categoryListState,
 } from "@/atom/stats";
 
-// contants
+// constants
 import { column } from "./AlgorithmList/AlgorithmListColumn";
 // theme
 import { theme } from "@/styles/common/ColorStyles";
@@ -51,6 +53,9 @@ const AlgorithmList = () => {
     SubscribeStatus: false,
   });
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [responseCode, setResponseCode] = useState(0);
+
   // get data
   const getAlgorithmList = async () => {
     const object: useGetAlgorithmListType = {
@@ -59,6 +64,7 @@ const AlgorithmList = () => {
     };
     const execute = useGetAlgorithmList(object);
     execute();
+    setResponseCode(200);
   };
 
   //get specific algorithm data
@@ -66,22 +72,82 @@ const AlgorithmList = () => {
     setAlgorithm(data);
   };
 
-  useEffect(() => {}, [CTid]);
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
+  const handleSearch = async () => {
+    if (searchTerm !== "") {
+      try {
+        const response = await axios.get(
+          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/search`,
+          {
+            params: {
+              studyId: selectedStudy?.studyId,
+              title: searchTerm,
+            },
+          }
+        );
+
+        setResponseCode(response.data.code);
+
+        const newResults = response.data.results.map(
+          (result: AlgorithmListType) => ({
+            algorithmId: result.algorithmId,
+            algorithmTitle: result.algorithmTitle,
+            solvedMembers: result.solvedMembers,
+            SubscribeStatus: result.SubscribeStatus,
+          })
+        );
+        setAlgorithmList(newResults);
+      } catch (e) {
+        console.log(e);
+      }
+    } else {
+      getAlgorithmList();
+    }
+  };
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
 
   useEffect(() => {
-    getAlgorithmList();
-  }, []);
+    if (responseCode === 200) {
+      const timer = setTimeout(() => {
+        setResponseCode(0);
+      }, 1000);
+
+      return () => clearTimeout(timer); // Cleanup the timeout on unmount or if responseCode changes
+    }
+  }, [responseCode]);
+
+  useEffect(() => {
+    if (searchTerm === "") {
+      getAlgorithmList();
+    }
+  }, [searchTerm]);
 
   useEffect(() => {
     console.log("algorithm: ", algorithm);
   }, [algorithm]);
+
   return (
     <AlgorithmListContainer>
       <nav className="title">알고리즘 목록</nav>
       <div className="contentArea">
         {/* input */}
         <div className="inputArea">
-          <input className="input" type="text" placeholder="알고리즘 검색" />
+          <input
+            className="input"
+            type="text"
+            placeholder="알고리즘 검색"
+            value={searchTerm}
+            onChange={handleChange}
+            onKeyDown={handleKeyDown}
+          />
         </div>
         {/* 헤더 */}
         <div className="week_header">
@@ -99,37 +165,43 @@ const AlgorithmList = () => {
           </div>
         </div>
         {/* 알고리즘 리스트 */}
-        <Box
-          sx={{
-            "& .super-app-theme--header": {
-              backgroundColor: `${theme.lightGray}`,
-              borderColor: `${theme.darkGray}`,
-              fontFamily: "GmarketSansBold",
-              color: "white",
-            },
-            [`.${gridClasses.cell}`]: {
-              fontFamily: "GmarketSansMedium",
-              color: "white",
-              display: "flex",
-              alignItems: "center",
-            },
-          }}
-        >
-          <DataGrid
-            getRowId={(row) => row.algorithmId}
-            rows={algorithmList}
-            columns={column}
-            initialState={{
-              pagination: {
-                paginationModel: { page: 0, pageSize: 6 },
+        {responseCode === 200 ? (
+          <div className="loaderContainer">
+            <span className="loader"></span>
+          </div>
+        ) : (
+          <Box
+            sx={{
+              "& .super-app-theme--header": {
+                backgroundColor: `${theme.lightGray}`,
+                borderColor: `${theme.darkGray}`,
+                fontFamily: "GmarketSansBold",
+                color: "white",
+              },
+              [`.${gridClasses.cell}`]: {
+                fontFamily: "GmarketSansMedium",
+                color: "white",
+                display: "flex",
+                alignItems: "center",
               },
             }}
-            pageSizeOptions={[6, 8]}
-            onCellClick={(cell) => {
-              getData(cell.row);
-            }}
-          />
-        </Box>
+          >
+            <DataGrid
+              getRowId={(row) => row.algorithmId}
+              rows={algorithmList}
+              columns={column}
+              initialState={{
+                pagination: {
+                  paginationModel: { page: 0, pageSize: 6 },
+                },
+              }}
+              pageSizeOptions={[6, 8]}
+              onCellClick={(cell) => {
+                getData(cell.row);
+              }}
+            />
+          </Box>
+        )}
       </div>
     </AlgorithmListContainer>
   );

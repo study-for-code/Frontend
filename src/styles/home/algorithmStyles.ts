@@ -80,4 +80,32 @@ export const AlgorithmListContainer = styled.div`
       border-radius: 0.5rem;
     }
   }
+
+  .loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #fff;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+  }
+
+  @keyframes rotation {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+
+  .loaderContainer {
+    width: 100%;
+    display: flex;
+    height: 30%;
+    justify-content: center;
+    align-items: center;
+  }
 `;
