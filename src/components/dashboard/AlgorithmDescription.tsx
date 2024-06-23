@@ -88,7 +88,7 @@ const AlgorithmDescription = () => {
             <div className="info-value">{pageData.memorySize}KB</div>
             <div className="info-value">{pageData.submit}</div>
             <div className="info-value">{pageData.answer}</div>
-            <div className="info-value">{pageData.answerRate}%</div>
+            <div className="info-value">{pageData.answerRate.toFixed(2)}%</div>
           </div>
         </div>
         <div className="content">

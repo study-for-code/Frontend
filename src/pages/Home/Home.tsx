@@ -24,6 +24,7 @@ import {
 // atom
 import { useRecoilState } from "recoil";
 import {
+  categoryId,
   categoryListState,
   pageDataState,
   pageState,
@@ -68,9 +69,8 @@ const Home = () => {
   const [categoryList, setCategoryList] =
     useRecoilState<SpecificCategoryData[]>(categoryListState);
 
-  // 햄버거바 컨트롤
+  // 양쪽 패널 컨트롤
   const [showHamburgerBar, setShowHamburgerBar] = useState(false);
-
   const [showUserSection, setShowUserSection] =
     useRecoilState(userSectionState);
 
@@ -79,6 +79,7 @@ const Home = () => {
 
   // 토글 상태 컨트롤
   const [isToggleSelected, setIsToggleSelected] = useState<boolean[]>([]);
+  const [CTid, setCTid] = useRecoilState<number>(categoryId);
 
   // 페이지
   const [pageData] = useRecoilState<problemListType>(pageDataState);
@@ -105,6 +106,7 @@ const Home = () => {
         }
       );
       const data = response.data;
+      console.log(data);
       setStudies(data.results);
       if (data.results.length > 0) {
         setSelectedStudy(data.results[0]);
@@ -199,6 +201,7 @@ const Home = () => {
     } else {
       setShowHamburgerBar(false);
     }
+    setCTid(0);
   }, [selectedStudy]);
 
   useEffect(() => {
@@ -212,7 +215,7 @@ const Home = () => {
       $showUserSection={showUserSection}
     >
       <nav>
-        <div className="header">구름적사고</div>
+        <div className="header">Study For Code</div>
       </nav>
       <main>
         <StudyList />

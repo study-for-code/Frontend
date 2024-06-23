@@ -62,7 +62,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   // 특정 카테고리 리스트
 
   // 전체 알고리즘 문제 데이터
-  const [, setAlgorithmList] =
+  const [algorithmList, setAlgorithmList] =
     useRecoilState<AlgorithmListType[]>(algorithmLists);
 
   // 카테고리 아이디
@@ -94,19 +94,36 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const [newTitle, setNewTitle] = useState<{ [key: number]: string }>({});
   const [selectedCgID, setSelectedCgID] = useState<number>(0);
 
-  // 특정 카테고리 데이터 데이터 가져오기
+  const scrollRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const handleScroll = () => {
+      if (containerRef.current) {
+        const containerRect = containerRef.current.getBoundingClientRect();
+
+        if (
+          containerRect.top < 0 ||
+          containerRect.bottom > window.innerHeight
+        ) {
+          window.scrollBy(0, containerRect.top);
+        }
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, []);
+
   const getCategory = (data: SpecificCategoryData) => {
     const { categoryId, subscribes, title } = data;
-    console.log("getCategory", data);
+    setCTid(categoryId);
     setSpecificCategory({
       categoryId,
       subscribes,
       title,
     });
-  };
-
-  const getCategoryId = (id: number) => {
-    setCTid(id);
   };
 
   const categoryRowRef = useRef<HTMLDivElement>(null);
@@ -312,14 +329,16 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   if (!modalRoot) return null;
 
   useEffect(() => {
-    getCategoryData();
+    if (selectedStudy) {
+      getCategoryData();
+    }
   }, [selectedStudy, specificCategory, CTid]);
 
   useEffect(() => {
     if (selectedStudy) {
       getCategoryData();
     }
-  }, [selectedStudy]);
+  }, [algorithmList]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -339,7 +358,11 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   }, [containerRef]);
 
   return (
-    <div className="drawerContent" onContextMenu={handleOuterContextMenu}>
+    <div
+      className="drawerContent"
+      onContextMenu={handleOuterContextMenu}
+      ref={scrollRef}
+    >
       <div className="categorySpace">
         <div className="algorithmList">Task 목록</div>
         <CategoryList
@@ -350,7 +373,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
           handleInputChange={handleInputChange}
           handleEditTitle={handleEditTitle}
           handleInnerContextMenu={handleInnerContextMenu}
-          getCategoryId={getCategoryId}
+          // getCategoryId={getCategoryId}
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}
           getCategory={getCategory}
