@@ -16,19 +16,23 @@
     "lodash.debounce": "^4.0.8",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-textarea-autosize": "^8.5.3"
+    "react-textarea-autosize": "^8.5.3",
+    "stompjs": "^2.3.3"
   },
   "devDependencies": {
     "@emotion/react": "^11.11.4",
     "@emotion/styled": "^11.11.5",
     "@mui/material": "^5.15.20",
     "@mui/x-data-grid": "^7.7.0",
+    "@stomp/stompjs": "^7.0.0",
     "@table-library/react-table-library": "^4.1.7",
     "@tanstack/react-query": "^5.40.1",
     "@tanstack/react-table": "^8.17.3",
     "@types/lodash.debounce": "^4.0.9",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
+    "@types/sockjs-client": "^1.5.4",
+    "@types/stompjs": "^2.3.9",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
     "@vitejs/plugin-react": "^4.2.1",
@@ -44,6 +48,8 @@
     "react-intersection-observer": "^9.10.3",
     "react-router-dom": "^6.23.1",
     "recoil": "^0.7.7",
+    "socket.io-client": "^4.7.5",
+    "sockjs-client": "^1.6.1",
     "styled-components": "^6.1.11",
     "typescript": "^5.2.2",
     "vite": "^5.2.0"

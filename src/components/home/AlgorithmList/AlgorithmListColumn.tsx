@@ -71,7 +71,7 @@ export const column: GridColDef[] = [
       const [CTid, setCTid] = useRecoilState<number>(categoryId);
       // console.log(CTid);
       // 전체 알고리즘 문제 데이터
-      const [algorithmList, setAlgorithmList] =
+      const [, setAlgorithmList] =
         useRecoilState<AlgorithmListType[]>(algorithmLists);
       // 전체 카테고리 리스트
       const [categoryList] =

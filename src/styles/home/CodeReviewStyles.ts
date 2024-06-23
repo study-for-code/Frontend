@@ -50,11 +50,105 @@ export const Container = styled.div`
     color: ${theme.mainRed};
     margin-left: 0.5rem;
   }
-  .code {
+  .codeContainer {
     width: 90%;
-    height: 100%;
-    border-radius: 1rem;
-    padding: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    color: white;
+  }
+  .codeLine {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin: 0.3rem 0 0.3rem 0.5rem;
+
+    img {
+      opacity: 0;
+      background-color: #0078ff;
+      margin-right: 0.5rem;
+      border-radius: 0.3rem;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
+  }
+  pre {
+    display: flex;
+    flex-direction: column;
     background-color: ${theme.gray};
+    color: #abb2bf;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-family: monospace;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+
+  .line-number {
+    display: inline-block;
+    text-align: right;
+    color: #5c6370;
+    margin-right: 0.5rem;
+  }
+
+  .chat_room {
+    padding: 0.8rem;
+    width: 90%;
+    max-height: 200px;
+    overflow-y: auto;
+    background-color: ${theme.lightBlack};
+    border-radius: 0.5rem;
+  }
+  .chat_room::-webkit-scrollbar {
+    display: none;
+  }
+  .chat_messages {
+    font-family: "GmarketSansLight";
+    color: white;
+  }
+  .chat_message_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-family: "GmarketSansLight";
+    color: white;
+
+    img {
+      border-radius: 50%;
+      margin-right: 0.3rem;
+    }
+  }
+  .user {
+    font-size: 0.8rem;
+  }
+  .profile_container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+  }
+  .timestamp {
+    font-size: 0.7rem;
+    color: ${theme.CategoryFontColor};
+  }
+  .chat {
+    position: sticky;
+    bottom: 0;
+    width: 95%;
+    height: 20px;
+    font-family: "GmarketSansLight";
+    color: white;
+    border-radius: 0.2rem;
+    outline: none;
+    border: none;
+    background-color: ${theme.gray};
+    padding-left: 0.5rem;
+
+    &:focus {
+      border: 1px solid ${theme.inputBorderColor};
+      color: ${theme.inputBorderColor};
+      background-color: white;
+    }
   }
 `;

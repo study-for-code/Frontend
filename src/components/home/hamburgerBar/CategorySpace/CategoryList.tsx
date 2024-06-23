@@ -24,7 +24,6 @@ export interface CategoryListType {
     event: React.MouseEvent<HTMLDivElement>,
     categoryId: number
   ) => void;
-  // getCategoryId: (data: SpecificCategoryData) => void;
   isToggleSelected: boolean[];
   handleToggle: (categoryId: number) => void;
   getCategory: (data: SpecificCategoryData) => void;
@@ -44,12 +43,9 @@ const CategoryList = ({
   handleInputChange,
   handleEditTitle,
   handleInnerContextMenu,
-  // getCategoryId,
   isToggleSelected,
   handleToggle,
   getCategory,
-  setSpecificCategory,
-  CTid,
   handlePage,
 }: CategoryListType) => {
   return (
@@ -85,25 +81,14 @@ const CategoryList = ({
               ) : (
                 <div
                   // 나중에 선택 가시성 수정하기
-                  className={`categoryTitle${CTid === category.categoryId ? " selected" : ""}`}
+                  className={`categoryTitle${isToggleSelected[category.categoryId] ? " selected" : ""}`}
                   onContextMenu={(event) =>
                     handleInnerContextMenu(event, category.categoryId)
                   }
                   onClick={() => {
                     console.log("category Id: ", category.categoryId);
                     getCategory(category);
-
                     handleToggle(category.categoryId);
-                    // if (!isToggleSelected[category.categoryId]) {
-                    //   getCategory(category);
-                    // } else {
-                    //   // 수정해야함
-                    //   setSpecificCategory({
-                    //     categoryId: 0,
-                    //     subscribes: [],
-                    //     title: "",
-                    //   });
-                    // }
                   }}
                 >
                   <span style={{ marginRight: "0.5rem" }}>
@@ -121,24 +106,25 @@ const CategoryList = ({
                   />
                 </div>
               )}
-              <div className="listColumn" style={{ overflowY: "auto" }}>
+              <div
+                className="listColumn"
+                style={{ maxHeight: "200px", overflowY: "auto" }}
+              >
                 {category.subscribes.length > 0 &&
                   isToggleSelected[category.categoryId] &&
                   category.subscribes.map((task, index: number) => {
+                    // if (CTid === category.categoryId) {
                     return (
                       <div key={index} className="algorithmProblems">
                         <li
                           style={{ padding: "0.3rem" }}
-                          onClick={() => {
+                          onClick={() =>
                             handlePage(
                               "algorithmDescription",
                               task.algorithm.algorithmId,
                               task.subscribeId
-                            );
-                            if (CTid !== category.categoryId) {
-                              getCategory(category);
-                            }
-                          }}
+                            )
+                          }
                         >
                           {task.algorithm.algorithmTitle}
                         </li>

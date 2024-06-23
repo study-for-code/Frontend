@@ -2,33 +2,33 @@ module.exports = {
   root: true,
   env: { browser: true, es2020: true },
   extends: [
-    'eslint:recommended',
-    'plugin:@typescript-eslint/recommended',
-    'plugin:react-hooks/recommended',
-    "plugin:prettier/recommended"
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:react-hooks/recommended",
+    "plugin:prettier/recommended",
   ],
-  ignorePatterns: ['dist', '.eslintrc.cjs'],
-  parser: '@typescript-eslint/parser',
-  plugins: ['react-refresh'],
+  ignorePatterns: ["dist", ".eslintrc.cjs"],
+  parser: "@typescript-eslint/parser",
+  plugins: ["react-refresh"],
   rules: {
-    'react-refresh/only-export-components': [
-      'warn',
+    "react-refresh/only-export-components": [
+      "warn",
       { allowConstantExport: true },
     ],
-    "prettier/prettier": ["error", { "singleQuote": true, "semi": false }],
-  "space-before-function-paren": ["error", "never"]
+    "prettier/prettier": ["error", { singleQuote: true, semi: false }],
+    "space-before-function-paren": ["error", "never"],
   },
   settings: {
     react: {
       // Tells eslint-plugin-react to automatically detect the version of React to use.
-      version: 'detect',
+      version: "detect",
     },
     // Tells eslint how to resolve imports
-    'import/resolver': {
+    "import/resolver": {
       node: {
-        paths: ['src'],
-        extensions: ['.js', '.jsx', '.ts', '.tsx'],
+        paths: ["src"],
+        extensions: [".js", ".jsx", ".ts", ".tsx"],
       },
     },
   },
-}
+};

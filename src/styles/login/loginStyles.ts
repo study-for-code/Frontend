@@ -1,7 +1,6 @@
 import styled from "styled-components";
 import { theme } from "../common/ColorStyles";
 import { showWrongMent, showWrongMent2 } from "../keyframes";
-import { LoginType } from "@/types/aboutLogin";
 import { css } from "styled-components";
 
 interface LoginStyleProps {

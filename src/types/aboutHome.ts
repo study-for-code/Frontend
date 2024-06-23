@@ -1,5 +1,4 @@
 import { SetStateAction } from "react";
-import { Category } from "./aboutStudy";
 
 export interface TaskListData {
   algorithmId: number;

@@ -1,5 +1,5 @@
 import axios from "axios";
-import { Category, Study } from "@/types/aboutStudy";
+import { Study } from "@/types/aboutStudy";
 import { SpecificCategoryData } from "@/types/aboutHome";
 
 interface useGetCategoryDataType {

@@ -1,5 +1,4 @@
 // types
-import { TaskListData } from "@/types/aboutHome";
 // styles
 import { Container } from "@/styles/home/CodeReviewStyles";
 
