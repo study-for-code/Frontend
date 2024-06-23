@@ -18,7 +18,7 @@ export const Container = styled.div<HomeStyleProps>`
   .header {
     background-color: ${theme.black};
     color: white;
-    font-family: "GmarketSansMedium";
+    font-family: "GmarketSansBold";
     padding: 0.5rem 0 0.5rem 0.5rem;
   }
 
@@ -38,6 +38,7 @@ export const Container = styled.div<HomeStyleProps>`
   }
 
   .element1 {
+    cursor: pointer;
     width: 50px;
     height: 50px;
     border-radius: 50%;
@@ -45,6 +46,21 @@ export const Container = styled.div<HomeStyleProps>`
     margin-bottom: 0.5rem;
     object-fit: cover;
     object-position: center;
+  }
+
+  .imageInstead {
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    margin-top: 0.8rem;
+    margin-bottom: 0.5rem;
+    background-color: ${theme.lightGray};
+    color: ${theme.fontWhiteColor};
+    font-family: "GmarketSansBold";
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .plusContainer {
@@ -245,6 +261,25 @@ export const Container = styled.div<HomeStyleProps>`
       ease-in-out`
         : css`0s ${hideDrawer}
       ease-in-out`};
+
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &::-webkit-scrollbar {
+      width: 0.5rem;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: ${theme.gray};
+      border-radius: 10px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background-color: ${theme.lightBlack};
+      border-radius: 10px;
+      border: 4px solid ${theme.lightBlack};
+      background-clip: padding-box;
+    }
   }
 
   .algorithmList {
@@ -289,7 +324,7 @@ export const Container = styled.div<HomeStyleProps>`
 
   .category {
     overflow-y: auto;
-    max-height: 500px;
+    /* max-height: 500px; */
   }
 
   .category ::-webkit-scrollbar {
@@ -320,6 +355,7 @@ export const Container = styled.div<HomeStyleProps>`
   .editInputCG {
     width: 7rem;
     height: 1.2rem;
+    padding-bottom: 0.2rem;
     font-family: "GmarketSansMedium";
     font-size: 1rem;
     background-color: none;
@@ -362,6 +398,11 @@ export const Container = styled.div<HomeStyleProps>`
     background-color: ${theme.selectedGray};
     border-radius: 0.5rem;
     /* transform: scale(1.05); */
+  }
+
+  .selected {
+    background-color: ${theme.black};
+    border-radius: 0.5rem;
   }
 
   .hr-line {
