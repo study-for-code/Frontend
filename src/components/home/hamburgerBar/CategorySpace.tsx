@@ -12,6 +12,7 @@ import { problemListType } from "@/types/aboutAdmin";
 // component
 import CreateCategoryModal from "../../modal/CreateCategoryModal";
 import DeleteCategoryModal from "../../modal/DeleteCategoryModal";
+import CategoryList from "./CategorySpace/CategoryList";
 
 // atom
 import { useRecoilValue, useRecoilState } from "recoil";
@@ -45,7 +46,6 @@ import useHandleInputChange, {
 } from "@/hooks/home/CategorySpace/useHandleInputChange";
 import useOnDelete from "@/hooks/home/CategorySpace/useOnDelete";
 import useGetAlgorithmList from "@/hooks/admin/AlgorithmList/useGetAlgorithmList";
-import CategoryList from "./CategorySpace/CategoryList";
 
 interface CategorySpaceProps {
   isToggleSelected: boolean[];
@@ -373,7 +373,6 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
           handleInputChange={handleInputChange}
           handleEditTitle={handleEditTitle}
           handleInnerContextMenu={handleInnerContextMenu}
-          // getCategoryId={getCategoryId}
           isToggleSelected={isToggleSelected}
           handleToggle={handleToggle}
           getCategory={getCategory}

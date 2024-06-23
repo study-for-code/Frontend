@@ -1,4 +1,4 @@
-import axios, { AxiosRequestConfig } from "axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 
 // image
@@ -88,18 +88,12 @@ const UserSection = ({ setUserData }: UserSectionType) => {
       />
       {showUserSection &&
         selectedStudy &&
-        (page !== "codeIde" ? (
+        (page === "algorithmList" || page === "defaultPage" ? (
           <div className="userContent">
             <div className="title">스터디 멤버</div>
             <div className="members">
-              {members.map((member, i) => (
-                <div
-                  onClick={() => {
-                    setPage("codeReview");
-                    setUserData(member);
-                  }}
-                  key={i}
-                >
+              {members.map((member) => (
+                <div>
                   {member.memberId === selectedStudy.ownerId && (
                     <div className="small-text">Host</div>
                   )}

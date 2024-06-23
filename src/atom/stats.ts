@@ -126,3 +126,8 @@ export const subscribeIdState = atom<number>({
   key: "subscribeIdState",
   default: 0,
 });
+
+export const codeIdRecoil = atom<number>({
+  key: "codeIdRecoil",
+  default: 0,
+});

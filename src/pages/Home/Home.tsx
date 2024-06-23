@@ -204,10 +204,10 @@ const Home = () => {
     setCTid(0);
   }, [selectedStudy]);
 
-  useEffect(() => {
-    console.log("isToggleSelected: ", isToggleSelected);
-    console.log("userData: ", userData);
-  }, [isToggleSelected, userData]);
+  // useEffect(() => {
+  //   console.log("isToggleSelected: ", isToggleSelected);
+  //   console.log("userData: ", userData);
+  // }, [isToggleSelected, userData]);
 
   return (
     <Container

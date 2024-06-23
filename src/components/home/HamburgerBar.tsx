@@ -26,7 +26,6 @@ import {
 } from "@/atom/stats";
 
 // types
-import { TaskListData } from "@/types/aboutHome";
 import useGetOwnerData from "@/hooks/home/useGetOwnerData";
 
 interface HamburgerBarType {
@@ -45,7 +44,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   goToLoginPage,
 }) => {
   const user = useRecoilValue(userState);
-  const [studies, setStudies] = useRecoilState(studiesState);
+  const [, setStudies] = useRecoilState(studiesState);
   const [selectedStudy, setSelectedStudy] = useRecoilState(selectedStudyState);
   // 선택된 스터디의 index -> 스터디 이름 수정 후 refresh 시 필요
   const [selectedIndex, setSelectedStudyIndex] =

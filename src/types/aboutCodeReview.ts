@@ -15,3 +15,8 @@ export interface messagesEntireType {
   reviewId: number;
   timestamp: string;
 }
+
+export interface reviewListType {
+  codeLine: number;
+  reviewId: number;
+}

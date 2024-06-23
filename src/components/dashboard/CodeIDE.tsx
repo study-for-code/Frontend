@@ -7,7 +7,7 @@ import { Container } from "@/styles/home/IDEStyles";
 
 // atom
 import { useRecoilState } from "recoil";
-import { pageDataState, testDataState, subscribeIdState } from "@/atom/stats";
+import { pageDataState, testDataState } from "@/atom/stats";
 
 // type
 import { problemListType, testCaseType } from "@/types/aboutAdmin";
@@ -29,8 +29,6 @@ const CodeIDE = () => {
   // language 선택 토글 상태
   const [isOpen, setIsOpen] = useState(false);
   const [selectedLang, setSelectedLang] = useState("java");
-
-  const [subscribeId] = useRecoilState(subscribeIdState);
 
   // 코드 채점 결과 별 class
   const getStatusClass = (status: string) => {
@@ -87,7 +85,7 @@ const CodeIDE = () => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       };
-      console.log("code", code);
+      console.log("code: ", code);
       const response = await axios.put(
         `${import.meta.env.VITE_LOCAL_API_ADDRESS}/submit`,
         {

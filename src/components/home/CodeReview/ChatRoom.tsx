@@ -4,7 +4,6 @@ import { useEffect, useRef, useState } from "react";
 import SockJS from "sockjs-client";
 import Stomp, { Client } from "stompjs";
 import { useCookies } from "react-cookie";
-import axios from "axios";
 // types
 import { codeDataType, messagesEntireType } from "@/types/aboutCodeReview";
 
@@ -13,20 +12,26 @@ import Profile from "@/assets/home/goormThinking.jpg";
 interface ChatRoomProps {
   codeData: codeDataType;
   memberId: number;
+  messages: messagesEntireType[];
+  setMessages: React.Dispatch<React.SetStateAction<messagesEntireType[]>>;
+  getAllMessages: () => Promise<void>;
 }
 
-const ChatRoom = ({ codeData, memberId }: ChatRoomProps) => {
+const ChatRoom = ({
+  codeData,
+  memberId,
+  messages,
+  getAllMessages,
+}: ChatRoomProps) => {
   // 채팅창 컨트롤
   const chatRef = useRef<HTMLInputElement>(null);
 
   // 쿠키
-  const [cookies] = useCookies(["nickname"]);
+  const [cookies] = useCookies(["nickname", "reviewId", "codeLine"]);
   const { nickname } = cookies;
   const { reviewId, codeId } = codeData;
   // stompjs
   const [stompClient, setStompClient] = useState<Client | null>(null);
-  // 전체 메세지
-  const [messages, setMessages] = useState<messagesEntireType[]>([]);
   // 유저 입력 메세지
   const [content, setContent] = useState<string>("");
 
@@ -41,9 +46,8 @@ const ChatRoom = ({ codeData, memberId }: ChatRoomProps) => {
       // 메시지 구독
       client.subscribe(`/topic/${reviewId}`, (messageOutput) => {
         const message = JSON.parse(messageOutput.body);
-        console.log("Received: ", message);
-
-        getReviews();
+        console.log("Subscribe: ", message);
+        getAllMessages();
       });
     });
 
@@ -57,34 +61,11 @@ const ChatRoom = ({ codeData, memberId }: ChatRoomProps) => {
     };
   }, []);
 
-  // 전체 메세지 가져오기
-  const getReviews = async () => {
-    try {
-      const res = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/messages/${reviewId}/review`
-      );
-      console.log("getReviews: ", res.data.results);
-      const sort = res.data.results.map((data: messagesEntireType) => {
-        const date = new Date(data.timestamp);
-        const formattedTime = date.toLocaleTimeString("ko-KR", {
-          hour: "numeric",
-          minute: "numeric",
-          second: "numeric",
-        });
-        return { ...data, timestamp: formattedTime };
-      });
-      const reverse = sort.reverse();
-      setMessages(reverse);
-    } catch (e) {
-      console.log(e);
-    }
-  };
   useEffect(() => {
-    getReviews();
+    getAllMessages();
   }, []);
 
   //메세지 보내기
-
   const sendMessage = () => {
     if (stompClient !== null && content.trim() !== "") {
       stompClient.send(
@@ -112,20 +93,24 @@ const ChatRoom = ({ codeData, memberId }: ChatRoomProps) => {
   return (
     <div className="chat_room">
       <div className="chat_messages">
-        {messages.map((message: messagesEntireType, index) => (
-          <div key={index} className="chat_message">
-            <div className="chat_message_container">
-              <img src={Profile} width={25} height={25} />
-              <div>
-                <div className="profile_container">
-                  <span className="user">{message.nickname}</span>
-                  <span className="timestamp">{message.timestamp}</span>
+        {messages.map((message: messagesEntireType, index) => {
+          if (reviewId === message.reviewId) {
+            return (
+              <div key={index} className="chat_message">
+                <div className="chat_message_container">
+                  <img src={Profile} width={25} height={25} />
+                  <div>
+                    <div className="profile_container">
+                      <span className="user">{message.nickname}</span>
+                      <span className="timestamp">{message.timestamp}</span>
+                    </div>
+                    {message.content}
+                  </div>
                 </div>
-                {message.content}
               </div>
-            </div>
-          </div>
-        ))}
+            );
+          }
+        })}
       </div>
       <input
         ref={chatRef}

@@ -60,7 +60,19 @@ export const Container = styled.div`
   .codeLine {
     display: flex;
     flex-direction: row;
+    align-items: center;
     margin: 0.3rem 0 0.3rem 0.5rem;
+
+    img {
+      opacity: 0;
+      background-color: #0078ff;
+      margin-right: 0.5rem;
+      border-radius: 0.3rem;
+
+      &:hover {
+        opacity: 1;
+      }
+    }
   }
   pre {
     display: flex;
@@ -77,8 +89,8 @@ export const Container = styled.div`
   .line-number {
     display: inline-block;
     text-align: right;
-    margin-right: 1rem;
     color: #5c6370;
+    margin-right: 0.5rem;
   }
 
   .chat_room {
