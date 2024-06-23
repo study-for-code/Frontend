@@ -63,15 +63,15 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
   let formattedDate = "Invalid Date";
   if (selectedStudy) {
     try {
-      let createAtDate: number[] = selectedStudy.createAt;
-      formattedDate = `${createAtDate[0]}년 ${createAtDate[1]}월 ${createAtDate[2]}일`;
-      // if (!isNaN(createAtDate.getTime())) {
-      //   formattedDate = createAtDate.toLocaleDateString("ko-KR", {
-      //     year: "numeric",
-      //     month: "2-digit",
-      //     day: "2-digit",
-      //   });
-      // }
+      let createAtDate: Date = new Date(selectedStudy.createAt);
+      // formattedDate = `${createAtDate[0]}년 ${createAtDate[1]}월 ${createAtDate[2]}일`;
+      if (!isNaN(createAtDate.getTime())) {
+        formattedDate = createAtDate.toLocaleDateString("ko-KR", {
+          year: "numeric",
+          month: "2-digit",
+          day: "2-digit",
+        });
+      }
     } catch (error) {
       console.error("Invalid date format:", error);
     }
@@ -220,9 +220,9 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
           {showHamburgerBar && selectedStudy && (
             <div className="studyName">
               {/* 이미지 데이터 추가 시 주석 해제 */}
-              {/* {selectedStudy.image && (
+              {selectedStudy.image && (
                 <img
-                  src={URL.createObjectURL(selectedStudy.image)}
+                  src={`${import.meta.env.VITE_LOCAL_API_ADDRESS}/${selectedStudy.image.imageFileUrl}`}
                   style={{
                     width: "25px",
                     height: "25px",
@@ -232,7 +232,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
                   }}
                   alt="study"
                 />
-              )} */}
+              )}
               {isEditing ? (
                 <div className="editAreaStudy">
                   <input
