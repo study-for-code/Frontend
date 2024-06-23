@@ -12,7 +12,7 @@ import { pageDataState, testDataState, subscribeIdState } from "@/atom/stats";
 // type
 import { problemListType, testCaseType } from "@/types/aboutAdmin";
 import { Result, TestResult } from "@/types/aboutStudy";
-import CodeSpace from "./CodeSpace";
+import CodeSpace from "@/components/dashboard/CodeSpace.tsx";
 
 const CodeIDE = () => {
   const [cookies] = useCookies(["accessToken"]);
@@ -99,6 +99,7 @@ const CodeIDE = () => {
           headers: headers,
         }
       );
+      console.log(response.data.results);
       setResult(response.data.results[0]);
       setTestResult(response.data.results[0].results);
     } catch (e) {

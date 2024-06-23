@@ -31,8 +31,9 @@ export const selectedStudyState = atom<Study | null>({
     studyId: 0,
     title: "",
     ownerId: 0,
-    createAt: [],
+    createAt: new Date(),
     joinCode: "",
+    image: null,
   },
 });
 
