@@ -85,7 +85,7 @@ const AlgorithmDescription = () => {
           <hr className="divider" />
           <div className="information">
             <div className="info-value">{pageData.timeLimit}ms</div>
-            <div className="info-value">{pageData.memorySize}KB</div>
+            <div className="info-value">{pageData.memorySize}MB</div>
             <div className="info-value">{pageData.submit}</div>
             <div className="info-value">{pageData.answer}</div>
             <div className="info-value">{pageData.answerRate.toFixed(2)}%</div>

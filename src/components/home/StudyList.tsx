@@ -75,7 +75,7 @@ const StudyList = () => {
           }
         );
         const data = response.data;
-        console.log(response.data);
+        // console.log(response.data);
         setStudies(data.results);
         setSelectedStudy(data.results[0]);
       } catch (e) {
