@@ -36,6 +36,7 @@ const ChatRoom = ({
   const [content, setContent] = useState<string>("");
 
   useEffect(() => {
+    // 웹 소켓 연결
     const socket = new SockJS(`${import.meta.env.VITE_WEBSOCKET_ADDRESS}`);
     const client = Stomp.over(socket);
 
@@ -46,7 +47,7 @@ const ChatRoom = ({
       // 메시지 구독
       client.subscribe(`/topic/${reviewId}`, (messageOutput) => {
         const message = JSON.parse(messageOutput.body);
-        // console.log("Subscribe: ", message);
+        console.log("Subscribe: ", message);
         getAllMessages();
       });
     });
@@ -55,7 +56,7 @@ const ChatRoom = ({
     return () => {
       if (stompClient !== null) {
         stompClient.disconnect(() => {
-          // console.log("Disconnected from STOMP broker.");
+          console.log("Disconnected from STOMP broker.");
         }, {});
       }
     };
@@ -93,24 +94,25 @@ const ChatRoom = ({
   return (
     <div className="chat_room">
       <div className="chat_messages">
-        {messages.map((message: messagesEntireType, index) => {
-          if (reviewId === message.reviewId) {
-            return (
-              <div key={index} className="chat_message">
-                <div className="chat_message_container">
-                  <img src={Profile} width={25} height={25} />
-                  <div>
-                    <div className="profile_container">
-                      <span className="user">{message.nickname}</span>
-                      <span className="timestamp">{message.timestamp}</span>
-                    </div>
-                    {message.content}
+        {/* {messages.map((message: messagesEntireType, index) => {
+          return (
+            <div key={index} className="chat_message">
+              <div className="chat_message_container">
+                <img src={Profile} width={25} height={25} />
+                <div>
+                  <div className="profile_container">
+                    <span className="user">{message.nickname}</span>
+                    <span className="timestamp">{message.timestamp}</span>
                   </div>
+                  {message.content}
                 </div>
               </div>
-            );
-          }
-        })}
+            </div>
+          );
+          // if (reviewId === message[0].reviewId) {
+
+          // }
+        })} */}
       </div>
       <input
         ref={chatRef}

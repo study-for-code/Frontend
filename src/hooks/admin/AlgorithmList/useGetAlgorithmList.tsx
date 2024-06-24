@@ -21,7 +21,7 @@ const useGetAlgorithmList = ({
         },
       };
       const studyInfo = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/solved`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms/solved`,
         config
       );
       // console.log("algorithmList: ", response);

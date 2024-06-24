@@ -15,7 +15,7 @@ const useDeleteData = ({
       const response = await axios.delete(
         `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms/${algorithmId}`
       );
-      console.log("deleteData: ", response);
+      // console.log("deleteData: ", response);
       const { code } = response.data;
       if (code === 200) {
         const response = await axios.get(

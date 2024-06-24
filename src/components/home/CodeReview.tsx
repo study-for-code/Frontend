@@ -104,7 +104,7 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
       const res = await axios.get(
         `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/messages/${codeData.codeId}/code`
       );
-      // console.log("getAllMessages: ", res);
+      console.log("getAllMessages: ", res);
       const sort = res.data.results
         .map((data: messagesEntireType) => {
           const date = new Date(data.timestamp);
@@ -116,7 +116,13 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
           return { ...data, timestamp: formattedTime };
         })
         .reverse();
-      setMessages(sort);
+      const reviewId = res.data.results[0].reviewId; // reviewId 값을 가져옵니다.
+
+      setMessages((prevMessages) => {
+        const newMessages = [...prevMessages];
+        newMessages[reviewId] = sort;
+        return newMessages;
+      });
     } catch (e) {
       console.log(e);
     }
@@ -176,11 +182,11 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
     }
   };
 
-  // useEffect(() => {
-  //   console.log("codeData: ", codeData);
-  //   console.log("채팅:", messages);
-  //   console.log("reviewData:", reviewData);
-  // }, [codeData, messages]);
+  useEffect(() => {
+    // console.log("codeData: ", codeData);
+    console.log("채팅:", messages);
+    // console.log("reviewData:", reviewData);
+  }, [codeData, messages]);
 
   useEffect(() => {
     getCodeId();
