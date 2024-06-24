@@ -26,21 +26,31 @@ Study For Code는 알고리즘 스터디에서 필요한 고충들을 보완하�
 ## 주요 기능 / Key Features 🌟
 
 ### 데이터베이스 / Database 💾
-- H2 : Version 2.2.224 (2023-09-17)
-- MySQL : Ver 5.7.44 for Linux on x86_64
-- MongoDB : Ver. 4.4 for Linux on x86_64
-- ORM: Spring Data JPA
+- H2 : Ver 2.2.224
+- MySQL : Ver 5.7.44 for
+- MongoDB : Ver 5.0.1
+- ORM: Spring Data JPA 3.3.0
+- Hibernate
+  - hibernate-core : 6.5.2.Final
+  - hibernate-validator: 8.0.1.Final
+  - hibernate-commons-annotations: 6.0.6.Final
 
 ### 보안 / Security 🔒
-- Spring Security
+- Spring Security : 6.3.0
 
 ### 유효성 검사 / Validation ✅
-- Spring Boot Starter Validation
+- Spring-boot-starter-data-jpa : 3.3.0
+- Validation : 3.0.2
 
 ### JWT 인증 / JWT Authentication 🔑
 - jjwt-api 0.11.5
 - jjwt-impl 0.11.5
 - jjwt-jackson 0.11.5
+
+### 추가 라이브러리
+- **Lombok**: 1.18.32
+- **Jackson**: 2.17.1
+- **Tomcat**: 10.1.24
 
 ### 암호화 / Encryption 🔐
 - Bouncy Castle Provider 1.69
@@ -73,27 +83,16 @@ A
 <details>
   <summary> 남소희 [FE]</summary>
   <ul>
-    <li> Jira 작업 </li>
-    <li> GitHub 작업 </li>
-    <li> 채팅 기능 구현 (Chat – Backend) </li>
-    <li> Spring Security 적용 (Spoco – Backend) </li>
-    <li> 코드 리뷰 관리 기능 (Spoco – Backend) </li>
-    <li> 사용자 초대 기능 (Spoco – Backend) </li>
-    <li> 이미지 등록 및 조회 (Spoco – Backend) </li> 
-    <li> 백엔드 코드 리팩토링 및 global 에러 처리 (Backend) </li>
+    <li> **TEAM Leader** </li>
+    <li> Notion 작성 </li>
+
   </ul>
 </details>
 
 <details>
   <summary> 서근재 [FE]</summary>
   <ul>
-    <li> Architecture 구현 </li>
-    <li> 채팅 서버 연결 (Chat – Backend) </li>
-    <li> 카테고리 관리 기능 (Spoco – Backend) </li>
-    <li> IDE 관련 기능 (Spoco – Backend) </li>
-    <li> 알고리즘 관리 기능 (Spoco – Backend) </li>
-    <li> 관리자 기능 (Spoco – Backend) </li>
-    <li> 프로젝트 배포 (Backend) </li>
+    <li> Front - Jira 작성 </li>
   </ul>
 </details>
 
