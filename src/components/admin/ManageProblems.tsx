@@ -31,6 +31,8 @@ import useHandleTestCaseModal, {
 import useModifyData, {
   useModifyDataType,
 } from "@/hooks/admin/ManageProblems/useModifyData";
+import axios from "axios";
+import useDeleteData from "@/hooks/admin/ManageProblems/useDeleteData";
 
 const ManageProblems = () => {
   // testCase modal
@@ -106,6 +108,15 @@ const ManageProblems = () => {
       setProblemList,
     };
     const execute = useModifyData(object);
+    execute();
+  };
+
+  const deleteData = async () => {
+    const object = {
+      setProblemList,
+      algorithmId,
+    };
+    const execute = useDeleteData(object);
     execute();
   };
   // 입력
@@ -270,7 +281,7 @@ const ManageProblems = () => {
                   display: "flex",
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  width: "45%",
+                  width: "60%",
                 }}
               >
                 <ModifyBtn
@@ -281,6 +292,13 @@ const ManageProblems = () => {
                 </ModifyBtn>
                 <button className="testCase" onClick={handleTestCaseModal}>
                   테스트 케이스
+                </button>
+                <button
+                  className="testCase2"
+                  onClick={deleteData}
+                  style={{ width: "5vw" }}
+                >
+                  삭제
                 </button>
                 {isModalOpen && (
                   <TestCaseModifyModal
