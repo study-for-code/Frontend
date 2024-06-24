@@ -330,11 +330,16 @@ export const ManageProblemsContainer = styled.div<{
     margin-bottom: 1rem;
   }
   .lists {
+    max-height: 80vh;
+    overflow-y: auto;
     width: 90%;
     display: flex;
     flex-direction: column;
     font-family: "GmarketSansMedium";
     color: white;
+  }
+  .lists::-webkit-scrollbar {
+    display: none;
   }
   .listContainer {
     display: flex;
@@ -447,6 +452,29 @@ export const ManageProblemsContainer = styled.div<{
   .testCaseModifyModal::-webkit-scrollbar {
     display: none; /* 크롬, 사파리, 오페라, 엣지의 경우 */
   }
+  .testCase2 {
+    width: 100px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    line-height: 1;
+    background-color: ${({ ismodalopen }) =>
+      ismodalopen === true ? `rgba(49,51,56,0.3)` : theme.mainColor};
+    color: white;
+    font-family: "GmarketSansMedium";
+    font-size: 1.1rem;
+    border: 1px solid ${theme.mainColor};
+    padding-top: 0.4rem;
+    border-radius: 0.2rem;
+    outline: none;
+
+    &:hover {
+      background-color: ${theme.adminContentBg};
+      border: 1px solid ${theme.mainColor};
+      color: ${theme.mainColor};
+    }
+  }
 `;
 
 export const ProblemDetailInput = styled.input`
@@ -492,12 +520,17 @@ export const ModifyLimitElementInput = styled.input`
 export const ModifyBtn = styled.button<{ ismodalopen: boolean }>`
   width: 100px;
   height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
   background-color: ${({ ismodalopen }) =>
     ismodalopen === true ? `rgba(49,51,56,0.3)` : theme.mainColor};
   color: white;
   font-family: "GmarketSansMedium";
-  font-size: 1.2rem;
+  font-size: 1.1rem;
   border: 1px solid ${theme.mainColor};
+  padding-top: 0.4rem;
   border-radius: 0.2rem;
   outline: none;
 
