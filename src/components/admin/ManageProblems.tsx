@@ -229,44 +229,6 @@ const ManageProblems = () => {
                 <div>{modalData.explanation}</div>
               )}
             </div>
-            {/* <div className="limitElementSection">
-              <span className="sectionTitle2">제한 사항</span>
-              <div
-                style={{
-                  height: "auto",
-                  display: "flex",
-                  justifyContent: "space-between",
-                  flexDirection: "column",
-                  marginTop: "1rem",
-                }}
-              >
-                {restrictions.map((item, i: number) => (
-                  <li className="listElement" key={i}>
-                    <ModifyLimitElementInput
-                      name="restrictions"
-                      onChange={(e) => {
-                        restrictions[i] = e.target.value;
-                        setModalData((prev) => ({
-                          ...prev,
-                          restrictions,
-                        }));
-                      }}
-                      onKeyDown={(e) => {
-                        const key = e.key.toUpperCase();
-                        if (key === "ENTER") {
-                          e.preventDefault();
-                          setModalData((prev) => ({
-                            ...prev,
-                            restrictions,
-                          }));
-                        }
-                      }}
-                      value={item}
-                    />
-                  </li>
-                ))}
-              </div>
-            </div> */}
             {/* 버튼 */}
             <div
               style={{

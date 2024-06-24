@@ -51,11 +51,16 @@ export const Container = styled.div`
     margin-left: 0.5rem;
   }
   .codeContainer {
+    max-height: 70vh;
+    overflow-y: auto;
     width: 90%;
     padding: 0.5rem;
     border-radius: 0.5rem;
     font-family: monospace;
     color: white;
+  }
+  .codeContainer::-webkit-scrollbar {
+    display: none;
   }
   .codeLine {
     display: flex;

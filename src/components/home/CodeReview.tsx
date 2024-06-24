@@ -38,8 +38,6 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
   ]);
   const { accessToken } = cookies;
   const { nickname, memberId } = userData;
-  // console.log("memberId: ", userData);
-  // console.log("algorithmId: ", pageData);
   // 토글
   const [isToggle, setIsToggle] = useState<boolean[]>([]);
   // 코드 데이터
@@ -48,7 +46,7 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
     detail: [],
     language: "",
     codeLine: 0,
-    reviewId: -1,
+    reviewId: 0,
   });
   const { detail, language } = codeData;
   // 전체 메세지
@@ -116,13 +114,32 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
           return { ...data, timestamp: formattedTime };
         })
         .reverse();
-      const reviewId = res.data.results[0].reviewId; // reviewId 값을 가져옵니다.
 
-      setMessages((prevMessages) => {
-        const newMessages = [...prevMessages];
-        newMessages[reviewId] = sort;
-        return newMessages;
-      });
+      setMessages(sort);
+    } catch (e) {
+      console.log(e);
+    }
+  };
+  // 전체 메세지 가져오기
+  const refreshAllMessage = async () => {
+    try {
+      const res = await axios.get(
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/messages/${codeData.codeId}/code`
+      );
+      console.log("getAllMessages: ", res);
+      const sort = res.data.results
+        .map((data: messagesEntireType) => {
+          const date = new Date(data.timestamp);
+          const formattedTime = date.toLocaleTimeString("ko-KR", {
+            hour: "numeric",
+            minute: "numeric",
+            second: "numeric",
+          });
+          return { ...data, timestamp: formattedTime };
+        })
+        .reverse();
+
+      setMessages(sort);
     } catch (e) {
       console.log(e);
     }
@@ -148,32 +165,21 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
           },
         }
       );
-      // console.log("openChattingRoom: ", res);
+      console.log("openChattingRoom: ", res);
       // 채팅방 생성에 성공하면 해당 정보를 업데이트합니다.
       if (res.data.code === 409) {
-        reviewData.filter((review) => {
-          if (review.codeLine === index + 1) {
-            setCodeData((prev) => ({
-              ...prev,
-              codeLine: index + 1,
-              reviewId: index + 1,
-            }));
-          }
-        });
+        setCodeData((prev) => ({
+          ...prev,
+          codeLine: index + 1,
+        }));
       } else {
         setCodeData((prev) => ({
           ...prev,
           codeLine: res.data.results[0].codeLine,
           reviewId: res.data.results[0].reviewId,
         }));
+        getCodeId();
       }
-
-      // 해당 라인의 채팅방 토글 상태를 변경합니다.
-      setIsToggle((prev) => {
-        const newToggle = [...prev];
-        newToggle[index] = !newToggle[index];
-        return newToggle;
-      });
 
       // 모든 메시지를 가져옵니다.
       await getAllMessages();
@@ -182,11 +188,21 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
     }
   };
 
+  // 데이터가 있을 때
+  const alreadyExistData = (index: number) => {
+    // 해당 라인의 채팅방 토글 상태를 변경합니다.
+    setIsToggle((prev) => {
+      const newToggle = [...prev];
+      newToggle[index] = !newToggle[index];
+      return newToggle;
+    });
+  };
+
   useEffect(() => {
     // console.log("codeData: ", codeData);
-    console.log("채팅:", messages);
-    // console.log("reviewData:", reviewData);
-  }, [codeData, messages]);
+    // console.log("채팅:", messages);
+    console.log("reviewData:", reviewData);
+  }, [codeData, messages, reviewData]);
 
   useEffect(() => {
     getCodeId();
@@ -227,41 +243,58 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
       <div className="codeContainer">
         <pre>
           {detail.length > 0 &&
-            detail.map((code, i: number) => (
-              <div key={i}>
-                <div className="codeLine">
-                  <img
-                    src={
-                      reviewData.some((review) => review.codeLine === i + 1)
-                        ? isToggle[i]
-                          ? ExpandDown
-                          : ExpandRight
-                        : Plus
-                    }
-                    width={20}
-                    height={20}
-                    onClick={() => openChattingRoom(i)}
-                  />
-                  <span className="line-number">{i + 1}</span>
-                  <span>{code.replace("\n", "")}</span>
-                </div>
+            detail.map((code, i: number) => {
+              const review = reviewData?.find(
+                (review) => review.codeLine === i + 1
+              ) as reviewListType;
+              return (
+                <div key={i}>
+                  <div className="codeLine">
+                    {reviewData.find((review) => review.codeLine === i + 1) ? (
+                      isToggle[i] ? (
+                        <img
+                          src={ExpandDown}
+                          width={20}
+                          height={20}
+                          onClick={() => alreadyExistData(i)}
+                        />
+                      ) : (
+                        <img
+                          src={ExpandRight}
+                          width={20}
+                          height={20}
+                          onClick={() => alreadyExistData(i)}
+                        />
+                      )
+                    ) : (
+                      <img
+                        src={Plus}
+                        width={20}
+                        height={20}
+                        onClick={() => openChattingRoom(i)}
+                      />
+                    )}
+                    <span className="line-number">{i + 1}</span>
+                    <span>{code.replace("\n", "")}</span>
+                  </div>
 
-                {isToggle[i] && (
-                  <ChatRoom
-                    codeData={codeData}
-                    memberId={memberId}
-                    messages={messages}
-                    setMessages={setMessages}
-                    getAllMessages={getAllMessages}
-                  />
-                )}
-              </div>
-            ))}
+                  {isToggle[i] && (
+                    <ChatRoom
+                      codeData={codeData}
+                      memberId={memberId}
+                      messages={messages}
+                      setMessages={setMessages}
+                      getAllMessages={getAllMessages}
+                      review={review}
+                      refreshAllMessage={refreshAllMessage}
+                      reviewData={reviewData}
+                    />
+                  )}
+                </div>
+              );
+            })}
         </pre>
       </div>
-      {/* http://localhost:8008로 메세지 보내기 */}
-
-      {/* 본문 */}
     </Container>
   );
 };
