@@ -218,10 +218,9 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
         <div className="hamburgerbutton">
           {showHamburgerBar && selectedStudy && (
             <div className="studyName">
-              {/* 이미지 데이터 추가 시 주석 해제 */}
               {selectedStudy.image && (
                 <img
-                  src={`${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/${selectedStudy.image.imageFileUrl}`}
+                  src={`${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/image/${selectedStudy.image.imageFileUrl}`}
                   style={{
                     width: "25px",
                     height: "25px",
