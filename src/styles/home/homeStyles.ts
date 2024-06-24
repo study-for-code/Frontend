@@ -61,6 +61,9 @@ export const Container = styled.div<HomeStyleProps>`
     display: flex;
     justify-content: center;
     align-items: center;
+    overflow: hidden;
+    word-wrap: break-word;
+    word-break: break-all;
   }
 
   .plusContainer {

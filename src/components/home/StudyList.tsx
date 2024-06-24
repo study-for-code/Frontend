@@ -155,11 +155,7 @@ const StudyList = () => {
             <div key={index} onClick={() => handleSelectStudy(study, index)}>
               {study.image ? (
                 <img
-                  src={
-                    study.image
-                      ? `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/${study.image.imageFileUrl}`
-                      : GoormThinking
-                  }
+                  src={`${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/image/${study.image.imageFileUrl}`}
                   width="100"
                   className="element1"
                 />
