@@ -36,17 +36,17 @@ const ChatRoom = ({
   const [content, setContent] = useState<string>("");
 
   useEffect(() => {
-    const socket = new SockJS("http://localhost:8008/ws");
+    const socket = new SockJS(`${import.meta.env.VITE_WEBSOCKET_ADDRESS}`);
     const client = Stomp.over(socket);
 
     client.connect({}, () => {
-      console.log("is Connected!");
+      // console.log("is Connected!");
       setStompClient(client);
 
       // 메시지 구독
       client.subscribe(`/topic/${reviewId}`, (messageOutput) => {
         const message = JSON.parse(messageOutput.body);
-        console.log("Subscribe: ", message);
+        // console.log("Subscribe: ", message);
         getAllMessages();
       });
     });
@@ -55,7 +55,7 @@ const ChatRoom = ({
     return () => {
       if (stompClient !== null) {
         stompClient.disconnect(() => {
-          console.log("Disconnected from STOMP broker.");
+          // console.log("Disconnected from STOMP broker.");
         }, {});
       }
     };

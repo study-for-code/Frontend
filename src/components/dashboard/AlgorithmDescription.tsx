@@ -52,7 +52,7 @@ const AlgorithmDescription = () => {
   const getTestData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/${pageData.algorithmId}`
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/testcases/${pageData.algorithmId}`
       );
       const data = response.data;
       setTestData(data.results);

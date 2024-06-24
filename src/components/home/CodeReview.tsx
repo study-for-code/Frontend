@@ -67,10 +67,10 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
       };
 
       const res = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/codes/${pageData.algorithmId}`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/codes/${pageData.algorithmId}`,
         config
       );
-      console.log("코드 아이디 get: ", res);
+      // console.log("코드 아이디 get: ", res);
 
       if (res.data.code === 200) {
         const codeLines = res.data.results[0].detail.split("\n");
@@ -81,16 +81,15 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
         }));
 
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/review/${res.data.results[0].codeId}`
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/review/${res.data.results[0].codeId}`
         );
 
-        console.log("리뷰 리스트 가져오기: ", response);
+        // console.log("리뷰 리스트 가져오기: ", response);
 
         if (response.data.results.length > 0) {
           const sortedReviews = response.data.results.map(
             (data: reviewListType) => data
           );
-          console.log(sortedReviews);
           setReviewData(sortedReviews);
         }
       }
@@ -103,9 +102,9 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
   const getAllMessages = async () => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/messages/${codeData.codeId}/code`
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/messages/${codeData.codeId}/code`
       );
-      console.log("getAllMessages: ", res);
+      // console.log("getAllMessages: ", res);
       const sort = res.data.results
         .map((data: messagesEntireType) => {
           const date = new Date(data.timestamp);
@@ -134,7 +133,7 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
     try {
       // 채팅방 생성 요청을 보냅니다.
       const res = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/review/${codeData.codeId}?codeLine=${index + 1}`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/review/${codeData.codeId}?codeLine=${index + 1}`,
         {},
         {
           headers: {
@@ -143,7 +142,7 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
           },
         }
       );
-      console.log("openChattingRoom: ", res);
+      // console.log("openChattingRoom: ", res);
       // 채팅방 생성에 성공하면 해당 정보를 업데이트합니다.
       if (res.data.code === 409) {
         reviewData.filter((review) => {
@@ -177,11 +176,11 @@ const CodeReview = ({ pageData, userData }: CodeReviewType) => {
     }
   };
 
-  useEffect(() => {
-    console.log("codeData: ", codeData);
-    console.log("채팅:", messages);
-    console.log("reviewData:", reviewData);
-  }, [codeData, messages]);
+  // useEffect(() => {
+  //   console.log("codeData: ", codeData);
+  //   console.log("채팅:", messages);
+  //   console.log("reviewData:", reviewData);
+  // }, [codeData, messages]);
 
   useEffect(() => {
     getCodeId();

@@ -82,16 +82,15 @@ export const column: GridColDef[] = [
       const { SubscribeStatus, algorithmId } = params.row;
 
       const addCategory = async () => {
-        console.log("CTid", CTid);
         try {
           const res = await axios.post(
-            `${import.meta.env.VITE_LOCAL_API_ADDRESS}/subscribes`,
+            `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/subscribes`,
             {
               categoryId: CTid,
               algorithmId,
             }
           );
-          console.log("카테고리 추가 성공: ", res);
+          // console.log("카테고리 추가 성공: ", res);
           if (res.data.code === 200) {
             const config: AxiosRequestConfig = {
               params: {
@@ -99,10 +98,10 @@ export const column: GridColDef[] = [
               },
             };
             const res = await axios.get(
-              `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/solved`,
+              `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms/solved`,
               config
             );
-            console.log("카테고리 추가 성공 후 전체 데이터 호출: ", res);
+            // console.log("카테고리 추가 성공 후 전체 데이터 호출: ", res);
             const newResults = res.data.results.map(
               (result: AlgorithmListType) => ({
                 algorithmId: result.algorithmId,
@@ -127,9 +126,9 @@ export const column: GridColDef[] = [
         if (subscribeId) {
           try {
             const res = await axios.delete(
-              `${import.meta.env.VITE_LOCAL_API_ADDRESS}/subscribes/${subscribeId}`
+              `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/subscribes/${subscribeId}`
             );
-            console.log("구독 취소 성공: ", res);
+            // console.log("구독 취소 성공: ", res);
             if (res.data.code === 200) {
               const config: AxiosRequestConfig = {
                 params: {
@@ -137,10 +136,10 @@ export const column: GridColDef[] = [
                 },
               };
               const res = await axios.get(
-                `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/solved`,
+                `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms/solved`,
                 config
               );
-              console.log("구독 취소 성공 후 전체 데이터 호출: ", res);
+              // console.log("구독 취소 성공 후 전체 데이터 호출: ", res);
               const newResults = res.data.results.map(
                 (result: AlgorithmListType) => ({
                   algorithmId: result.algorithmId,

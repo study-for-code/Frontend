@@ -87,10 +87,10 @@ const CreateProblems = () => {
     execute();
   };
 
-  useEffect(() => {
-    console.log("createProblem: ", createProblem);
-    console.log("limitationList: ", restrictions);
-  }, [createProblem, restrictions]);
+  // useEffect(() => {
+  //   console.log("createProblem: ", createProblem);
+  //   console.log("limitationList: ", restrictions);
+  // }, [createProblem, restrictions]);
 
   return (
     <div className="content">

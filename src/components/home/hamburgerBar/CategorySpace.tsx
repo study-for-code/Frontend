@@ -139,11 +139,11 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
     if (selectedStudy) {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/categories/${selectedStudy?.studyId}/study`
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/categories/${selectedStudy?.studyId}/study`
         );
         const data = response.data;
         setCategoryList(data.results);
-        console.log("category List : ", data.results);
+        // console.log("category List : ", data.results);
       } catch (e) {
         console.log(e);
       }
@@ -169,7 +169,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const onCreate = async (title: string) => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/categories/${selectedStudy?.studyId}`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/categories/${selectedStudy?.studyId}`,
         {
           title: title,
           studyId: selectedStudy?.studyId,
@@ -207,7 +207,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   };
 
   const handleEditTitle = (categoryId: number) => {
-    console.log(newTitle[categoryId]);
+    // console.log(newTitle[categoryId]);
     if (
       newTitle[categoryId] !== undefined &&
       newTitle[categoryId] !== "" &&
@@ -235,7 +235,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
   const onModify = async (title: string) => {
     try {
       const response = await axios.patch(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/categories/${selectedCgID}`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/categories/${selectedCgID}`,
         {
           title: title,
         }
@@ -311,7 +311,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
       }
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/${algorithmID}`
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms/${algorithmID}`
         );
         const data = response.data;
         if (pageData.algorithmId !== data.results[0].algorithmId) {

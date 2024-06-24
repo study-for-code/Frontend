@@ -16,11 +16,11 @@ const useHandleTestCaseModal = ({
     setIsModalOpen(true);
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/${algorithmId}`
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/testcases/${algorithmId}`
       );
-      console.log("testCase: ", res);
+      // console.log("testCase: ", res);
       const { results } = res.data;
-      console.log("results: ", results);
+      // console.log("results: ", results);
       setTestcaseList(results);
     } catch (error) {
       console.log(error);

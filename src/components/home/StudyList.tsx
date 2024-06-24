@@ -69,7 +69,7 @@ const StudyList = () => {
           Authorization: `Bearer ${accessToken}`,
         };
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies`,
           {
             headers: headers,
           }
@@ -112,7 +112,7 @@ const StudyList = () => {
       }
 
       const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies`,
         formData,
         {
           headers: headers,
@@ -157,7 +157,7 @@ const StudyList = () => {
                 <img
                   src={
                     study.image
-                      ? `${import.meta.env.VITE_LOCAL_API_ADDRESS}/${study.image.imageFileUrl}`
+                      ? `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/${study.image.imageFileUrl}`
                       : GoormThinking
                   }
                   width="100"

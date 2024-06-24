@@ -15,10 +15,6 @@ const useGetAlgorithmList = ({
 }: useGetAlgorithmListType) => {
   async function getAlgorithmList() {
     try {
-      // const response = await axios.get(
-      //   `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms`
-      // );
-
       const config: AxiosRequestConfig = {
         params: {
           studyId: selectedStudy?.studyId,

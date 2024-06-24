@@ -48,7 +48,6 @@ const CategoryList = ({
   isToggleSelected,
   handleToggle,
   getCategory,
-  setSpecificCategory,
   CTid,
   handlePage,
 }: CategoryListType) => {
@@ -90,20 +89,10 @@ const CategoryList = ({
                     handleInnerContextMenu(event, category.categoryId)
                   }
                   onClick={() => {
-                    console.log("category Id: ", category.categoryId);
+                    // console.log("category Id: ", category.categoryId);
                     getCategory(category);
 
                     handleToggle(category.categoryId);
-                    // if (!isToggleSelected[category.categoryId]) {
-                    //   getCategory(category);
-                    // } else {
-                    //   // 수정해야함
-                    //   setSpecificCategory({
-                    //     categoryId: 0,
-                    //     subscribes: [],
-                    //     title: "",
-                    //   });
-                    // }
                   }}
                 >
                   <span style={{ marginRight: "0.5rem" }}>

@@ -58,13 +58,13 @@ const Login = () => {
   const login = async () => {
     try {
       const response: AxiosResponse = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/login`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/login`,
         {
           email,
           password,
         }
       );
-      console.log(response);
+      // console.log(response);
       const { code } = response.data;
       setUserData((prev) => ({
         ...prev,

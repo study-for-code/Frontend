@@ -144,10 +144,10 @@ const ManageProblems = () => {
     setIsModify(!isModify);
   };
 
-  useEffect(() => {
-    console.log("modalData: ", modalData);
-    console.log("testcaseList: ", testcaseList);
-  }, [modalData, testcaseList]);
+  // useEffect(() => {
+  //   console.log("modalData: ", modalData);
+  //   console.log("testcaseList: ", testcaseList);
+  // }, [modalData, testcaseList]);
 
   useEffect(() => {
     getData();
@@ -218,7 +218,7 @@ const ManageProblems = () => {
                 <div>{modalData.explanation}</div>
               )}
             </div>
-            <div className="limitElementSection">
+            {/* <div className="limitElementSection">
               <span className="sectionTitle2">제한 사항</span>
               <div
                 style={{
@@ -255,7 +255,7 @@ const ManageProblems = () => {
                   </li>
                 ))}
               </div>
-            </div>
+            </div> */}
             {/* 버튼 */}
             <div
               style={{

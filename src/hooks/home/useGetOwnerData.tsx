@@ -11,7 +11,7 @@ const useGetOwnerData = ({
     if (ownerId) {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/members/${ownerId}`
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/members/${ownerId}`
         );
         const data = response.data;
         setOwnerName(data.results[0].nickname);

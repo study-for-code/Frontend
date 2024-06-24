@@ -33,7 +33,7 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({ isOpen, onClose }) => {
         Authorization: `Bearer ${accessToken}`,
       };
       const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies/join`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies/join`,
         null,
         {
           headers: headers,
@@ -50,7 +50,7 @@ const EnterStudyModal: React.FC<EnterStudyProps> = ({ isOpen, onClose }) => {
             Authorization: `Bearer ${accessToken}`,
           };
           const response = await axios.get(
-            `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+            `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies`,
             {
               headers: headers,
             }

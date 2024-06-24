@@ -16,12 +16,12 @@ const useGetStudyList = ({
         Authorization: `Bearer ${accessToken}`,
       };
       const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies`,
         {
           headers: headers,
         }
       );
-      console.log(response);
+      // console.log(response);
       const data = response.data;
       setStudies(data.results);
     } catch (e) {

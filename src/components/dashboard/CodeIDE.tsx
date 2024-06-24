@@ -85,9 +85,9 @@ const CodeIDE = () => {
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       };
-      console.log("code: ", code);
+      // console.log("code: ", code);
       const response = await axios.put(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/submit`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/submit`,
         {
           algorithmId: pageData.algorithmId,
           language: selectedLang,
@@ -97,7 +97,7 @@ const CodeIDE = () => {
           headers: headers,
         }
       );
-      console.log(response.data.results);
+      // console.log(response.data.results);
       setResult(response.data.results[0]);
       setTestResult(response.data.results[0].results);
     } catch (e) {
