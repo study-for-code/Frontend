@@ -315,7 +315,7 @@ const CategorySpace: React.FC<CategorySpaceProps> = ({
         );
         const data = response.data;
         if (pageData.algorithmId !== data.results[0].algorithmId) {
-          console.log("page Data : ", data.results[0]);
+          // console.log("page Data : ", data.results[0]);
           setPageData(data.results[0]);
         }
       } catch (e) {
