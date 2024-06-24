@@ -82,7 +82,7 @@ const AlgorithmList = () => {
     if (searchTerm !== "") {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/search`,
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms/search`,
           {
             params: {
               studyId: selectedStudy?.studyId,
@@ -130,9 +130,9 @@ const AlgorithmList = () => {
     }
   }, [searchTerm]);
 
-  useEffect(() => {
-    console.log("algorithm: ", algorithm);
-  }, [algorithm]);
+  // useEffect(() => {
+  //   console.log("algorithm: ", algorithm);
+  // }, [algorithm]);
 
   return (
     <AlgorithmListContainer>

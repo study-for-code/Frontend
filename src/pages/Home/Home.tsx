@@ -100,13 +100,13 @@ const Home = () => {
         Authorization: `Bearer ${accessToken}`,
       };
       const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies`,
         {
           headers: headers,
         }
       );
       const data = response.data;
-      console.log(data);
+      // console.log(data);
       setStudies(data.results);
       if (data.results.length > 0) {
         setSelectedStudy(data.results[0]);

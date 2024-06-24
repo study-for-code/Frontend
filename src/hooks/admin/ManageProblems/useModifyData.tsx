@@ -25,7 +25,7 @@ const useModifyData = ({
   async function modifyData() {
     try {
       const res = await axios.patch(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms/${algorithmId}`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms/${algorithmId}`,
         {
           title: algorithmTitle.replace("-", ""),
           explanation,
@@ -35,13 +35,13 @@ const useModifyData = ({
         }
       );
       setIsModify(false);
-      console.log(res);
+      // console.log(res);
       const { code } = res.data;
       if (code === 200) {
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms`
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms`
         );
-        console.log("refetch Data: ", response);
+        // console.log("refetch Data: ", response);
         const { results } = response.data;
         setProblemList(results);
       }

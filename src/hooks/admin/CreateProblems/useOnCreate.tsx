@@ -20,7 +20,7 @@ const useOnCreate = ({
   async function onCreate() {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms`,
         {
           title,
           timeLimit,
@@ -29,12 +29,12 @@ const useOnCreate = ({
           restrictions,
         }
       );
-      console.log("create problem : ", response);
+      // console.log("create problem : ", response);
       const { algorithmId } = response.data.results[0];
 
       const response2 = testCase.map((testCase) =>
         axios.post(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/testcases/${algorithmId}`,
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/testcases/${algorithmId}`,
           {
             input: testCase.input,
             output: testCase.output,
@@ -42,7 +42,7 @@ const useOnCreate = ({
         )
       );
       const res = await Promise.all(response2);
-      console.log(res);
+      // console.log(res);
     } catch (e) {
       console.log(e);
     }

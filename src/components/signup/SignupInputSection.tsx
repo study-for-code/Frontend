@@ -44,7 +44,7 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
   const signup = async () => {
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/members`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/members`,
         {
           email,
           nickname,
@@ -52,7 +52,7 @@ const SignupInputSection: React.FC<SignupInputSectionType> = ({
           confirmPassword,
         }
       );
-      console.log(response);
+      // console.log(response);
       if (response.data.code === 409) {
         setConflictEmail(true);
       }

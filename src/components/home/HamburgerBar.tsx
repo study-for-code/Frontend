@@ -119,7 +119,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
           Authorization: `Bearer ${accessToken}`,
         };
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies`,
           {
             headers: headers,
           }
@@ -127,11 +127,11 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
         const data = response.data;
         setStudies(data.results);
         if (selectedIndex > data.results.length) {
-          console.log("selected study", data.results[0]);
+          // console.log("selected study", data.results[0]);
           setSelectedStudy(data.results[0]);
           setSelectedStudyIndex(0);
         } else {
-          console.log("selected study", data.results[selectedIndex]);
+          // console.log("selected study", data.results[selectedIndex]);
           setSelectedStudy(data.results[selectedIndex]);
           setSelectedStudyIndex(selectedIndex);
         }
@@ -148,7 +148,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
         "Content-Type": "application/json",
       };
       const response = await axios.patch(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies`,
         {
           studyId: studyId,
           title: title,
@@ -178,7 +178,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
       };
 
       const response = await axios.delete(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies/${studyId}`,
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies/${studyId}`,
         {
           headers: headers,
         }
@@ -221,7 +221,7 @@ const HamburgerBar: React.FC<HamburgerBarType> = ({
               {/* 이미지 데이터 추가 시 주석 해제 */}
               {selectedStudy.image && (
                 <img
-                  src={`${import.meta.env.VITE_LOCAL_API_ADDRESS}/${selectedStudy.image.imageFileUrl}`}
+                  src={`${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/${selectedStudy.image.imageFileUrl}`}
                   style={{
                     width: "25px",
                     height: "25px",

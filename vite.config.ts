@@ -1,14 +1,14 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
+import { nodePolyfills } from "vite-plugin-node-polyfills";
 
-// https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [react(), nodePolyfills()],
   server: {
     port: 5000,
     proxy: {
       "/ws": {
-        target: "http://localhost:8008",
+        target: "http://54.180.239.58:8008",
         changeOrigin: true,
         secure: false,
         rewrite: (path) => path.replace(/^\/ws/, ""),
@@ -22,20 +22,6 @@ export default defineConfig({
     global: "window",
   },
   build: {
-    chunkSizeWarningLimit: 1600,
-    rollupOptions: {
-      input: "./index.html",
-      output: {
-        manualChunks(id) {
-          if (id.includes("node_modules")) {
-            return id
-              .toString()
-              .split("node_modules/")[1]
-              .split("/")[0]
-              .toString();
-          }
-        },
-      },
-    },
+    chunkSizeWarningLimit: 5000,
   },
 });

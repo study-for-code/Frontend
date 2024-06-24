@@ -15,8 +15,6 @@ const TestCaseModifyModal = ({
   testcaseList,
   setTestcaseList,
 }: TestCaseModifyModalType) => {
-  console.log("testcaseList: ", testcaseList);
-
   const containerRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     const handleScroll = () => {

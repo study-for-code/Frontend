@@ -12,9 +12,9 @@ const useManageProblemData = ({
   async function ManageProblemData() {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/algorithms`
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/algorithms`
       );
-      console.log(response);
+      // console.log(response);
       const { results } = response.data;
       setProblemList(results);
     } catch (err) {

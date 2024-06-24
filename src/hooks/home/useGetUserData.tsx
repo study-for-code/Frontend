@@ -11,9 +11,9 @@ const useGetUserData = ({
   const getUserData = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/members/${memberId}`
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/members/${memberId}`
       );
-      console.log(response);
+      // console.log(response);
       const data = response.data;
       setUser(data.results[0]);
     } catch (e) {

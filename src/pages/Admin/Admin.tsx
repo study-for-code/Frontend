@@ -71,12 +71,6 @@ const Admin = () => {
             >
               문제 관리
             </div>
-            <div
-              className="sub_element"
-              onClick={() => showComponents("userWithdrawal")}
-            >
-              유저 탈퇴
-            </div>
             <div className="sub_element" onClick={() => navigation("/")}>
               메인 이동
             </div>

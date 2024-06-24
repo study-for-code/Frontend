@@ -27,7 +27,7 @@ const useGetSolvedMembers = ({
     if (subscribeId) {
       try {
         const response = await axios.get(
-          `${import.meta.env.VITE_LOCAL_API_ADDRESS}/subscribes/submit`,
+          `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/subscribes/submit`,
           {
             params: {
               subscribeId: subscribeId,
@@ -35,7 +35,7 @@ const useGetSolvedMembers = ({
             },
           }
         );
-        console.log("solved : ", response.data.results[0].submit);
+        // console.log("solved : ", response.data.results[0].submit);
         const result: SolvedMember[] = response.data.results[0].submit;
         const solvedMembers = result.filter((member) => {
           if (member.submitStatus === "FINISHED") {

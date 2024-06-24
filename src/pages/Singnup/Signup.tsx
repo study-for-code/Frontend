@@ -23,9 +23,9 @@ const Signup = () => {
     message: "",
   });
 
-  useEffect(() => {
-    // console.log("signupData: ", signupData);
-  }, [signupData]);
+  // useEffect(() => {
+  //   console.log("signupData: ", signupData);
+  // }, [signupData]);
 
   return (
     <SignupContainer $message={signupData.message}>

@@ -18,7 +18,7 @@ const useOnDelete = ({
   async function onDelete() {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/categories/${selectedCgID}`
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/categories/${selectedCgID}`
       );
       getCategoryData();
       setSelectedCgID(0);

@@ -47,9 +47,9 @@ const UserSection = ({ setUserData }: UserSectionType) => {
   const getMembers = async () => {
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_LOCAL_API_ADDRESS}/studies/${selectedStudy?.studyId}`
+        `${import.meta.env.VITE_DEPLOYED_API_ADDRESS}/studies/${selectedStudy?.studyId}`
       );
-      console.log(response.data.results[0]);
+      // console.log(response.data.results[0]);
       setMembers(response.data.results[0].members);
     } catch (e) {
       console.error(e);
