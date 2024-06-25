@@ -28,5 +28,6 @@ export default defineConfig({
         main: "./index.html",
       },
     },
+    sourcemap: false,
   },
 });
