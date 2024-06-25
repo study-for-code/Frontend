@@ -48,7 +48,7 @@ const ChatRoom = ({
   console.log("review ChatRoom: ", review);
   // stompjs
   const [stompClient, setStompClient] = useState<Client | null>(null);
-  // 유저 입력 메세지
+  // 유저 입력
   const [content, setContent] = useState<string>("");
 
   const [createReviewId, setCreateReviewId] = useState<number>(review.reviewId);
